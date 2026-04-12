@@ -11,13 +11,18 @@
     <form action="/" method="POST">
         @csrf
         <div>
-            <select name="category" id="category">
+            <select name="category_id" id="category_id">
                 <option value="1">プログラミング</option>
                 <option value="2">英語</option>
                 <option value="3">理科</option>
             </select>
         </div>
-        <input type="text" name="study-time" id="study-time" placeholder="勉強時間を入力">
+        <div>
+            @error('study_time')
+                <div>{{ $message }}</div>
+            @enderror
+        <input type="text" name="study_time" id="study_time" placeholder="勉強時間を入力">
+        </div>
         <button type="submit">送信</button>
     </form>
 </body>

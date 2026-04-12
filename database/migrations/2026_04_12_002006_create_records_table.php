@@ -16,7 +16,7 @@ return new class extends Migration
             $table->date('study_date');
             $table->integer('study_time');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            // $table->foreignId('user_id')->nullable();
             $table->timestamps();
         });
     }

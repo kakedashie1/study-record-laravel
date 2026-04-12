@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Record;
 use Illuminate\Http\Request;
 
 class TopController extends Controller
@@ -13,7 +14,10 @@ class TopController extends Controller
 
     public function store(Request $request)
     {
-        $studyTime = $request->input('study-time');
+        $validated = $request->validate(Record::$rules, Record::$messages);
+        $validated['study_date'] = now()->toDateString("Y-m-d");
+        $result = Record::create($validated);
+
         return view('top');
     }
 }
