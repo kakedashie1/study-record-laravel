@@ -8,13 +8,14 @@
 </head>
 <body>
     <h1>トップページ</h1>
+    <label>今日の勉強時間:{{ $today_study_time_hour_min }}</label>
     <form action="/" method="POST">
         @csrf
         <div>
-            <select name="category_id" id="category_id">
-                <option value="1">プログラミング</option>
-                <option value="2">英語</option>
-                <option value="3">理科</option>
+            <select name="category_id">
+            @foreach($categories as $category)
+            <option value="{{ $category->id }}">{{ $category->name }}</option>
+            @endforeach
             </select>
         </div>
         <div>
