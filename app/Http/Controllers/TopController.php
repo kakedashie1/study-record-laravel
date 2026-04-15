@@ -11,7 +11,10 @@ class TopController extends Controller
     public function index()
     {
         $categories = Category::all();
-        $records = Record::all();
+        $records = Record::where('study_date', now()->toDateString("Y-m-d"))->get();
+        $records->each(function ($record) {
+            $record->study_time = $this->calcHourMin($record->study_time);
+        });
         $today_study_time = Record::where('study_date', now()->toDateString("Y-m-d"))->sum('study_time');
         $today_study_time_hour_min = $this->calcHourMin($today_study_time);
         return view(

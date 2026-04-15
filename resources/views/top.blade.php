@@ -26,5 +26,32 @@
         </div>
         <button type="submit">送信</button>
     </form>
+    <div>
+        <table class="table table-striped">
+        <thead>
+            <tr>
+            <th>カテゴリー</th>
+            <th>勉強時間</th>
+            {{-- <th>編集/削除</th> --}}
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($records as $record)
+            <tr>
+            <td>{{ $record->category->name }}</td>
+            <td>{{ $record->study_time }}</td>
+            {{-- <td>
+                <a href="/records/{{ $record->id }}/edit">編集</a>
+                <form action="/records/{{ $record->id }}" method="POST" style="display: inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit">削除</button>
+                </form>
+            </td> --}}
+            </tr>
+            @endforeach
+        </tbody>
+        </table>
+    </div>
 </body>
 </html>
