@@ -27,15 +27,6 @@ class TopController extends Controller
         );
     }
 
-    public function store(Request $request)
-    {
-        $validated = $request->validate(Record::$rules, Record::$messages);
-        $validated['study_date'] = now()->toDateString("Y-m-d");
-        $result = Record::create($validated);
-
-        return redirect()->action([TopController::class, 'index']);
-    }
-
     public function calcHourMin($today_study_time)
     {
         if ($today_study_time === 0) {

@@ -9,7 +9,7 @@
 <body>
     <h1>トップページ</h1>
     <label>今日の勉強時間:{{ $today_study_time_hour_min }}</label>
-    <form action="/" method="POST">
+    <form action="/store" method="POST">
         @csrf
         <div>
             <select name="category_id">
@@ -32,7 +32,7 @@
             <tr>
             <th>カテゴリー</th>
             <th>勉強時間</th>
-            {{-- <th>編集/削除</th> --}}
+            <th>編集/削除</th>
             </tr>
         </thead>
         <tbody>
@@ -40,14 +40,14 @@
             <tr>
             <td>{{ $record->category->name }}</td>
             <td>{{ $record->study_time }}</td>
-            {{-- <td>
+            <td>
                 <a href="/records/{{ $record->id }}/edit">編集</a>
-                <form action="/records/{{ $record->id }}" method="POST" style="display: inline;">
+                <form action="/destroy/{{ $record->id }}" method="POST" style="display: inline;">
                     @csrf
                     @method('DELETE')
                     <button type="submit">削除</button>
                 </form>
-            </td> --}}
+            </td>
             </tr>
             @endforeach
         </tbody>
