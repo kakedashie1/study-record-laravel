@@ -15,6 +15,7 @@
     </form>
     <label>今日の勉強時間:{{ $today_study_time_hour_min }}</label>
     <form action="/store" method="POST">
+        <input type="hidden" name="user_id" value="{{ Auth::id() }}">
         @csrf
         <div>
             <select name="category_id">

@@ -23,10 +23,10 @@ class Category extends Model
     //     // 'user_id.integer' => 'ユーザーIDは整数で入力してください。',
     // ];
 
-    //  public function user()
-    // {
-    //     return $this->belongsTo(User::class);
-    // }
+     public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function records()
     {
