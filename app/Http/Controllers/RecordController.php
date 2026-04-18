@@ -27,4 +27,15 @@ class RecordController extends Controller
 
         return redirect()->action([TopController::class, 'index']);
     }
+
+    public function update(Request $request)
+    {
+        $record = Record::find($request->id);
+        if ($record) {
+            $validated = $request->validate(Record::$rules, Record::$messages);
+            $record->update($validated);
+        }
+
+        return redirect()->action([TopController::class, 'index']);
+    }
 }

@@ -2,10 +2,28 @@
 
 use App\Http\Controllers\TopController;
 use App\Http\Controllers\RecordController;
+use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [TopController::class, 'index']);
 
-Route::post('/store', [RecordController::class, 'store']);
+// Route::get('/', [TopController::class, 'index']);
 
-Route::delete('/destroy/{id}', [RecordController::class, 'destroy']);
+// Route::post('/store', [RecordController::class, 'store']);
+
+// Route::delete('/destroy/{id}', [RecordController::class, 'destroy']);
+
+// Route::put('/update/{id}', [RecordController::class, 'update']);
+
+Route::get('/login', [LoginController::class, 'index']);
+
+Route::post('/login', [LoginController::class, 'login']);
+
+
+
+Route::middleware('auth')->group(function () {
+    Route::get('/', [TopController::class, 'index']);
+    Route::post('/store', [RecordController::class, 'store']);
+    Route::delete('/destroy/{id}', [RecordController::class, 'destroy']);
+    Route::put('/update/{id}', [RecordController::class, 'update']);
+    Route::post('/logout', [LoginController::class, 'logout']);
+});

@@ -8,6 +8,11 @@
 </head>
 <body>
     <h1>トップページ</h1>
+    <div>{{ Auth::user()->name }}さん、こんにちは！</div>
+    <form action="/logout" method="POST">
+        @csrf
+        <button type="submit">ログアウト</button>
+    </form>
     <label>今日の勉強時間:{{ $today_study_time_hour_min }}</label>
     <form action="/store" method="POST">
         @csrf
