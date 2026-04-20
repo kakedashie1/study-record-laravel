@@ -1,5 +1,6 @@
 import { useForm } from '@inertiajs/react';
 import { formatMinutes } from '../utils/format';
+import { router } from '@inertiajs/react';
 
 export default function Top({ categories, records, todayStudyTime }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -77,19 +78,30 @@ export default function Top({ categories, records, todayStudyTime }) {
                     <table border="1" cellPadding="8" style={{ borderCollapse: 'collapse' }}>
                         <thead>
                             <tr>
-                                <th>ID</th>
                                 <th>日付</th>
                                 <th>カテゴリー</th>
                                 <th>勉強時間</th>
+                                <th>削除</th>
                             </tr>
                         </thead>
                         <tbody>
                             {records.map((record) => (
                                 <tr key={record.id}>
-                                    <td>{record.id}</td>
                                     <td>{record.study_date}</td>
                                     <td>{record.category?.name ?? '未設定'}</td>
                                     <td>{formatMinutes(record.study_time)}</td>
+                                    <td>
+                                       <button
+                                            onClick={() => {
+                                                if (confirm('本当に削除しますか？')) {
+                                                    router.delete('/destroy/' + record.id);
+                                                }
+                                            }}
+                                        >
+                                            削除
+                                        </button>
+                                    </td>
+
                                 </tr>
                             ))}
                         </tbody>

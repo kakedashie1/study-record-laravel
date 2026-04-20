@@ -7,6 +7,7 @@ use App\Models\Record;
 use App\Models\Category;
 use App\Http\Controllers\TopController;
 
+
 class RecordController extends Controller
 {
     public function store(Request $request)
@@ -19,15 +20,16 @@ class RecordController extends Controller
         return redirect()->action([TopController::class, 'index']);
     }
 
-    public function destroy(Request $request)
-    {
-        $record = Record::find($request->id);
-        if ($record) {
-            $record->delete();
-        }
+    public function destroy($id)
+{
+    $record = Record::find($id);
 
-        return redirect()->action([TopController::class, 'index']);
+    if ($record) {
+        $record->delete();
     }
+
+    return redirect()->action([TopController::class, 'index']);
+}
 
     public function update(Request $request)
     {

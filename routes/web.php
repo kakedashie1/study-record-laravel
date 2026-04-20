@@ -23,7 +23,7 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::middleware('auth')->group(function () {
     Route::get('/', [TopController::class, 'index']);
     Route::post('/store', [RecordController::class, 'store']);
-    Route::delete('/destroy/{id}', [RecordController::class, 'destroy']);
+    Route::delete('/destroy/{id}', [RecordController::class, 'destroy'])->name('destroy');
     Route::put('/update/{id}', [RecordController::class, 'update']);
     Route::post('/logout', [LoginController::class, 'logout']);
 });
