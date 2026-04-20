@@ -13,6 +13,7 @@ class RecordController extends Controller
     {
         $validated = $request->validate(Record::$rules, Record::$messages);
         $validated['study_date'] = now()->toDateString("Y-m-d");
+        $validated['user_id'] = $request->user()->id;
         $result = Record::create($validated);
 
         return redirect()->action([TopController::class, 'index']);

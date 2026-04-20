@@ -10,7 +10,7 @@ export default function Top({ categories, records, todayStudyTime }) {
     const submit = (e) => {
         e.preventDefault();
 
-        post('/records', {
+        post('/store', {
             onSuccess: () => reset(),
         });
     };
@@ -28,6 +28,7 @@ export default function Top({ categories, records, todayStudyTime }) {
                 <h2>勉強記録登録</h2>
 
                 <form onSubmit={submit}>
+                     <input type="hidden" name="user_id" value="{{ Auth::id() }}"></input>
                     <div style={{ marginBottom: '12px' }}>
                         <label>カテゴリー</label>
                         <br />
@@ -53,6 +54,7 @@ export default function Top({ categories, records, todayStudyTime }) {
                         <input
                             type="number"
                             value={data.study_time}
+                            step="30"
                             onChange={(e) => setData('study_time', e.target.value)}
                         />
                         {errors.study_time && (
