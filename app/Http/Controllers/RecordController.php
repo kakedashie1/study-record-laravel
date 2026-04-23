@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Record;
 use App\Models\Category;
 use App\Http\Controllers\TopController;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 
 class RecordController extends Controller
@@ -31,9 +33,24 @@ class RecordController extends Controller
     return redirect()->action([TopController::class, 'index']);
 }
 
-    public function update(Request $request)
+    public function edit($id)
     {
-        $record = Record::find($request->id);
+        $record = Record::find($id);
+        $categories = Category::where('user_id', Auth::id())->get();
+
+        if (!$record) {
+            return redirect()->action([TopController::class, 'index']);
+        }
+
+        return Inertia::render('CategoryEdit', [
+            'record' => $record,
+            'categories' => $categories,
+        ]);
+    }
+
+    public function update($id, Request $request)
+    {
+        $record = Record::find($id);
         if ($record) {
             $validated = $request->validate(Record::$rules, Record::$messages);
             $record->update($validated);

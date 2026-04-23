@@ -24,6 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [TopController::class, 'index']);
     Route::post('/store', [RecordController::class, 'store']);
     Route::delete('/destroy/{id}', [RecordController::class, 'destroy'])->name('destroy');
+    Route::get('/edit/{id}', [RecordController::class, 'edit'])->name('edit');
     Route::put('/update/{id}', [RecordController::class, 'update']);
     Route::post('/logout', [LoginController::class, 'logout']);
 });

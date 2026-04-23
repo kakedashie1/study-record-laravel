@@ -82,6 +82,7 @@ export default function Top({ categories, records, todayStudyTime }) {
                                 <th>カテゴリー</th>
                                 <th>勉強時間</th>
                                 <th>削除</th>
+                                <th>編集</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -101,7 +102,15 @@ export default function Top({ categories, records, todayStudyTime }) {
                                             削除
                                         </button>
                                     </td>
-
+                                    <td>
+                                        <button
+                                            onClick={() => {
+                                                router.get('/edit/' + record.id);
+                                            }}
+                                        >
+                                            編集
+                                        </button>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
