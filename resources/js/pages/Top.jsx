@@ -1,41 +1,94 @@
-import { useForm } from '@inertiajs/react';
-import { formatMinutes } from '../utils/format';
-import { router } from '@inertiajs/react';
+import { useState } from "react";
+import { useForm } from "@inertiajs/react";
+import { formatMinutes } from "../utils/format";
+import { router } from "@inertiajs/react";
 
 export default function Top({ categories, records, todayStudyTime }) {
+    const today = new Date().toISOString().slice(0, 10);
+
+    const [selectedDate, setSelectedDate] = useState(today);
+    const [displayRecords, setDisplayRecords] = useState(records);
+    const [displayStudyTime, setDisplayStudyTime] = useState(todayStudyTime);
+    const [loading, setLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+
     const { data, setData, post, processing, errors, reset } = useForm({
-        study_time: '',
-        category_id: '',
+        study_time: "",
+        category_id: "",
     });
 
     const submit = (e) => {
         e.preventDefault();
 
-        post('/store', {
+        post("/store", {
             onSuccess: () => reset(),
         });
     };
 
+    const fetchRecordsByDate = async (date) => {
+        try {
+            setLoading(true);
+            setErrorMessage("");
+
+            const response = await fetch(`/records/by-date?date=${date}`);
+
+            if (!response.ok) {
+                throw new Error("記録の取得に失敗しました");
+            }
+
+            const result = await response.json();
+
+            setDisplayRecords(result.records);
+            setDisplayStudyTime(result.totalStudyTime);
+        } catch (error) {
+            setErrorMessage(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDateChange = (e) => {
+        const date = e.target.value;
+
+        setSelectedDate(date);
+        fetchRecordsByDate(date);
+    };
+
     return (
-        <div style={{ padding: '24px' }}>
+        <div style={{ padding: "24px" }}>
             <h1>学習時間記録アプリ</h1>
 
-            <section style={{ marginBottom: '24px' }}>
-                <h2>今日の合計勉強時間</h2>
-                <p>{formatMinutes(todayStudyTime)}</p>
+            <section style={{ marginBottom: "24px" }}>
+                <h2>表示日付</h2>
+                <input
+                    type="date"
+                    value={selectedDate}
+                    onChange={handleDateChange}
+                />
             </section>
 
-            <section style={{ marginBottom: '24px' }}>
+            <section style={{ marginBottom: "24px" }}>
+                <h2>合計勉強時間</h2>
+                <p>
+                    {loading
+                        ? "読み込み中..."
+                        : formatMinutes(displayStudyTime)}
+                </p>
+                {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+            </section>
+
+            <section style={{ marginBottom: "24px" }}>
                 <h2>勉強記録登録</h2>
 
                 <form onSubmit={submit}>
-                     <input type="hidden" name="user_id" value="{{ Auth::id() }}"></input>
-                    <div style={{ marginBottom: '12px' }}>
+                    <div style={{ marginBottom: "12px" }}>
                         <label>カテゴリー</label>
                         <br />
                         <select
                             value={data.category_id}
-                            onChange={(e) => setData('category_id', e.target.value)}
+                            onChange={(e) =>
+                                setData("category_id", e.target.value)
+                            }
                         >
                             <option value="">選択してください</option>
                             {categories.map((category) => (
@@ -45,21 +98,27 @@ export default function Top({ categories, records, todayStudyTime }) {
                             ))}
                         </select>
                         {errors.category_id && (
-                            <div style={{ color: 'red' }}>{errors.category_id}</div>
+                            <div style={{ color: "red" }}>
+                                {errors.category_id}
+                            </div>
                         )}
                     </div>
 
-                    <div style={{ marginBottom: '12px' }}>
+                    <div style={{ marginBottom: "12px" }}>
                         <label>勉強時間（分）</label>
                         <br />
                         <input
                             type="number"
                             value={data.study_time}
                             step="30"
-                            onChange={(e) => setData('study_time', e.target.value)}
+                            onChange={(e) =>
+                                setData("study_time", e.target.value)
+                            }
                         />
                         {errors.study_time && (
-                            <div style={{ color: 'red' }}>{errors.study_time}</div>
+                            <div style={{ color: "red" }}>
+                                {errors.study_time}
+                            </div>
                         )}
                     </div>
 
@@ -70,12 +129,18 @@ export default function Top({ categories, records, todayStudyTime }) {
             </section>
 
             <section>
-                <h2>今日の勉強記録一覧</h2>
+                <h2>{selectedDate} の勉強記録一覧</h2>
 
-                {records.length === 0 ? (
-                    <p>今日はまだ記録がありません。</p>
+                {loading ? (
+                    <p>読み込み中...</p>
+                ) : displayRecords.length === 0 ? (
+                    <p>この日の記録はありません。</p>
                 ) : (
-                    <table border="1" cellPadding="8" style={{ borderCollapse: 'collapse' }}>
+                    <table
+                        border="1"
+                        cellPadding="8"
+                        style={{ borderCollapse: "collapse" }}
+                    >
                         <thead>
                             <tr>
                                 <th>日付</th>
@@ -86,16 +151,22 @@ export default function Top({ categories, records, todayStudyTime }) {
                             </tr>
                         </thead>
                         <tbody>
-                            {records.map((record) => (
+                            {displayRecords.map((record) => (
                                 <tr key={record.id}>
                                     <td>{record.study_date}</td>
-                                    <td>{record.category?.name ?? '未設定'}</td>
+                                    <td>{record.category?.name ?? "未設定"}</td>
                                     <td>{formatMinutes(record.study_time)}</td>
                                     <td>
-                                       <button
+                                        <button
                                             onClick={() => {
-                                                if (confirm('本当に削除しますか？')) {
-                                                    router.delete('/destroy/' + record.id);
+                                                if (
+                                                    confirm(
+                                                        "本当に削除しますか？",
+                                                    )
+                                                ) {
+                                                    router.delete(
+                                                        "/destroy/" + record.id,
+                                                    );
                                                 }
                                             }}
                                         >
@@ -105,7 +176,9 @@ export default function Top({ categories, records, todayStudyTime }) {
                                     <td>
                                         <button
                                             onClick={() => {
-                                                router.get('/edit/' + record.id);
+                                                router.get(
+                                                    "/edit/" + record.id,
+                                                );
                                             }}
                                         >
                                             編集
