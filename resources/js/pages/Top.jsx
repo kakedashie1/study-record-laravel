@@ -15,15 +15,8 @@ export default function Top({ categories, records, todayStudyTime }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         study_time: "",
         category_id: "",
+        study_date: selectedDate,
     });
-
-    const submit = (e) => {
-        e.preventDefault();
-
-        post("/store", {
-            onSuccess: () => reset(),
-        });
-    };
 
     const fetchRecordsByDate = async (date) => {
         try {
@@ -47,10 +40,22 @@ export default function Top({ categories, records, todayStudyTime }) {
         }
     };
 
+    const submit = (e) => {
+        e.preventDefault();
+
+        post("/store", {
+            onSuccess: () => {
+                reset();
+                fetchRecordsByDate(selectedDate);
+            },
+        });
+    };
+
     const handleDateChange = (e) => {
         const date = e.target.value;
 
         setSelectedDate(date);
+        setData('study_date', date);
         fetchRecordsByDate(date);
     };
 
@@ -166,6 +171,13 @@ export default function Top({ categories, records, todayStudyTime }) {
                                                 ) {
                                                     router.delete(
                                                         "/destroy/" + record.id,
+                                                        {
+                                                            onSuccess: () => {
+                                                                fetchRecordsByDate(
+                                                                    selectedDate,
+                                                                );
+                                                            },
+                                                        },
                                                     );
                                                 }
                                             }}

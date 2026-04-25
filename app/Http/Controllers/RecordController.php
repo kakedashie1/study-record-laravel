@@ -15,8 +15,8 @@ class RecordController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate(Record::$rules, Record::$messages);
-        $validated['study_date'] = now()->toDateString("Y-m-d");
-        $validated['user_id'] = $request->user()->id;
+        $validated['study_date'] = $request->study_date;
+        $validated['user_id'] = Auth::id();
         $result = Record::create($validated);
 
         return redirect()->action([TopController::class, 'index']);
@@ -53,6 +53,7 @@ class RecordController extends Controller
         $record = Record::find($id);
         if ($record) {
             $validated = $request->validate(Record::$rules, Record::$messages);
+            $validated['study_date'] = $request->study_date;
             $record->update($validated);
         }
 

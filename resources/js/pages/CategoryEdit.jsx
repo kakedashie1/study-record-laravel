@@ -6,6 +6,7 @@ export default function CategoryEdit({ categories, record }) {
     const { data, setData, put, processing, errors, reset } = useForm({
         study_time: record.study_time,
         category_id: record.category_id || '',
+        study_date: record.study_date,
     });
 
     const submit = (e) => {
