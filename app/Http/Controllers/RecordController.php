@@ -42,7 +42,7 @@ class RecordController extends Controller
             return redirect()->action([TopController::class, 'index']);
         }
 
-        return Inertia::render('CategoryEdit', [
+        return Inertia::render('RecordEdit', [
             'record' => $record,
             'categories' => $categories,
         ]);

@@ -4,7 +4,7 @@ import { formatMinutes } from "../utils/format";
 import { router } from "@inertiajs/react";
 
 export default function Top({ categories, records, todayStudyTime }) {
-    const today = new Date().toISOString().slice(0, 10);
+    const today = new Date().toLocaleDateString('sv-SE').slice(0, 10);
 
     const [selectedDate, setSelectedDate] = useState(today);
     const [displayRecords, setDisplayRecords] = useState(records);

@@ -2,7 +2,7 @@ import { useForm } from '@inertiajs/react';
 import { formatMinutes } from '../utils/format';
 import { router } from '@inertiajs/react';
 
-export default function CategoryEdit({ categories, record }) {
+export default function RecordEdit({ categories, record }) {
     const { data, setData, put, processing, errors, reset } = useForm({
         study_time: record.study_time,
         category_id: record.category_id || '',
