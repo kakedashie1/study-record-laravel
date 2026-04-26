@@ -20,4 +20,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/update/{id}', [RecordController::class, 'update']);
     Route::post('/logout', [LoginController::class, 'logout']);
     Route::get('/records/by-date', [TopController::class, 'byDate'])->name('records.byDate');
+    Route::get('/categories', [App\Http\Controllers\CategoryController::class, 'index'])->name('categories.index');
+    Route::post('/categories/store', [App\Http\Controllers\CategoryController::class, 'store'])->name('categories.store');
+    Route::delete('/categories/destroy/{id}', [App\Http\Controllers\CategoryController::class, 'destroy'])->name('categories.destroy');
+    Route::get('/categories/edit/{id}', [App\Http\Controllers\CategoryController::class, 'edit'])->name('categories.edit');
+    Route::put('/categories/update/{id}', [App\Http\Controllers\CategoryController::class, 'update'])->name('categories.update');
 });

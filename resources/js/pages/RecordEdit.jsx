@@ -33,7 +33,7 @@ export default function RecordEdit({ categories, record }) {
                             <option value="">選択してください</option>
                             {categories.map((category) => (
                                 <option key={category.id} value={category.id}>
-                                    {category.name}
+                                    {category.category_name}
                                 </option>
                             ))}
                         </select>

@@ -88,6 +88,13 @@ export default function Top({ categories, records, todayStudyTime }) {
                 <form onSubmit={submit}>
                     <div style={{ marginBottom: "12px" }}>
                         <label>カテゴリー</label>
+                        <button
+                            type="button"
+                            onClick={() => router.get("/categories")}
+                            style={{ marginLeft: "8px" }}
+                        >
+                            カテゴリー追加
+                        </button>
                         <br />
                         <select
                             value={data.category_id}
@@ -98,7 +105,7 @@ export default function Top({ categories, records, todayStudyTime }) {
                             <option value="">選択してください</option>
                             {categories.map((category) => (
                                 <option key={category.id} value={category.id}>
-                                    {category.name}
+                                    {category.category_name}
                                 </option>
                             ))}
                         </select>
@@ -159,7 +166,7 @@ export default function Top({ categories, records, todayStudyTime }) {
                             {displayRecords.map((record) => (
                                 <tr key={record.id}>
                                     <td>{record.study_date}</td>
-                                    <td>{record.category?.name ?? "未設定"}</td>
+                                    <td>{record.category?.category_name ?? "未設定"}</td>
                                     <td>{formatMinutes(record.study_time)}</td>
                                     <td>
                                         <button

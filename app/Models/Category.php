@@ -8,20 +8,19 @@ class Category extends Model
 {
     protected $fillable = [
         'id',
-        'name'
+        'category_name',
+        'user_id',
     ];
 
-    // public static $rules = [
-    //     'category_id' => 'required|integer',
-    //     'name' => 'required|string',
-    //     // 'user_id' => 'integer'
-    // ];
+    public static $rules = [
+        'category_name' => 'required|string',
+        'user_id' => 'integer'
+    ];
 
-    // public static $messages = [
-    //     'category_id.required' => 'カテゴリーIDは必須です。',
-    //     'category_id.integer' => 'カテゴリーIDは整数で入力してください。'
-    //     // 'user_id.integer' => 'ユーザーIDは整数で入力してください。',
-    // ];
+    public static $messages = [
+        'category_name.required' => 'カテゴリー名は必須です。',
+        'user_id.integer' => 'ユーザーIDは整数で入力してください。',
+    ];
 
      public function user()
     {

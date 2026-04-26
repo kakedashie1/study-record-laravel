@@ -23,15 +23,15 @@ class RecordController extends Controller
     }
 
     public function destroy($id)
-{
-    $record = Record::find($id);
+    {
+        $record = Record::find($id);
 
-    if ($record) {
-        $record->delete();
+        if ($record) {
+            $record->delete();
+        }
+
+        return redirect()->action([TopController::class, 'index']);
     }
-
-    return redirect()->action([TopController::class, 'index']);
-}
 
     public function edit($id)
     {
