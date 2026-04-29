@@ -61,10 +61,9 @@ export default function Top({ categories, records, todayStudyTime }) {
 
     return (
         <div style={{ padding: "24px" }}>
-            <h1>学習時間記録アプリ</h1>
-
+            <h1 >学習時間記録アプリ</h1>
             <section style={{ marginBottom: "24px" }}>
-                <h2>表示日付</h2>
+                <label>{selectedDate}</label>
                 <input
                     type="date"
                     value={selectedDate}
@@ -141,8 +140,6 @@ export default function Top({ categories, records, todayStudyTime }) {
             </section>
 
             <section>
-                <h2>{selectedDate} の勉強記録一覧</h2>
-
                 {loading ? (
                     <p>読み込み中...</p>
                 ) : displayRecords.length === 0 ? (
