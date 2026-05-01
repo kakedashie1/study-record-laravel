@@ -4,7 +4,7 @@ import { formatMinutes } from "../utils/format";
 import { router } from "@inertiajs/react";
 
 export default function Top({ categories, records, todayStudyTime }) {
-    const today = new Date().toLocaleDateString('sv-SE').slice(0, 10);
+    const today = new Date().toLocaleDateString("sv-SE").slice(0, 10);
 
     const [selectedDate, setSelectedDate] = useState(today);
     const [displayRecords, setDisplayRecords] = useState(records);
@@ -55,15 +55,14 @@ export default function Top({ categories, records, todayStudyTime }) {
         const date = e.target.value;
 
         setSelectedDate(date);
-        setData('study_date', date);
+        setData("study_date", date);
         fetchRecordsByDate(date);
     };
 
     return (
-        <div style={{ padding: "24px" }}>
-            <h1 >学習時間記録アプリ</h1>
-            <section style={{ marginBottom: "24px" }}>
-                <label>{selectedDate}</label>
+        <div class="grid grid-cols-4 gap-4">
+            <h1 class="col-span-4 text-2xl font-bold">学習時間記録アプリ</h1>
+            <section  class="col-span-4 flex justify-center">
                 <input
                     type="date"
                     value={selectedDate}
@@ -71,28 +70,25 @@ export default function Top({ categories, records, todayStudyTime }) {
                 />
             </section>
 
-            <section style={{ marginBottom: "24px" }}>
+            <section class="col-span-4 flex justify-center flex-col items-center">
                 <h2>合計勉強時間</h2>
                 <p>
                     {loading
                         ? "読み込み中..."
                         : formatMinutes(displayStudyTime)}
                 </p>
-                {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+                {errorMessage && <p>{errorMessage}</p>}
             </section>
-
-            <section style={{ marginBottom: "24px" }}>
-                <h2>勉強記録登録</h2>
-
-                <form onSubmit={submit}>
-                    <div style={{ marginBottom: "12px" }}>
-                        <label>カテゴリー</label>
+            <h2 class="col-span-4 flex justify-center">勉強記録登録</h2>
+            <section class="col-span-4  flex justify-center">
+                <form onSubmit={submit} class="flex flex-row items-center gap-8">
+                    <div class="">
                         <button
                             type="button"
                             onClick={() => router.get("/categories")}
-                            style={{ marginLeft: "8px" }}
+                            class="border-1 border-solid w-full rounded-xl"
                         >
-                            カテゴリー追加
+                            カテゴリー
                         </button>
                         <br />
                         <select
@@ -100,59 +96,48 @@ export default function Top({ categories, records, todayStudyTime }) {
                             onChange={(e) =>
                                 setData("category_id", e.target.value)
                             }
+                            class="border-1 border-solid mt-2"
                         >
-                            <option value="">選択してください</option>
+                            <option value="" >選択してください</option>
                             {categories.map((category) => (
                                 <option key={category.id} value={category.id}>
                                     {category.category_name}
                                 </option>
                             ))}
                         </select>
-                        {errors.category_id && (
-                            <div style={{ color: "red" }}>
-                                {errors.category_id}
-                            </div>
-                        )}
+                        {errors.category_id && <div>{errors.category_id}</div>}
                     </div>
 
-                    <div style={{ marginBottom: "12px" }}>
-                        <label>勉強時間（分）</label>
-                        <br />
+                    <div class="flex justify-center flex-col items-center">
+                        <label class="text-center">勉強時間（分）</label>
                         <input
                             type="number"
                             value={data.study_time}
                             step="30"
+                            min="30"
                             onChange={(e) =>
                                 setData("study_time", e.target.value)
                             }
+                            class="border-2 border-solid mt-2 text-center"
                         />
-                        {errors.study_time && (
-                            <div style={{ color: "red" }}>
-                                {errors.study_time}
-                            </div>
-                        )}
+                        {errors.study_time && <div>{errors.study_time}</div>}
                     </div>
 
-                    <button type="submit" disabled={processing}>
+                    <button type="submit" disabled={processing} class="border-1 border-solid">
                         登録
                     </button>
                 </form>
             </section>
 
-            <section>
+            <section class="col-span-4  flex justify-center">
                 {loading ? (
                     <p>読み込み中...</p>
                 ) : displayRecords.length === 0 ? (
                     <p>この日の記録はありません。</p>
                 ) : (
-                    <table
-                        border="1"
-                        cellPadding="8"
-                        style={{ borderCollapse: "collapse" }}
-                    >
+                    <table  class="table-auto table-fixed border-separate border-spacing-x-8 border-spacing-y-4">
                         <thead>
                             <tr>
-                                <th>日付</th>
                                 <th>カテゴリー</th>
                                 <th>勉強時間</th>
                                 <th>削除</th>
@@ -162,8 +147,10 @@ export default function Top({ categories, records, todayStudyTime }) {
                         <tbody>
                             {displayRecords.map((record) => (
                                 <tr key={record.id}>
-                                    <td>{record.study_date}</td>
-                                    <td>{record.category?.category_name ?? "未設定"}</td>
+                                    <td>
+                                        {record.category?.category_name ??
+                                            "未設定"}
+                                    </td>
                                     <td>{formatMinutes(record.study_time)}</td>
                                     <td>
                                         <button
