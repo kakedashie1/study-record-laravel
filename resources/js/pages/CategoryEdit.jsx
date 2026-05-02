@@ -43,15 +43,7 @@ export default function CategoryEdit({ category }) {
                     </button>
                 </form>
             </section>
-            <button
-                onClick={() => {
-                    if (document.referrer) {
-                        window.history.back();
-                    } else {
-                        window.location.href = "/";
-                    }
-                }}
-            >
+            <button type="button" onClick={() => router.get("/categories")}>
                 戻る
             </button>
         </div>

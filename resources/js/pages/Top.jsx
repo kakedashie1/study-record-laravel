@@ -5,7 +5,17 @@ import { router } from "@inertiajs/react";
 
 export default function Top({ categories, records, todayStudyTime }) {
     const today = new Date().toLocaleDateString("sv-SE").slice(0, 10);
-
+    const [editingRecord, setEditingRecord] = useState(null);
+    const editForm = useForm({
+        study_time: "",
+        category_id: "",
+        study_date: "",
+    });
+    const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+    const [editingCategory, setEditingCategory] = useState(null);
+    const categoryForm = useForm({
+        category_name: "",
+    });
     const [selectedDate, setSelectedDate] = useState(today);
     const [displayRecords, setDisplayRecords] = useState(records);
     const [displayStudyTime, setDisplayStudyTime] = useState(todayStudyTime);
@@ -60,147 +70,477 @@ export default function Top({ categories, records, todayStudyTime }) {
     };
 
     return (
-        <div class="grid grid-cols-4 gap-4">
-            <h1 class="col-span-4 text-2xl font-bold ml-4 mt-4">学習時間記録アプリ</h1>
-            <section  class="col-span-4 flex justify-center">
-                <input
-                    type="date"
-                    value={selectedDate}
-                    onChange={handleDateChange}
-                    class="text-2xl"
-                />
-            </section>
+        <>
+            <div className="grid grid-cols-4 gap-4">
+                <h1 className="col-span-4 text-2xl font-bold ml-4 mt-4">
+                    学習時間記録アプリ
+                </h1>
+                <section className="col-span-4 flex justify-center">
+                    <input
+                        type="date"
+                        value={selectedDate}
+                        onChange={handleDateChange}
+                        className="text-2xl  cursor-pointer"
+                    />
+                </section>
 
-            <section class="col-span-4 flex justify-center flex-col items-center mt-4 mb-4 ">
-                <div class="bg-stone-50 rounded-lg p-4 flex flex-col items-center">
-                <h2 class="text-xl mb-2">{selectedDate} 勉強時間</h2>
-                <p class="text-lg">
-                    {loading
-                        ? "読み込み中..."
-                        : formatMinutes(displayStudyTime)}
+                <section className="col-span-4 flex justify-center flex-col items-center mt-4 mb-4 ">
+                    <div className="bg-stone-50 rounded-lg p-4 flex flex-col items-center">
+                        <h2 className="text-xl mb-2">
+                            {selectedDate} 勉強時間
+                        </h2>
+                        <p className="text-lg">
+                            {loading
+                                ? "読み込み中..."
+                                : formatMinutes(displayStudyTime)}
+                        </p>
+                        {errorMessage && <p>{errorMessage}</p>}
+                    </div>
+                </section>
+                <h2 className="col-span-4 flex justify-center text-xl">
+                    学習記録登録
+                </h2>
+                <section className="col-span-4  flex justify-center mb-4">
+                    <form
+                        onSubmit={submit}
+                        className="flex flex-row items-center gap-8 outline-2 outline-offset-2 outline-gray-200 p-4"
+                    >
+                        <div className="">
+                            <button
+                                type="button"
+                                onClick={() => setIsCategoryModalOpen(true)}
+                                className="border-1 border-solid w-full rounded-xl cursor-pointer hover:bg-blue-500 hover:text-white"
+                            >
+                                カテゴリー
+                            </button>
+                            <br />
+                            <select
+                                value={data.category_id}
+                                onChange={(e) =>
+                                    setData("category_id", e.target.value)
+                                }
+                                className="border-1 border-solid mt-2"
+                            >
+                                <option value="">選択してください</option>
+                                {categories.map((category) => (
+                                    <option
+                                        key={category.id}
+                                        value={category.id}
+                                    >
+                                        {category.category_name}
+                                    </option>
+                                ))}
+                            </select>
+                            {errors.category_id && (
+                                <div>{errors.category_id}</div>
+                            )}
+                        </div>
 
-                </p>
-                {errorMessage && <p>{errorMessage}</p>}
-                </div>
-            </section>
-            <h2 class="col-span-4 flex justify-center text-xl">勉強記録登録</h2>
-            <section class="col-span-4  flex justify-center mb-4">
-                <form onSubmit={submit} class="flex flex-row items-center gap-8 outline-2 outline-offset-2 outline-gray-200 p-4">
-                    <div class="">
+                        <div className="flex justify-center flex-col items-center">
+                            <label className="text-center">
+                                勉強時間（分）
+                            </label>
+                            <input
+                                type="number"
+                                value={data.study_time}
+                                step="30"
+                                min="30"
+                                onChange={(e) =>
+                                    setData("study_time", e.target.value)
+                                }
+                                className="border-2 border-solid mt-2 text-center"
+                            />
+                            {errors.study_time && (
+                                <div>{errors.study_time}</div>
+                            )}
+                        </div>
+
                         <button
-                            type="button"
-                            onClick={() => router.get("/categories")}
-                            class="border-1 border-solid w-full rounded-xl"
+                            type="submit"
+                            disabled={processing}
+                            className="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xs"
                         >
-                            カテゴリー
+                            登録
                         </button>
-                        <br />
-                        <select
-                            value={data.category_id}
-                            onChange={(e) =>
-                                setData("category_id", e.target.value)
-                            }
-                            class="border-1 border-solid mt-2"
-                        >
-                            <option value="" >選択してください</option>
-                            {categories.map((category) => (
-                                <option key={category.id} value={category.id}>
-                                    {category.category_name}
-                                </option>
-                            ))}
-                        </select>
-                        {errors.category_id && <div>{errors.category_id}</div>}
-                    </div>
+                    </form>
+                </section>
 
-                    <div class="flex justify-center flex-col items-center">
-                        <label class="text-center">勉強時間（分）</label>
-                        <input
-                            type="number"
-                            value={data.study_time}
-                            step="30"
-                            min="30"
-                            onChange={(e) =>
-                                setData("study_time", e.target.value)
-                            }
-                            class="border-2 border-solid mt-2 text-center"
-                        />
-                        {errors.study_time && <div>{errors.study_time}</div>}
-                    </div>
-
-                    <button type="submit" disabled={processing} class="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xs">
-                        登録
-                    </button>
-                </form>
-            </section>
-
-            <section class="col-span-4  flex justify-center">
-                <div class="h-48 overflow-y-auto  outline-2 outline-offset-2 outline-gray-200">
-                {loading ? (
-                    <p>読み込み中...</p>
-                ) : displayRecords.length === 0 ? (
-                    <p>この日の記録はありません。</p>
-                ) : (
-                    <table  class="table-auto table-fixed border-separate border-spacing-x-8 border-spacing-y-4">
-                        <thead>
-                            <tr class="py-6">
-                                <th class="sticky top-0 bg-stone-50">カテゴリー</th>
-                                <th class="sticky top-0 bg-stone-50">勉強時間</th>
-                                <th class="sticky top-0 bg-stone-50">削除</th>
-                                <th class="sticky top-0 bg-stone-50 py-2">編集</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {displayRecords.map((record) => (
-                                <tr key={record.id}>
-                                    <td>
-                                        {record.category?.category_name ??
-                                            "未設定"}
-                                    </td>
-                                    <td>{formatMinutes(record.study_time)}</td>
-                                    <td>
-                                        <button
-                                            onClick={() => {
-                                                if (
-                                                    confirm(
-                                                        "本当に削除しますか？",
-                                                    )
-                                                ) {
-                                                    router.delete(
-                                                        "/destroy/" + record.id,
-                                                        {
-                                                            onSuccess: () => {
-                                                                fetchRecordsByDate(
-                                                                    selectedDate,
-                                                                );
-                                                            },
-                                                        },
-                                                    );
-                                                }
-                                            }}
-                                            class="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xs"
-                                        >
+                <section className="col-span-4  flex justify-center">
+                    <div className="h-48 overflow-y-auto  outline-2 outline-offset-2 outline-gray-200">
+                        {loading ? (
+                            <p>読み込み中...</p>
+                        ) : displayRecords.length === 0 ? (
+                            <p>この日の記録はありません。</p>
+                        ) : (
+                            <table className="table-auto table-fixed border-separate border-spacing-x-8 border-spacing-y-4">
+                                <thead>
+                                    <tr className="py-6">
+                                        <th className="sticky top-0 bg-stone-50">
+                                            カテゴリー
+                                        </th>
+                                        <th className="sticky top-0 bg-stone-50">
+                                            勉強時間
+                                        </th>
+                                        <th className="sticky top-0 bg-stone-50">
                                             削除
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button
-                                            onClick={() => {
-                                                router.get(
-                                                    "/edit/" + record.id,
-                                                );
-                                            }}
-                                            class="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xs"
-                                        >
+                                        </th>
+                                        <th className="sticky top-0 bg-stone-50 py-2">
                                             編集
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                )}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {displayRecords.map((record) => (
+                                        <tr key={record.id}>
+                                            <td>
+                                                {record.category
+                                                    ?.category_name ?? "未設定"}
+                                            </td>
+                                            <td>
+                                                {formatMinutes(
+                                                    record.study_time,
+                                                )}
+                                            </td>
+                                            <td>
+                                                <button
+                                                    onClick={() => {
+                                                        if (
+                                                            confirm(
+                                                                "本当に削除しますか？",
+                                                            )
+                                                        ) {
+                                                            router.delete(
+                                                                "/destroy/" +
+                                                                    record.id,
+                                                                {
+                                                                    onSuccess:
+                                                                        () => {
+                                                                            fetchRecordsByDate(
+                                                                                selectedDate,
+                                                                            );
+                                                                        },
+                                                                },
+                                                            );
+                                                        }
+                                                    }}
+                                                    className="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xs"
+                                                >
+                                                    削除
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button
+                                                    onClick={() => {
+                                                        setEditingRecord(
+                                                            record,
+                                                        );
+                                                        editForm.setData({
+                                                            study_time:
+                                                                record.study_time,
+                                                            category_id:
+                                                                record.category_id ||
+                                                                "",
+                                                            study_date:
+                                                                record.study_date,
+                                                        });
+                                                    }}
+                                                    className="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xs"
+                                                >
+                                                    編集
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )}
+                    </div>
+                </section>
+            </div>
+
+            {editingRecord && (
+                <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+                    <div className="bg-white p-6 rounded-xl w-[400px]">
+                        <h2 className="text-xl font-bold mb-4">学習記録編集</h2>
+
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+
+                                editForm.put(`/update/${editingRecord.id}`, {
+                                    onSuccess: () => {
+                                        setEditingRecord(null);
+                                        fetchRecordsByDate(selectedDate);
+                                    },
+                                });
+                            }}
+                        >
+                            <div className="mb-4">
+                                <label>カテゴリー</label>
+                                <select
+                                    value={editForm.data.category_id}
+                                    onChange={(e) =>
+                                        editForm.setData(
+                                            "category_id",
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="w-full border mt-1"
+                                >
+                                    <option value="">選択してください</option>
+                                    {categories.map((category) => (
+                                        <option
+                                            key={category.id}
+                                            value={category.id}
+                                        >
+                                            {category.category_name}
+                                        </option>
+                                    ))}
+                                </select>
+
+                                {editForm.errors.category_id && (
+                                    <div className="text-red-500">
+                                        {editForm.errors.category_id}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="mb-4">
+                                <label>勉強時間（分）</label>
+                                <input
+                                    type="number"
+                                    value={editForm.data.study_time}
+                                    step="30"
+                                    min="30"
+                                    onChange={(e) =>
+                                        editForm.setData(
+                                            "study_time",
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="w-full border mt-1 text-center"
+                                />
+
+                                {editForm.errors.study_time && (
+                                    <div className="text-red-500">
+                                        {editForm.errors.study_time}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="flex justify-end gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setEditingRecord(null)}
+                                    className="border px-4 py-2 rounded"
+                                >
+                                    キャンセル
+                                </button>
+
+                                <button
+                                    type="submit"
+                                    disabled={editForm.processing}
+                                    className="border px-4 py-2 rounded bg-blue-500 text-white"
+                                >
+                                    更新
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </section>
-        </div>
+            )}
+            {/* カテゴリー一覧モーダル */}
+            {isCategoryModalOpen && (
+                <div
+                    className="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
+                    onClick={() => setIsCategoryModalOpen(false)}
+                >
+                    <div
+                        className="bg-white p-6 rounded-xl w-[500px]"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <h2 className="text-xl font-bold mb-4">
+                            カテゴリー管理
+                        </h2>
+
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+
+                                categoryForm.post("/categories/store", {
+                                    onSuccess: () => {
+                                        categoryForm.reset();
+                                    },
+                                });
+                            }}
+                            className="flex gap-2 mb-4"
+                        >
+                            <input
+                                type="text"
+                                value={categoryForm.data.category_name}
+                                onChange={(e) =>
+                                    categoryForm.setData(
+                                        "category_name",
+                                        e.target.value,
+                                    )
+                                }
+                                className="border px-2 py-1 flex-1"
+                                placeholder="カテゴリー名"
+                            />
+
+                            <button
+                                type="submit"
+                                disabled={categoryForm.processing}
+                                className="border px-4 py-1 rounded"
+                            >
+                                追加
+                            </button>
+                        </form>
+
+                        {categoryForm.errors.category_name && (
+                            <p className="text-red-500">
+                                {categoryForm.errors.category_name}
+                            </p>
+                        )}
+
+                        <div className="max-h-64 overflow-y-auto">
+                            <table className="w-full border-separate border-spacing-y-2">
+                                <thead>
+                                    <tr>
+                                        <th>カテゴリー名</th>
+                                        <th>編集</th>
+                                        <th>削除</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {categories.map((category) => (
+                                        <tr key={category.id}>
+                                            <td>{category.category_name}</td>
+
+                                            <td>
+                                                <button
+                                                    type="button"
+                                                    className="border px-2 py-1 rounded"
+                                                    onClick={() => {
+                                                        setEditingCategory(
+                                                            category,
+                                                        );
+                                                        categoryForm.setData(
+                                                            "category_name",
+                                                            category.category_name,
+                                                        );
+                                                    }}
+                                                >
+                                                    編集
+                                                </button>
+                                            </td>
+
+                                            <td>
+                                                <button
+                                                    type="button"
+                                                    className="border px-2 py-1 rounded"
+                                                    onClick={() => {
+                                                        if (
+                                                            confirm(
+                                                                "本当に削除しますか？",
+                                                            )
+                                                        ) {
+                                                            router.delete(
+                                                                `/categories/destroy/${category.id}`,
+                                                            );
+                                                        }
+                                                    }}
+                                                >
+                                                    削除
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div className="flex justify-end mt-4">
+                            <button
+                                type="button"
+                                className="border px-4 py-2 rounded"
+                                onClick={() => setIsCategoryModalOpen(false)}
+                            >
+                                閉じる
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {editingCategory && (
+                <div
+                    className="fixed inset-0 bg-black/40 flex items-center justify-center z-[60]"
+                    onClick={() => setEditingCategory(null)}
+                >
+                    <div
+                        className="bg-white p-6 rounded-xl w-[400px]"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <h2 className="text-xl font-bold mb-4">
+                            カテゴリー編集
+                        </h2>
+
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+
+                                categoryForm.put(
+                                    `/categories/update/${editingCategory.id}`,
+                                    {
+                                        onSuccess: () => {
+                                            setEditingCategory(null);
+                                            categoryForm.reset();
+                                        },
+                                    },
+                                );
+                            }}
+                        >
+                            <input
+                                type="text"
+                                value={categoryForm.data.category_name}
+                                onChange={(e) =>
+                                    categoryForm.setData(
+                                        "category_name",
+                                        e.target.value,
+                                    )
+                                }
+                                className="w-full border px-2 py-1 mb-4"
+                            />
+
+                            {categoryForm.errors.category_name && (
+                                <p className="text-red-500">
+                                    {categoryForm.errors.category_name}
+                                </p>
+                            )}
+
+                            <div className="flex justify-end gap-2">
+                                <button
+                                    type="button"
+                                    className="border px-4 py-2 rounded"
+                                    onClick={() => setEditingCategory(null)}
+                                >
+                                    キャンセル
+                                </button>
+
+                                <button
+                                    type="submit"
+                                    disabled={categoryForm.processing}
+                                    className="border px-4 py-2 rounded bg-blue-500 text-white"
+                                >
+                                    更新
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+        </>
     );
 }
