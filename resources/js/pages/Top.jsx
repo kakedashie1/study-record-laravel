@@ -61,27 +61,31 @@ export default function Top({ categories, records, todayStudyTime }) {
 
     return (
         <div class="grid grid-cols-4 gap-4">
-            <h1 class="col-span-4 text-2xl font-bold">学習時間記録アプリ</h1>
+            <h1 class="col-span-4 text-2xl font-bold ml-4 mt-4">学習時間記録アプリ</h1>
             <section  class="col-span-4 flex justify-center">
                 <input
                     type="date"
                     value={selectedDate}
                     onChange={handleDateChange}
+                    class="text-2xl"
                 />
             </section>
 
-            <section class="col-span-4 flex justify-center flex-col items-center">
-                <h2>合計勉強時間</h2>
-                <p>
+            <section class="col-span-4 flex justify-center flex-col items-center mt-4 mb-4 ">
+                <div class="bg-stone-50 rounded-lg p-4 flex flex-col items-center">
+                <h2 class="text-xl mb-2">{selectedDate} 勉強時間</h2>
+                <p class="text-lg">
                     {loading
                         ? "読み込み中..."
                         : formatMinutes(displayStudyTime)}
+
                 </p>
                 {errorMessage && <p>{errorMessage}</p>}
+                </div>
             </section>
-            <h2 class="col-span-4 flex justify-center">勉強記録登録</h2>
-            <section class="col-span-4  flex justify-center">
-                <form onSubmit={submit} class="flex flex-row items-center gap-8">
+            <h2 class="col-span-4 flex justify-center text-xl">勉強記録登録</h2>
+            <section class="col-span-4  flex justify-center mb-4">
+                <form onSubmit={submit} class="flex flex-row items-center gap-8 outline-2 outline-offset-2 outline-gray-200 p-4">
                     <div class="">
                         <button
                             type="button"
@@ -123,13 +127,14 @@ export default function Top({ categories, records, todayStudyTime }) {
                         {errors.study_time && <div>{errors.study_time}</div>}
                     </div>
 
-                    <button type="submit" disabled={processing} class="border-1 border-solid">
+                    <button type="submit" disabled={processing} class="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xs">
                         登録
                     </button>
                 </form>
             </section>
 
             <section class="col-span-4  flex justify-center">
+                <div class="h-48 overflow-y-auto  outline-2 outline-offset-2 outline-gray-200">
                 {loading ? (
                     <p>読み込み中...</p>
                 ) : displayRecords.length === 0 ? (
@@ -137,11 +142,11 @@ export default function Top({ categories, records, todayStudyTime }) {
                 ) : (
                     <table  class="table-auto table-fixed border-separate border-spacing-x-8 border-spacing-y-4">
                         <thead>
-                            <tr>
-                                <th>カテゴリー</th>
-                                <th>勉強時間</th>
-                                <th>削除</th>
-                                <th>編集</th>
+                            <tr class="py-6">
+                                <th class="sticky top-0 bg-stone-50">カテゴリー</th>
+                                <th class="sticky top-0 bg-stone-50">勉強時間</th>
+                                <th class="sticky top-0 bg-stone-50">削除</th>
+                                <th class="sticky top-0 bg-stone-50 py-2">編集</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -172,6 +177,7 @@ export default function Top({ categories, records, todayStudyTime }) {
                                                     );
                                                 }
                                             }}
+                                            class="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xs"
                                         >
                                             削除
                                         </button>
@@ -183,6 +189,7 @@ export default function Top({ categories, records, todayStudyTime }) {
                                                     "/edit/" + record.id,
                                                 );
                                             }}
+                                            class="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xs"
                                         >
                                             編集
                                         </button>
@@ -192,6 +199,7 @@ export default function Top({ categories, records, todayStudyTime }) {
                         </tbody>
                     </table>
                 )}
+                </div>
             </section>
         </div>
     );
