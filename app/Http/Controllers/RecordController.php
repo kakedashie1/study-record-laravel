@@ -15,19 +15,20 @@ class RecordController extends Controller
 {
     public function store(Request $request)
     {
+        $validated = $request->validate(Record::$rules, Record::$messages);
         try {
-            $validated = $request->validate(Record::$rules, Record::$messages);
-            $validated['study_date'] = $request->study_date;
             $validated['user_id'] = Auth::id();
             $result = Record::create($validated);
 
-            return redirect()->action([TopController::class, 'index']);
+            return back();
         } catch (\Exception $e) {
             Log::error('記録保存失敗', [
                 'error' => $e->getMessage(),
                 'user_id' => Auth::id(),
             ]);
-            return redirect()->action([TopController::class, 'index'])->withErrors(['error' => 'データの保存に失敗しました。']);
+            return back()->withErrors([
+                'error' => 'データの保存に失敗しました。'
+            ]);
         }
     }
 
@@ -71,23 +72,25 @@ class RecordController extends Controller
 
     public function update($id, Request $request)
     {
+        $validated = $request->validate(Record::$rules, Record::$messages);
+
         try {
             $record = Record::where('id', $id)
                 ->where('user_id', Auth::id())
                 ->firstOrFail();
-            if ($record) {
-                $validated = $request->validate(Record::$rules, Record::$messages);
-                $validated['study_date'] = $request->study_date;
-                $record->update($validated);
-            }
 
-            return redirect()->action([TopController::class, 'index']);
+            $record->update($validated);
+
+            return back();
         } catch (\Exception $e) {
-            Log::error('記録保存失敗', [
+            Log::error('記録更新失敗', [
                 'error' => $e->getMessage(),
                 'user_id' => Auth::id(),
             ]);
-            return redirect()->action([TopController::class, 'index'])->withErrors(['error' => 'データの更新に失敗しました。']);
+
+            return back()->withErrors([
+                'error' => 'データの更新に失敗しました。',
+            ]);
         }
     }
 }

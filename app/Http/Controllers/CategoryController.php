@@ -13,6 +13,7 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::where('user_id', Auth::id())->get();
+
         return Inertia::render('Category', [
             'categories' => $categories,
         ]);
@@ -20,18 +21,23 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        try {
-            $validated = $request->validate(Category::$rules, Category::$messages);
-            $validated['user_id'] = Auth::id();
-            $result = Category::create($validated);
+        $validated = $request->validate(Category::$rules, Category::$messages);
 
-            return redirect()->action([TopController::class, 'index']);
+        try {
+            $validated['user_id'] = Auth::id();
+
+            Category::create($validated);
+
+            return back();
         } catch (\Exception $e) {
-            Log::error('記録保存失敗', [
+            Log::error('カテゴリー保存失敗', [
                 'error' => $e->getMessage(),
                 'user_id' => Auth::id(),
             ]);
-            return redirect()->action([TopController::class, 'index'])->withErrors(['error' => 'データの保存に失敗しました。']);
+
+            return back()->withErrors([
+                'error' => 'データの保存に失敗しました。',
+            ]);
         }
     }
 
@@ -41,17 +47,19 @@ class CategoryController extends Controller
             $category = Category::where('id', $id)
                 ->where('user_id', Auth::id())
                 ->firstOrFail();
-            if ($category) {
-                $category->delete();
-            }
 
-            return redirect()->action([TopController::class, 'index']);
+            $category->delete();
+
+            return back();
         } catch (\Exception $e) {
-            Log::error('記録保存失敗', [
+            Log::error('カテゴリー削除失敗', [
                 'error' => $e->getMessage(),
                 'user_id' => Auth::id(),
             ]);
-            return redirect()->action([TopController::class, 'index'])->withErrors(['error' => 'データの削除に失敗しました。']);
+
+            return back()->withErrors([
+                'error' => 'データの削除に失敗しました。',
+            ]);
         }
     }
 
@@ -60,9 +68,6 @@ class CategoryController extends Controller
         $category = Category::where('id', $id)
             ->where('user_id', Auth::id())
             ->firstOrFail();
-        if (!$category) {
-            return redirect()->action([TopController::class, 'index']);
-        }
 
         return Inertia::render('CategoryEdit', [
             'category' => $category,
@@ -71,23 +76,27 @@ class CategoryController extends Controller
 
     public function update($id, Request $request)
     {
+        $validated = $request->validate(Category::$rules, Category::$messages);
+
         try {
             $category = Category::where('id', $id)
                 ->where('user_id', Auth::id())
                 ->firstOrFail();
-            if ($category) {
-                $validated = $request->validate(Category::$rules, Category::$messages);
-                $validated['user_id'] = Auth::id();
-                $category->update($validated);
-            }
 
-            return redirect()->action([TopController::class, 'index']);
+            $validated['user_id'] = Auth::id();
+
+            $category->update($validated);
+
+            return back();
         } catch (\Exception $e) {
-            Log::error('記録保存失敗', [
+            Log::error('カテゴリー更新失敗', [
                 'error' => $e->getMessage(),
                 'user_id' => Auth::id(),
             ]);
-            return redirect()->action([TopController::class, 'index'])->withErrors(['error' => 'データの更新に失敗しました。']);
+
+            return back()->withErrors([
+                'error' => 'データの更新に失敗しました。',
+            ]);
         }
     }
 }

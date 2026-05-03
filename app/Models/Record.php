@@ -8,7 +8,6 @@ class Record extends Model
 {
     protected $fillable = [
         'study_date',
-        'study_date',
         'study_time',
         'category_id',
         'user_id',

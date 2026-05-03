@@ -58,6 +58,7 @@ export default function Top({ categories, records, todayStudyTime }) {
                 reset();
                 fetchRecordsByDate(selectedDate);
             },
+
         });
     };
 
@@ -132,7 +133,7 @@ export default function Top({ categories, records, todayStudyTime }) {
                                 ))}
                             </select>
                             {errors.category_id && (
-                                <div>{errors.category_id}</div>
+                                <div className="text-red-500">{errors.category_id}</div>
                             )}
                         </div>
 
@@ -151,7 +152,7 @@ export default function Top({ categories, records, todayStudyTime }) {
                                 className="border-2 border-solid mt-2 text-center"
                             />
                             {errors.study_time && (
-                                <div>{errors.study_time}</div>
+                                <div className="text-red-500">{errors.study_time}</div>
                             )}
                         </div>
 
@@ -257,7 +258,7 @@ export default function Top({ categories, records, todayStudyTime }) {
                     </div>
                 </section>
             </div>
-
+            {/* 学習記録編集モーダル */}
             {editingRecord && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
                     <div className="bg-white p-6 rounded-xl w-[400px]">
@@ -408,8 +409,8 @@ export default function Top({ categories, records, todayStudyTime }) {
                                 <thead>
                                     <tr>
                                         <th>カテゴリー名</th>
-                                        <th>編集</th>
                                         <th>削除</th>
+                                        <th>編集</th>
                                     </tr>
                                 </thead>
 
@@ -417,25 +418,6 @@ export default function Top({ categories, records, todayStudyTime }) {
                                     {categories.map((category) => (
                                         <tr key={category.id}>
                                             <td>{category.category_name}</td>
-
-                                            <td>
-                                                <button
-                                                    type="button"
-                                                    className="border px-2 py-1 rounded"
-                                                    onClick={() => {
-                                                        setEditingCategory(
-                                                            category,
-                                                        );
-                                                        categoryForm.setData(
-                                                            "category_name",
-                                                            category.category_name,
-                                                        );
-                                                    }}
-                                                >
-                                                    編集
-                                                </button>
-                                            </td>
-
                                             <td>
                                                 <button
                                                     type="button"
@@ -453,6 +435,23 @@ export default function Top({ categories, records, todayStudyTime }) {
                                                     }}
                                                 >
                                                     削除
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button
+                                                    type="button"
+                                                    className="border px-2 py-1 rounded"
+                                                    onClick={() => {
+                                                        setEditingCategory(
+                                                            category,
+                                                        );
+                                                        categoryForm.setData(
+                                                            "category_name",
+                                                            category.category_name,
+                                                        );
+                                                    }}
+                                                >
+                                                    編集
                                                 </button>
                                             </td>
                                         </tr>
