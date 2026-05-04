@@ -7,22 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     protected $fillable = [
-        'id',
         'category_name',
         'user_id',
     ];
 
     public static $rules = [
-        'category_name' => 'required|string',
-        'user_id' => 'integer'
+        'category_name' => 'required|string|max:50',
     ];
 
     public static $messages = [
         'category_name.required' => 'カテゴリー名は必須です。',
-        'user_id.integer' => 'ユーザーIDは整数で入力してください。',
+        'category_name.string' => 'カテゴリー名は文字で入力してください。',
+        'category_name.max' => 'カテゴリー名は50文字以内で入力してください。',
     ];
 
-     public function user()
+    public function user()
     {
         return $this->belongsTo(User::class);
     }

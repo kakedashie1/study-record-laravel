@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useForm } from "@inertiajs/react";
 import { formatMinutes } from "../utils/format";
 import { router } from "@inertiajs/react";
+import { usePage } from '@inertiajs/react';
 
 export default function Top({
     categories,
@@ -13,6 +14,7 @@ export default function Top({
     totalStudyTime: totalStudyTimeProp,
 }) {
     const today = new Date().toLocaleDateString("sv-SE").slice(0, 10);
+    const { auth } = usePage().props;
     const [weeklyStudyTime, setWeeklyStudyTime] = useState(weeklyStudyTimeProp);
     const [monthlyStudyTime, setMonthlyStudyTime] =
         useState(monthlyStudyTimeProp);
@@ -106,9 +108,21 @@ export default function Top({
     return (
         <>
             <div className="grid grid-cols-4 gap-4">
-                <h1 className="col-span-4 text-2xl font-bold ml-4 mt-4">
+                <section className="col-span-4 flex flex-row justify-between mt-4 mr-4">
+                <h1 className="text-2xl font-bold ml-4">
                     学習時間記録アプリ
                 </h1>
+                <div className="mr-4 ">
+                   <label>{auth.user.name}</label>
+                    <form method="POST" action="/logout" className="inline">
+                    <button
+                        className="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xl ml-4"
+                    >
+                        ログアウト
+                    </button>
+                    </form>
+                </div>
+                </section>
                 <section className="col-span-4 flex justify-center">
                     <input
                         type="date"
@@ -311,8 +325,8 @@ export default function Top({
             </div>
             {/* 学習記録編集モーダル */}
             {editingRecord && (
-                <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-                    <div className="bg-white p-6 rounded-xl w-[400px]">
+                <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50" onClick={() => setEditingRecord(null)}>
+                    <div className="bg-white p-6 rounded-xl w-[400px]" onClick={(e) => e.stopPropagation()}>
                         <h2 className="text-xl font-bold mb-4">学習記録編集</h2>
 
                         <form
@@ -443,7 +457,7 @@ export default function Top({
                             <button
                                 type="submit"
                                 disabled={categoryForm.processing}
-                                className="border px-4 py-1 rounded"
+                                className="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xs"
                             >
                                 追加
                             </button>
@@ -465,14 +479,14 @@ export default function Top({
                                     </tr>
                                 </thead>
 
-                                <tbody>
+                                <tbody className="text-center">
                                     {categories.map((category) => (
                                         <tr key={category.id}>
                                             <td>{category.category_name}</td>
                                             <td>
                                                 <button
                                                     type="button"
-                                                    className="border px-2 py-1 rounded"
+                                                    className="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xs"
                                                     onClick={() => {
                                                         if (
                                                             confirm(
@@ -491,7 +505,7 @@ export default function Top({
                                             <td>
                                                 <button
                                                     type="button"
-                                                    className="border px-2 py-1 rounded"
+                                                    className="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xs"
                                                     onClick={() => {
                                                         setEditingCategory(
                                                             category,
@@ -514,7 +528,7 @@ export default function Top({
                         <div className="flex justify-end mt-4">
                             <button
                                 type="button"
-                                className="border px-4 py-2 rounded"
+                                className="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xs"
                                 onClick={() => setIsCategoryModalOpen(false)}
                             >
                                 閉じる

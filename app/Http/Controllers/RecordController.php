@@ -17,6 +17,9 @@ class RecordController extends Controller
     {
         $validated = $request->validate(Record::$rules, Record::$messages);
         try {
+            Category::where('id', $validated['category_id'])
+                ->where('user_id', Auth::id())
+                ->firstOrFail();
             $validated['user_id'] = Auth::id();
             $result = Record::create($validated);
 
@@ -49,7 +52,8 @@ class RecordController extends Controller
                 'error' => $e->getMessage(),
                 'user_id' => Auth::id(),
             ]);
-            return redirect()->action([TopController::class, 'index'])->withErrors(['error' => 'データの削除に失敗しました。']);
+            return redirect()->action([TopController::class, 'index'])
+                ->withErrors(['error' => 'データの削除に失敗しました。']);
         }
     }
 
@@ -59,10 +63,6 @@ class RecordController extends Controller
             ->where('user_id', Auth::id())
             ->firstOrFail();
         $categories = Category::where('user_id', Auth::id())->get();
-
-        if (!$record) {
-            return redirect()->action([TopController::class, 'index']);
-        }
 
         return Inertia::render('RecordEdit', [
             'record' => $record,
@@ -75,6 +75,9 @@ class RecordController extends Controller
         $validated = $request->validate(Record::$rules, Record::$messages);
 
         try {
+            Category::where('id', $validated['category_id'])
+                ->where('user_id', Auth::id())
+                ->firstOrFail();
             $record = Record::where('id', $id)
                 ->where('user_id', Auth::id())
                 ->firstOrFail();
