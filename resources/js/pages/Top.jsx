@@ -3,8 +3,22 @@ import { useForm } from "@inertiajs/react";
 import { formatMinutes } from "../utils/format";
 import { router } from "@inertiajs/react";
 
-export default function Top({ categories, records, todayStudyTime }) {
+export default function Top({
+    categories,
+    records,
+    todayStudyTime,
+    weeklyStudyTime: weeklyStudyTimeProp,
+    monthlyStudyTime: monthlyStudyTimeProp,
+    yearlyStudyTime: yearlyStudyTimeProp,
+    totalStudyTime: totalStudyTimeProp,
+}) {
     const today = new Date().toLocaleDateString("sv-SE").slice(0, 10);
+    const [weeklyStudyTime, setWeeklyStudyTime] = useState(weeklyStudyTimeProp);
+    const [monthlyStudyTime, setMonthlyStudyTime] =
+        useState(monthlyStudyTimeProp);
+    const [yearlyStudyTime, setYearlyStudyTime] = useState(yearlyStudyTimeProp);
+    const [totalStudyTime, setTotalStudyTime] = useState(totalStudyTimeProp);
+    const [summaryType, setSummaryType] = useState("daily");
     const [editingRecord, setEditingRecord] = useState(null);
     const editForm = useForm({
         study_time: "",
@@ -42,7 +56,11 @@ export default function Top({ categories, records, todayStudyTime }) {
             const result = await response.json();
 
             setDisplayRecords(result.records);
-            setDisplayStudyTime(result.totalStudyTime);
+            setDisplayStudyTime(result.todayStudyTime);
+            setWeeklyStudyTime(result.weeklyStudyTime);
+            setMonthlyStudyTime(result.monthlyStudyTime);
+            setYearlyStudyTime(result.yearlyStudyTime);
+            setTotalStudyTime(result.totalStudyTime);
         } catch (error) {
             setErrorMessage(error.message);
         } finally {
@@ -58,7 +76,6 @@ export default function Top({ categories, records, todayStudyTime }) {
                 reset();
                 fetchRecordsByDate(selectedDate);
             },
-
         });
     };
 
@@ -68,6 +85,22 @@ export default function Top({ categories, records, todayStudyTime }) {
         setSelectedDate(date);
         setData("study_date", date);
         fetchRecordsByDate(date);
+    };
+
+    const summaryLabels = {
+        daily: `${selectedDate} 勉強時間`,
+        weekly: "今週の勉強時間",
+        monthly: "今月の勉強時間",
+        yearly: "今年の勉強時間",
+        total: "総勉強時間",
+    };
+
+    const summaryValues = {
+        daily: displayStudyTime,
+        weekly: weeklyStudyTime,
+        monthly: monthlyStudyTime,
+        yearly: yearlyStudyTime,
+        total: totalStudyTime,
     };
 
     return (
@@ -85,16 +118,30 @@ export default function Top({ categories, records, todayStudyTime }) {
                     />
                 </section>
 
-                <section className="col-span-4 flex justify-center flex-col items-center mt-4 mb-4 ">
-                    <div className="bg-stone-50 rounded-lg p-4 flex flex-col items-center">
+                <section className="col-span-4 flex justify-center flex-row items-center mt-4 mb-4 ">
+                    <div className="flex flex-col items-center outline-2 outline-offset-2 outline-gray-200 p-4">
                         <h2 className="text-xl mb-2">
-                            {selectedDate} 勉強時間
+                            {summaryLabels[summaryType]}
                         </h2>
+
+                        <select
+                            value={summaryType}
+                            onChange={(e) => setSummaryType(e.target.value)}
+                            className="border rounded px-2 py-1 mb-2"
+                        >
+                            <option value="daily">日別</option>
+                            <option value="weekly">週別</option>
+                            <option value="monthly">月別</option>
+                            <option value="yearly">年別</option>
+                            <option value="total">総合計</option>
+                        </select>
+
                         <p className="text-lg">
                             {loading
                                 ? "読み込み中..."
-                                : formatMinutes(displayStudyTime)}
+                                : formatMinutes(summaryValues[summaryType])}
                         </p>
+
                         {errorMessage && <p>{errorMessage}</p>}
                     </div>
                 </section>
@@ -133,7 +180,9 @@ export default function Top({ categories, records, todayStudyTime }) {
                                 ))}
                             </select>
                             {errors.category_id && (
-                                <div className="text-red-500">{errors.category_id}</div>
+                                <div className="text-red-500">
+                                    {errors.category_id}
+                                </div>
                             )}
                         </div>
 
@@ -152,7 +201,9 @@ export default function Top({ categories, records, todayStudyTime }) {
                                 className="border-2 border-solid mt-2 text-center"
                             />
                             {errors.study_time && (
-                                <div className="text-red-500">{errors.study_time}</div>
+                                <div className="text-red-500">
+                                    {errors.study_time}
+                                </div>
                             )}
                         </div>
 
