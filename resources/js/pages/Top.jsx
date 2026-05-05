@@ -164,7 +164,7 @@ export default function Top({
                 </h2>
                 <section className="col-span-4  flex justify-center mb-4">
                     <form
-                        onSubmit={submit}
+                        onSubmit={submit} noValidate
                         className="flex flex-row items-center gap-8 outline-2 outline-offset-2 outline-gray-200 p-4"
                     >
                         <div className="">
