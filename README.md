@@ -56,4 +56,4 @@
 自動テストと手動テスト観点を用意しています。
 
 - 自動テスト：`tests/Feature`
-- 手動テスト観点：[test-spec.xlsx](docs/test-spec.xlsx)
+- 手動テスト観点：[学習時間記録アプリテスト.xlsx](docs/学習時間記録アプリテスト.xlsx)
