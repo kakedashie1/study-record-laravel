@@ -51,11 +51,9 @@
 
 ---
 
-## 工夫した点
+## テスト
 
-### ① 認可（セキュリティ）
+自動テストと手動テスト観点を用意しています。
 
-他人のデータを操作できないように制御
-
-```php
-->where('user_id', Auth::id())
+- 自動テスト：`tests/Feature`
+- 手動テスト観点：[test-spec.xlsx](docs/test-spec.xlsx)
