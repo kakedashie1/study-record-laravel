@@ -1,8 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "@inertiajs/react";
 import { formatMinutes } from "../utils/format";
 import { router } from "@inertiajs/react";
-import { usePage } from '@inertiajs/react';
+import { usePage } from "@inertiajs/react";
+import {
+    BarChart,
+    Bar,
+    XAxis,
+    YAxis,
+    Tooltip,
+    CartesianGrid,
+    ResponsiveContainer,
+    PieChart,
+    Pie,
+    Cell,
+    Legend,
+} from "recharts";
 
 export default function Top({
     categories,
@@ -14,6 +27,13 @@ export default function Top({
     totalStudyTime: totalStudyTimeProp,
 }) {
     const today = new Date().toLocaleDateString("sv-SE").slice(0, 10);
+
+    const [chartDate, setChartDate] = useState(today);
+    const [chartPeriod, setChartPeriod] = useState("daily");
+    const [chartCategoryId, setChartCategoryId] = useState("");
+    const [barChartData, setBarChartData] = useState([]);
+    const [pieChartData, setPieChartData] = useState([]);
+
     const { auth } = usePage().props;
     const [weeklyStudyTime, setWeeklyStudyTime] = useState(weeklyStudyTimeProp);
     const [monthlyStudyTime, setMonthlyStudyTime] =
@@ -70,6 +90,33 @@ export default function Top({
         }
     };
 
+    const fetchChartData = async () => {
+        try {
+            const params = new URLSearchParams({
+                date: chartDate,
+                period: chartPeriod,
+                category_id: chartCategoryId,
+            });
+
+            const response = await fetch(`/records/chart?${params.toString()}`);
+
+            if (!response.ok) {
+                throw new Error("グラフデータの取得に失敗しました");
+            }
+
+            const result = await response.json();
+
+            setBarChartData(result.barChartData);
+            setPieChartData(result.pieChartData);
+        } catch (error) {
+            setErrorMessage(error.message);
+        }
+    };
+
+    useEffect(() => {
+        fetchChartData();
+    }, [chartDate, chartPeriod, chartCategoryId]);
+
     const submit = (e) => {
         e.preventDefault();
 
@@ -107,226 +154,394 @@ export default function Top({
 
     return (
         <>
-            <div className="grid grid-cols-4 gap-4">
-                <section className="col-span-4 flex flex-row justify-between mt-4 mr-4">
-                <h1 className="text-2xl font-bold ml-4">
-                    学習時間記録アプリ
-                </h1>
-                <div className="mr-4 ">
-                   <label>{auth.user.name}</label>
-                    <form method="POST" action="/logout" className="inline">
-                    <button
-                        className="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xl ml-4"
-                    >
-                        ログアウト
-                    </button>
-                    </form>
+            <div className="min-h-screen bg-white p-6">
+                <div className="mb-6 flex items-center justify-between">
+                    <h1 className="text-2xl font-bold ml-4">
+                        学習時間記録アプリ
+                    </h1>
+                    <div className="mr-4 ">
+                        <label>{auth.user.name}</label>
+                        <form method="POST" action="/logout" className="inline">
+                            <button className="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xl ml-4">
+                                ログアウト
+                            </button>
+                        </form>
+                    </div>
                 </div>
-                </section>
-                <section className="col-span-4 flex justify-center">
-                    <input
-                        type="date"
-                        value={selectedDate}
-                        onChange={handleDateChange}
-                        className="text-2xl  cursor-pointer"
-                    />
-                </section>
+                <div className="grid grid-cols-12 gap-4">
+                    <section className="col-span-3  ">
+                        <div className="h-86 overflow-y-auto  outline-2 outline-offset-2 outline-gray-200">
+                            {loading ? (
+                                <p>読み込み中...</p>
+                            ) : displayRecords.length === 0 ? (
+                                <p>この日の記録はありません。</p>
+                            ) : (
+                                <table className="table-auto table-fixed border-separate border-spacing-x-8 border-spacing-y-4">
+                                    <thead>
+                                        <tr className="py-6">
+                                            <th className="sticky top-0 bg-stone-50">
+                                                カテゴリー
+                                            </th>
+                                            <th className="sticky top-0 bg-stone-50">
+                                                勉強時間
+                                            </th>
+                                            <th className="sticky top-0 bg-stone-50">
+                                                削除
+                                            </th>
+                                            <th className="sticky top-0 bg-stone-50 py-2">
+                                                編集
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {displayRecords.map((record) => (
+                                            <tr key={record.id}>
+                                                <td>
+                                                    {record.category
+                                                        ?.category_name ??
+                                                        "未設定"}
+                                                </td>
+                                                <td>
+                                                    {formatMinutes(
+                                                        record.study_time,
+                                                    )}
+                                                </td>
+                                                <td>
+                                                    <button
+                                                        onClick={() => {
+                                                            if (
+                                                                confirm(
+                                                                    "本当に削除しますか？",
+                                                                )
+                                                            ) {
+                                                                router.delete(
+                                                                    "/destroy/" +
+                                                                        record.id,
+                                                                    {
+                                                                        onSuccess:
+                                                                            () => {
+                                                                                fetchRecordsByDate(
+                                                                                    selectedDate,
+                                                                                );
+                                                                            },
+                                                                    },
+                                                                );
+                                                            }
+                                                        }}
+                                                        className="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xs"
+                                                    >
+                                                        削除
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    <button
+                                                        onClick={() => {
+                                                            setEditingRecord(
+                                                                record,
+                                                            );
+                                                            editForm.setData({
+                                                                study_time:
+                                                                    record.study_time,
+                                                                category_id:
+                                                                    record.category_id ||
+                                                                    "",
+                                                                study_date:
+                                                                    record.study_date,
+                                                            });
+                                                        }}
+                                                        className="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xs"
+                                                    >
+                                                        編集
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            )}
+                        </div>
+                    </section>
+                    <section className="col-span-4 ">
+                        <input
+                            type="date"
+                            value={selectedDate}
+                            onChange={handleDateChange}
+                            className="text-2xl  cursor-pointer"
+                        />
+                        <div className="flex flex-col items-center outline-2 outline-offset-2 outline-gray-200 p-4">
+                            <div className="rounded-xl border p-4">
+                                <h2 className="mb-4 text-lg font-bold text-blue-600">
+                                    期間別の合計時間
+                                </h2>
 
-                <section className="col-span-4 flex justify-center flex-row items-center mt-4 mb-4 ">
-                    <div className="flex flex-col items-center outline-2 outline-offset-2 outline-gray-200 p-4">
-                        <h2 className="text-xl mb-2">
-                            {summaryLabels[summaryType]}
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="rounded-lg border p-4">
+                                        <p className="text-sm font-bold">
+                                            日別
+                                        </p>
+                                        <p className="mt-2 text-2xl font-bold">
+                                            {formatMinutes(displayStudyTime)}
+                                        </p>
+                                    </div>
+
+                                    <div className="rounded-lg border p-4">
+                                        <p className="text-sm font-bold">
+                                            週別
+                                        </p>
+                                        <p className="mt-2 text-2xl font-bold">
+                                            {formatMinutes(weeklyStudyTime)}
+                                        </p>
+                                    </div>
+
+                                    <div className="rounded-lg border p-4">
+                                        <p className="text-sm font-bold">
+                                            月別
+                                        </p>
+                                        <p className="mt-2 text-2xl font-bold">
+                                            {formatMinutes(monthlyStudyTime)}
+                                        </p>
+                                    </div>
+
+                                    <div className="rounded-lg border p-4">
+                                        <p className="text-sm font-bold">
+                                            年別
+                                        </p>
+                                        <p className="mt-2 text-2xl font-bold">
+                                            {formatMinutes(yearlyStudyTime)}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="mt-3 rounded-lg border p-4">
+                                    <p className="text-sm font-bold">総合計</p>
+                                    <p className="mt-2 text-2xl font-bold">
+                                        {formatMinutes(totalStudyTime)}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h2 className="col-span-4 flex justify-center text-xl">
+                            学習記録登録
                         </h2>
 
-                        <select
-                            value={summaryType}
-                            onChange={(e) => setSummaryType(e.target.value)}
-                            className="border rounded px-2 py-1 mb-2"
+                        <form
+                            onSubmit={submit}
+                            noValidate
+                            className="flex flex-row items-center gap-8 outline-2 outline-offset-2 outline-gray-200 p-4"
                         >
-                            <option value="daily">日別</option>
-                            <option value="weekly">週別</option>
-                            <option value="monthly">月別</option>
-                            <option value="yearly">年別</option>
-                            <option value="total">総合計</option>
-                        </select>
-
-                        <p className="text-lg">
-                            {loading
-                                ? "読み込み中..."
-                                : formatMinutes(summaryValues[summaryType])}
-                        </p>
-
-                        {errorMessage && <p>{errorMessage}</p>}
-                    </div>
-                </section>
-                <h2 className="col-span-4 flex justify-center text-xl">
-                    学習記録登録
-                </h2>
-                <section className="col-span-4  flex justify-center mb-4">
-                    <form
-                        onSubmit={submit} noValidate
-                        className="flex flex-row items-center gap-8 outline-2 outline-offset-2 outline-gray-200 p-4"
-                    >
-                        <div className="">
-                            <button
-                                type="button"
-                                onClick={() => setIsCategoryModalOpen(true)}
-                                className="border-1 border-solid w-full rounded-xl cursor-pointer hover:bg-blue-500 hover:text-white"
-                            >
-                                カテゴリー
-                            </button>
-                            <br />
-                            <select
-                                value={data.category_id}
-                                onChange={(e) =>
-                                    setData("category_id", e.target.value)
-                                }
-                                className="border-1 border-solid mt-2"
-                            >
-                                <option value="">選択してください</option>
-                                {categories.map((category) => (
-                                    <option
-                                        key={category.id}
-                                        value={category.id}
-                                    >
-                                        {category.category_name}
-                                    </option>
-                                ))}
-                            </select>
-                            {errors.category_id && (
-                                <div className="text-red-500">
-                                    {errors.category_id}
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="flex justify-center flex-col items-center">
-                            <label className="text-center">
-                                勉強時間（分）
-                            </label>
-                            <input
-                                type="number"
-                                value={data.study_time}
-                                step="30"
-                                min="30"
-                                onChange={(e) =>
-                                    setData("study_time", e.target.value)
-                                }
-                                className="border-2 border-solid mt-2 text-center"
-                            />
-                            {errors.study_time && (
-                                <div className="text-red-500">
-                                    {errors.study_time}
-                                </div>
-                            )}
-                        </div>
-
-                        <button
-                            type="submit"
-                            disabled={processing}
-                            className="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xs"
-                        >
-                            登録
-                        </button>
-                    </form>
-                </section>
-
-                <section className="col-span-4  flex justify-center">
-                    <div className="h-48 overflow-y-auto  outline-2 outline-offset-2 outline-gray-200">
-                        {loading ? (
-                            <p>読み込み中...</p>
-                        ) : displayRecords.length === 0 ? (
-                            <p>この日の記録はありません。</p>
-                        ) : (
-                            <table className="table-auto table-fixed border-separate border-spacing-x-8 border-spacing-y-4">
-                                <thead>
-                                    <tr className="py-6">
-                                        <th className="sticky top-0 bg-stone-50">
-                                            カテゴリー
-                                        </th>
-                                        <th className="sticky top-0 bg-stone-50">
-                                            勉強時間
-                                        </th>
-                                        <th className="sticky top-0 bg-stone-50">
-                                            削除
-                                        </th>
-                                        <th className="sticky top-0 bg-stone-50 py-2">
-                                            編集
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {displayRecords.map((record) => (
-                                        <tr key={record.id}>
-                                            <td>
-                                                {record.category
-                                                    ?.category_name ?? "未設定"}
-                                            </td>
-                                            <td>
-                                                {formatMinutes(
-                                                    record.study_time,
-                                                )}
-                                            </td>
-                                            <td>
-                                                <button
-                                                    onClick={() => {
-                                                        if (
-                                                            confirm(
-                                                                "本当に削除しますか？",
-                                                            )
-                                                        ) {
-                                                            router.delete(
-                                                                "/destroy/" +
-                                                                    record.id,
-                                                                {
-                                                                    onSuccess:
-                                                                        () => {
-                                                                            fetchRecordsByDate(
-                                                                                selectedDate,
-                                                                            );
-                                                                        },
-                                                                },
-                                                            );
-                                                        }
-                                                    }}
-                                                    className="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xs"
-                                                >
-                                                    削除
-                                                </button>
-                                            </td>
-                                            <td>
-                                                <button
-                                                    onClick={() => {
-                                                        setEditingRecord(
-                                                            record,
-                                                        );
-                                                        editForm.setData({
-                                                            study_time:
-                                                                record.study_time,
-                                                            category_id:
-                                                                record.category_id ||
-                                                                "",
-                                                            study_date:
-                                                                record.study_date,
-                                                        });
-                                                    }}
-                                                    className="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xs"
-                                                >
-                                                    編集
-                                                </button>
-                                            </td>
-                                        </tr>
+                            <div className="">
+                                <button
+                                    type="button"
+                                    onClick={() => setIsCategoryModalOpen(true)}
+                                    className="border-1 border-solid w-full rounded-xl cursor-pointer hover:bg-blue-500 hover:text-white"
+                                >
+                                    カテゴリー
+                                </button>
+                                <br />
+                                <select
+                                    value={data.category_id}
+                                    onChange={(e) =>
+                                        setData("category_id", e.target.value)
+                                    }
+                                    className="border-1 border-solid mt-2"
+                                >
+                                    <option value="">選択してください</option>
+                                    {categories.map((category) => (
+                                        <option
+                                            key={category.id}
+                                            value={category.id}
+                                        >
+                                            {category.category_name}
+                                        </option>
                                     ))}
-                                </tbody>
-                            </table>
-                        )}
-                    </div>
-                </section>
+                                </select>
+                                {errors.category_id && (
+                                    <div className="text-red-500">
+                                        {errors.category_id}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="flex justify-center flex-col items-center">
+                                <label className="text-center">
+                                    勉強時間（分）
+                                </label>
+                                <input
+                                    type="number"
+                                    value={data.study_time}
+                                    step="30"
+                                    min="30"
+                                    onChange={(e) =>
+                                        setData("study_time", e.target.value)
+                                    }
+                                    className="border-2 border-solid mt-2 text-center"
+                                />
+                                {errors.study_time && (
+                                    <div className="text-red-500">
+                                        {errors.study_time}
+                                    </div>
+                                )}
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={processing}
+                                className="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xs"
+                            >
+                                登録
+                            </button>
+                        </form>
+                    </section>
+                    <section className="col-span-5 rounded-xl border p-4">
+                        <h2 className="mb-4 text-lg font-bold text-blue-600">
+                            学習時間のグラフ
+                        </h2>
+
+                        <div className="mb-4 grid grid-cols-3 gap-3">
+                            <div>
+                                <label className="mb-1 block">日付を選択</label>
+                                <input
+                                    type="date"
+                                    value={chartDate}
+                                    onChange={(e) =>
+                                        setChartDate(e.target.value)
+                                    }
+                                    className="w-full rounded border px-3 py-2"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="mb-1 block">期間</label>
+                                <div className="flex">
+                                    <button
+                                        type="button"
+                                        onClick={() => setChartPeriod("daily")}
+                                        className={`px-3 py-2 ${
+                                            chartPeriod === "daily"
+                                                ? "bg-blue-600 text-white"
+                                                : "border"
+                                        }`}
+                                    >
+                                        日別
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => setChartPeriod("weekly")}
+                                        className={`px-3 py-2 ${
+                                            chartPeriod === "weekly"
+                                                ? "bg-blue-600 text-white"
+                                                : "border"
+                                        }`}
+                                    >
+                                        週別
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            setChartPeriod("monthly")
+                                        }
+                                        className={`px-3 py-2 ${
+                                            chartPeriod === "monthly"
+                                                ? "bg-blue-600 text-white"
+                                                : "border"
+                                        }`}
+                                    >
+                                        月別
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="mb-1 block">カテゴリー</label>
+                                <select
+                                    value={chartCategoryId}
+                                    onChange={(e) =>
+                                        setChartCategoryId(e.target.value)
+                                    }
+                                    className="w-full rounded border px-3 py-2"
+                                >
+                                    <option value="">すべてのカテゴリー</option>
+                                    {categories.map((category) => (
+                                        <option
+                                            key={category.id}
+                                            value={category.id}
+                                        >
+                                            {category.category_name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="mb-4 rounded-xl border p-4">
+                            <h3 className="mb-3 font-bold">
+                                カテゴリー別の学習時間（割合）
+                            </h3>
+
+                            <ResponsiveContainer width="100%" height={260}>
+                                <PieChart>
+                                    <Pie
+                                        data={pieChartData}
+                                        dataKey="total"
+                                        nameKey="category_name"
+                                        cx="50%"
+                                        cy="50%"
+                                        innerRadius={50}
+                                        outerRadius={90}
+                                        label
+                                    >
+                                        {pieChartData.map((entry, index) => (
+                                            <Cell
+                                                key={`cell-${index}`}
+                                                fill={
+                                                    [
+                                                        "#2563eb",
+                                                        "#22c55e",
+                                                        "#f59e0b",
+                                                        "#8b5cf6",
+                                                        "#ef4444",
+                                                    ][index % 5]
+                                                }
+                                            />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip />
+                                    <Legend />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
+
+                        <div className="rounded-xl border p-4">
+                            <h3 className="mb-3 font-bold">
+                                学習時間の推移（棒グラフ）
+                            </h3>
+
+                            <ResponsiveContainer width="100%" height={300}>
+                                <BarChart data={barChartData}>
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis dataKey="label" />
+                                    <YAxis />
+                                    <Tooltip />
+                                    <Bar dataKey="total" fill="#2563eb" />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </div>
+                    </section>
+                </div>
             </div>
             {/* 学習記録編集モーダル */}
             {editingRecord && (
-                <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50" onClick={() => setEditingRecord(null)}>
-                    <div className="bg-white p-6 rounded-xl w-[400px]" onClick={(e) => e.stopPropagation()}>
+                <div
+                    className="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
+                    onClick={() => setEditingRecord(null)}
+                >
+                    <div
+                        className="bg-white p-6 rounded-xl w-[400px]"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <h2 className="text-xl font-bold mb-4">学習記録編集</h2>
 
                         <form

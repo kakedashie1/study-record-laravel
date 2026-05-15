@@ -9,6 +9,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class TopController extends Controller
 {
@@ -85,6 +86,73 @@ class TopController extends Controller
             'monthlyStudyTime' => $monthlyStudyTime,
             'yearlyStudyTime' => $yearlyStudyTime,
             'totalStudyTime' => $totalStudyTime,
+        ]);
+    }
+
+    public function chart(Request $request)
+    {
+        $date = $request->query('date');
+        $period = $request->query('period', 'daily');
+        $categoryId = $request->query('category_id');
+
+        $selectedDate = Carbon::parse($date);
+
+        $baseQuery = Record::where('records.user_id', Auth::id());
+
+        if ($categoryId) {
+            $baseQuery->where('category_id', $categoryId);
+        }
+
+        if ($period === 'daily') {
+            $startDate = $selectedDate->copy()->subDays(6)->toDateString();
+            $endDate = $selectedDate->copy()->toDateString();
+
+            $barChartData = (clone $baseQuery)
+                ->whereBetween('study_date', [$startDate, $endDate])
+                ->selectRaw('study_date as label, SUM(study_time) as total')
+                ->groupBy('study_date')
+                ->orderBy('study_date')
+                ->get();
+        }
+
+        if ($period === 'weekly') {
+            $startDate = $selectedDate->copy()->subWeeks(4)->startOfWeek()->toDateString();
+            $endDate = $selectedDate->copy()->endOfWeek()->toDateString();
+
+            $barChartData = (clone $baseQuery)
+                ->whereBetween('study_date', [$startDate, $endDate])
+                ->selectRaw('strftime("%Y-W%W", study_date) as label, SUM(study_time) as total')
+                ->groupBy('label')
+                ->orderBy('label')
+                ->get();
+        }
+
+        if ($period === 'monthly') {
+            $startDate = $selectedDate->copy()->subMonths(5)->startOfMonth()->toDateString();
+            $endDate = $selectedDate->copy()->endOfMonth()->toDateString();
+
+            $barChartData = (clone $baseQuery)
+                ->whereBetween('study_date', [$startDate, $endDate])
+                ->selectRaw('strftime("%Y-%m", study_date) as label, SUM(study_time) as total')
+                ->groupBy('label')
+                ->orderBy('label')
+                ->get();
+        }
+
+        $pieChartData = Record::join('categories', 'records.category_id', '=', 'categories.id')
+            ->where('records.user_id', Auth::id())
+            ->whereBetween('study_date', [
+                $selectedDate->copy()->startOfMonth()->toDateString(),
+                $selectedDate->copy()->endOfMonth()->toDateString(),
+            ])
+            ->selectRaw('categories.category_name, SUM(records.study_time) as total')
+            ->groupBy('categories.category_name')
+            ->orderByDesc('total')
+            ->get();
+
+        return response()->json([
+            'barChartData' => $barChartData,
+            'pieChartData' => $pieChartData,
         ]);
     }
 }

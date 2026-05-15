@@ -26,4 +26,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/categories/edit/{id}', [App\Http\Controllers\CategoryController::class, 'edit'])->name('categories.edit');
     Route::put('/categories/update/{id}', [App\Http\Controllers\CategoryController::class, 'update'])->name('categories.update');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+    Route::get('/records/chart', [TopController::class, 'chart']);
 });
