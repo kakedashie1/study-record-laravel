@@ -27,7 +27,6 @@ export default function Top({
     totalStudyTime: totalStudyTimeProp,
 }) {
     const today = new Date().toLocaleDateString("sv-SE").slice(0, 10);
-
     const [chartDate, setChartDate] = useState(today);
     const [chartPeriod, setChartPeriod] = useState("daily");
     const [chartCategoryId, setChartCategoryId] = useState("");
@@ -124,6 +123,7 @@ export default function Top({
             onSuccess: () => {
                 reset();
                 fetchRecordsByDate(selectedDate);
+                fetchChartData();
             },
         });
     };
@@ -150,6 +150,91 @@ export default function Top({
         monthly: monthlyStudyTime,
         yearly: yearlyStudyTime,
         total: totalStudyTime,
+    };
+
+    const formatChartLabel = (value) => {
+        if (chartPeriod === "daily") {
+            const date = new Date(value);
+            const weekDays = ["日", "月", "火", "水", "木", "金", "土"];
+
+            return `${date.getMonth() + 1}/${date.getDate()}(${weekDays[date.getDay()]})`;
+        }
+
+        if (chartPeriod === "weekly") {
+            const date = new Date(value);
+
+            return `${date.getMonth() + 1}/${date.getDate()}週`;
+        }
+
+        if (chartPeriod === "monthly") {
+            const [year, month] = value.split("-");
+
+            return `${Number(month)}月`;
+        }
+
+        return value;
+    };
+
+    const getYAxisConfig = () => {
+        if (chartPeriod === "daily") {
+            return {
+                domain: [0, 600],
+                ticks: [0, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600],
+            };
+        }
+
+        if (chartPeriod === "weekly") {
+            return {
+                domain: [0, 3000],
+                ticks: [
+                    0, 300, 600, 900, 1200, 1500, 1800, 2100, 2400, 2700, 3000,
+                ],
+            };
+        }
+
+        if (chartPeriod === "monthly") {
+            return {
+                domain: [0, 6000],
+                ticks: [
+                    0, 600, 1200, 1800, 2400, 3000, 3600, 4200, 4800, 5400,
+                    6000,
+                ],
+            };
+        }
+
+        return {
+            domain: [0, 600],
+            ticks: [0, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600],
+        };
+    };
+
+    const yAxisConfig = getYAxisConfig();
+
+    const getPieChartRangeLabel = () => {
+        const date = new Date(chartDate);
+
+        if (chartPeriod === "daily") {
+            return `${date.getMonth() + 1}/${date.getDate()} の割合`;
+        }
+
+        if (chartPeriod === "weekly") {
+            const startDate = new Date(date);
+            const day = startDate.getDay();
+            const diff = day === 0 ? -6 : 1 - day;
+
+            startDate.setDate(startDate.getDate() + diff);
+
+            const endDate = new Date(startDate);
+            endDate.setDate(startDate.getDate() + 6);
+
+            return `${startDate.getMonth() + 1}/${startDate.getDate()}〜${endDate.getMonth() + 1}/${endDate.getDate()} の割合`;
+        }
+
+        if (chartPeriod === "monthly") {
+            return `${date.getFullYear()}年${date.getMonth() + 1}月 の割合`;
+        }
+
+        return "カテゴリー別の割合";
     };
 
     return (
@@ -223,6 +308,7 @@ export default function Top({
                                                                                 fetchRecordsByDate(
                                                                                     selectedDate,
                                                                                 );
+                                                                                fetchChartData();
                                                                             },
                                                                     },
                                                                 );
@@ -478,40 +564,132 @@ export default function Top({
 
                         <div className="mb-4 rounded-xl border p-4">
                             <h3 className="mb-3 font-bold">
-                                カテゴリー別の学習時間（割合）
+                                カテゴリー別の学習時間（
+                                {getPieChartRangeLabel()}）
                             </h3>
-
-                            <ResponsiveContainer width="100%" height={260}>
-                                <PieChart>
-                                    <Pie
-                                        data={pieChartData}
-                                        dataKey="total"
-                                        nameKey="category_name"
-                                        cx="50%"
-                                        cy="50%"
-                                        innerRadius={50}
-                                        outerRadius={90}
-                                        label
+                            <div className="flex items-center justify-between">
+                                <div className="w-1/2 h-[260px]">
+                                    <ResponsiveContainer
+                                        width="100%"
+                                        height="100%"
                                     >
-                                        {pieChartData.map((entry, index) => (
-                                            <Cell
-                                                key={`cell-${index}`}
-                                                fill={
-                                                    [
-                                                        "#2563eb",
-                                                        "#22c55e",
-                                                        "#f59e0b",
-                                                        "#8b5cf6",
-                                                        "#ef4444",
-                                                    ][index % 5]
+                                        <PieChart>
+                                            <Pie
+                                                data={pieChartData}
+                                                dataKey="total"
+                                                nameKey="category_name"
+                                                cx="50%"
+                                                cy="50%"
+                                                innerRadius={50}
+                                                outerRadius={90}
+                                            >
+                                                {pieChartData.map(
+                                                    (entry, index) => (
+                                                        <Cell
+                                                            key={`cell-${index}`}
+                                                            fill={
+                                                                [
+                                                                    "#2563eb",
+                                                                    "#22c55e",
+                                                                    "#f59e0b",
+                                                                    "#8b5cf6",
+                                                                    "#ef4444",
+                                                                ][index % 5]
+                                                            }
+                                                        />
+                                                    ),
+                                                )}
+                                            </Pie>
+
+                                            <Tooltip
+                                                formatter={(value) =>
+                                                    formatMinutes(value)
                                                 }
                                             />
-                                        ))}
-                                    </Pie>
-                                    <Tooltip />
-                                    <Legend />
-                                </PieChart>
-                            </ResponsiveContainer>
+                                        </PieChart>
+                                    </ResponsiveContainer>
+                                </div>
+
+                                <div className="w-1/2 pl-4">
+                                    <table className="w-full text-sm">
+                                        <thead>
+                                            <tr className="border-b">
+                                                <th className="py-2 text-left">
+                                                    カテゴリ
+                                                </th>
+                                                <th className="py-2 text-right">
+                                                    時間
+                                                </th>
+                                                <th className="py-2 text-right">
+                                                    割合
+                                                </th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            {pieChartData.map((item, index) => {
+                                                const total =
+                                                    pieChartData.reduce(
+                                                        (sum, data) =>
+                                                            sum + data.total,
+                                                        0,
+                                                    );
+
+                                                const percent =
+                                                    total > 0
+                                                        ? (
+                                                              (item.total /
+                                                                  total) *
+                                                              100
+                                                          ).toFixed(1)
+                                                        : 0;
+
+                                                return (
+                                                    <tr
+                                                        key={index}
+                                                        className="border-b"
+                                                    >
+                                                        <td className="py-2">
+                                                            <div className="flex items-center gap-2">
+                                                                <div
+                                                                    className="w-3 h-3 rounded-full"
+                                                                    style={{
+                                                                        backgroundColor:
+                                                                            [
+                                                                                "#2563eb",
+                                                                                "#22c55e",
+                                                                                "#f59e0b",
+                                                                                "#8b5cf6",
+                                                                                "#ef4444",
+                                                                            ][
+                                                                                index %
+                                                                                    5
+                                                                            ],
+                                                                    }}
+                                                                />
+
+                                                                {
+                                                                    item.category_name
+                                                                }
+                                                            </div>
+                                                        </td>
+
+                                                        <td className="py-2 text-right">
+                                                            {formatMinutes(
+                                                                item.total,
+                                                            )}
+                                                        </td>
+
+                                                        <td className="py-2 text-right">
+                                                            {percent}%
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
 
                         <div className="rounded-xl border p-4">
@@ -522,9 +700,27 @@ export default function Top({
                             <ResponsiveContainer width="100%" height={300}>
                                 <BarChart data={barChartData}>
                                     <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="label" />
-                                    <YAxis />
-                                    <Tooltip />
+                                    <XAxis
+                                        dataKey="label"
+                                        interval={0}
+                                        fontSize={11}
+                                        tickFormatter={formatChartLabel}
+                                    />
+                                    <YAxis
+                                        domain={yAxisConfig.domain}
+                                        ticks={yAxisConfig.ticks}
+                                        tickFormatter={(value) =>
+                                            formatMinutes(value)
+                                        }
+                                    />
+                                    <Tooltip
+                                        formatter={(value) =>
+                                            formatMinutes(value)
+                                        }
+                                        labelFormatter={(value) =>
+                                            formatChartLabel(value)
+                                        }
+                                    />
                                     <Bar dataKey="total" fill="#2563eb" />
                                 </BarChart>
                             </ResponsiveContainer>
@@ -552,6 +748,7 @@ export default function Top({
                                     onSuccess: () => {
                                         setEditingRecord(null);
                                         fetchRecordsByDate(selectedDate);
+                                        fetchChartData();
                                     },
                                 });
                             }}
