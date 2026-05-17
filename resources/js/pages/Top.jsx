@@ -358,6 +358,23 @@ export default function Top({
     return (
         <>
             <div className="h-screen overflow-hidden bg-white p-3">
+                {/* ヘッダー */}
+            <div className="mb-3 flex h-10 items-center justify-between">
+                <h1 className="ml-4 text-2xl font-bold">
+                    学習時間記録アプリ
+                </h1>
+
+                <div className="mr-4 flex items-center gap-4">
+                    <label>{auth.user?.name}</label>
+
+                    <form method="POST" action="/logout" className="inline">
+                        <button className="rounded-xl border px-3 py-1 hover:bg-gray-100">
+                            ログアウト
+                        </button>
+                    </form>
+                </div>
+                </div>
+
                 <div className="grid h-[calc(100vh-24px)] grid-cols-12 gap-3 overflow-hidden">
                     {/* ========================= */}
                     {/* 左列 */}
@@ -612,10 +629,6 @@ export default function Top({
                                 </div>
 
                                 <div>
-                                    <label className="mb-1 block text-xs font-bold">
-                                        勉強時間
-                                    </label>
-
                                     <TimeInput
                                         value={data.study_time}
                                         onChange={(value) =>
@@ -1001,10 +1014,6 @@ export default function Top({
                             </div>
 
                             <div className="mb-4">
-                                <label className="mb-1 block text-sm font-bold">
-                                    勉強時間
-                                </label>
-
                                 <TimeInput
                                     value={editForm.data.study_time}
                                     onChange={(value) =>

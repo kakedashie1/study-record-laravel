@@ -1,11 +1,7 @@
 import { useState } from "react";
 import { formatMinutes } from "../utils/format";
 
-export default function TimeInput({
-    value,
-    onChange,
-    min = 0,
-}) {
+export default function TimeInput({ value, onChange, min = 0 }) {
     const [step, setStep] = useState(30);
 
     const changeTime = (amount) => {
@@ -21,33 +17,29 @@ export default function TimeInput({
 
     return (
         <div className="space-y-2">
+            <div className="flex items-center justify-between">
+                <label className="text-xs font-bold">勉強時間</label>
 
-            {/* 調整単位 */}
-            <div>
-                <label className="mb-1 block text-xs font-bold">
-                    調整単位
-                </label>
+                <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold">記録単位</span>
 
-                <select
-                    value={step}
-                    onChange={(e) => setStep(Number(e.target.value))}
-                    className="w-full rounded border px-2 py-1"
-                >
-                    <option value={15}>15分</option>
-                    <option value={30}>30分</option>
-                    <option value={60}>60分</option>
-                </select>
+                    <select
+                        value={step}
+                        onChange={(e) => setStep(Number(e.target.value))}
+                        className="rounded border px-2 py-1 text-xs"
+                    >
+                        <option value={15}>15分</option>
+                        <option value={30}>30分</option>
+                        <option value={60}>60分</option>
+                    </select>
+                </div>
             </div>
 
-            {/* 時間入力 */}
             <div className="flex items-center gap-2">
-
-                {/* 時間表示 */}
                 <div className="flex-1 rounded border px-3 py-2 text-center font-bold">
                     {formatMinutes(Number(value || 0))}
                 </div>
 
-                {/* プラス */}
                 <button
                     type="button"
                     onClick={() => changeTime(step)}
@@ -56,7 +48,6 @@ export default function TimeInput({
                     +{step}
                 </button>
 
-                {/* マイナス */}
                 <button
                     type="button"
                     onClick={() => changeTime(-step)}
