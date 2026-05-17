@@ -89,6 +89,41 @@ class TopController extends Controller
         ]);
     }
 
+    public function dashboard()
+    {
+        $todayStudyTime = Record::where('user_id', Auth::id())
+            ->where('study_date', now()->toDateString())
+            ->sum('study_time');
+
+        $weeklyStudyTime = Record::where('user_id', Auth::id())
+            ->whereBetween('study_date', [
+                now()->startOfWeek()->toDateString(),
+                now()->endOfWeek()->toDateString(),
+            ])
+            ->sum('study_time');
+
+        $monthlyStudyTime = Record::where('user_id', Auth::id())
+            ->whereYear('study_date', now()->year)
+            ->whereMonth('study_date', now()->month)
+            ->sum('study_time');
+
+        $yearlyStudyTime = Record::where('user_id', Auth::id())
+            ->whereYear('study_date', now()->year)
+            ->sum('study_time');
+
+        $totalStudyTime = Record::where('user_id', Auth::id())
+            ->sum('study_time');
+
+        return response()->json([
+            'todayStudyTime' => $todayStudyTime,
+            'weeklyStudyTime' => $weeklyStudyTime,
+            'monthlyStudyTime' => $monthlyStudyTime,
+            'yearlyStudyTime' => $yearlyStudyTime,
+            'totalStudyTime' => $totalStudyTime,
+        ]);
+    }
+
+
     public function chart(Request $request)
     {
         $date = $request->query('date');

@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import { useForm } from "@inertiajs/react";
+import { useForm, router, usePage } from "@inertiajs/react";
 import { formatMinutes } from "../utils/format";
-import { router } from "@inertiajs/react";
-import { usePage } from "@inertiajs/react";
 import TimeInput from "../components/TimeInput";
+
 import {
     BarChart,
     Bar,
@@ -15,7 +14,6 @@ import {
     PieChart,
     Pie,
     Cell,
-    Legend,
 } from "recharts";
 
 export default function Top({
@@ -28,46 +26,112 @@ export default function Top({
     totalStudyTime: totalStudyTimeProp,
 }) {
     const today = new Date().toLocaleDateString("sv-SE").slice(0, 10);
-    const [chartDate, setChartDate] = useState(today);
-    const [chartPeriod, setChartPeriod] = useState("daily");
-    const [chartCategoryId, setChartCategoryId] = useState("");
-    const [barChartData, setBarChartData] = useState([]);
-    const [pieChartData, setPieChartData] = useState([]);
 
     const { auth } = usePage().props;
-    const [weeklyStudyTime, setWeeklyStudyTime] = useState(weeklyStudyTimeProp);
-    const [monthlyStudyTime, setMonthlyStudyTime] =
+
+    /*
+    |--------------------------------------------------------------------------
+    | グラフ
+    |--------------------------------------------------------------------------
+    */
+
+    const [chartDate, setChartDate] = useState(today);
+
+    const [chartPeriod, setChartPeriod] = useState("daily");
+
+    const [chartCategoryId, setChartCategoryId] = useState("");
+
+    const [barChartData, setBarChartData] = useState([]);
+
+    const [pieChartData, setPieChartData] = useState([]);
+
+    /*
+    |--------------------------------------------------------------------------
+    | ダッシュボード
+    |--------------------------------------------------------------------------
+    */
+
+    const [dashboardTodayTime, setDashboardTodayTime] =
+        useState(todayStudyTime);
+
+    const [dashboardWeeklyTime, setDashboardWeeklyTime] =
+        useState(weeklyStudyTimeProp);
+
+    const [dashboardMonthlyTime, setDashboardMonthlyTime] =
         useState(monthlyStudyTimeProp);
-    const [yearlyStudyTime, setYearlyStudyTime] = useState(yearlyStudyTimeProp);
-    const [totalStudyTime, setTotalStudyTime] = useState(totalStudyTimeProp);
-    const [summaryType, setSummaryType] = useState("daily");
+
+    const [dashboardYearlyTime, setDashboardYearlyTime] =
+        useState(yearlyStudyTimeProp);
+
+    const [dashboardTotalTime, setDashboardTotalTime] =
+        useState(totalStudyTimeProp);
+
+    /*
+    |--------------------------------------------------------------------------
+    | 左列一覧
+    |--------------------------------------------------------------------------
+    */
+
+    const [listDate, setListDate] = useState(today);
+
+    const [listRecords, setListRecords] = useState(records);
+
+    const [listStudyTime, setListStudyTime] = useState(todayStudyTime);
+
+    /*
+    |--------------------------------------------------------------------------
+    | モーダル
+    |--------------------------------------------------------------------------
+    */
+
     const [editingRecord, setEditingRecord] = useState(null);
+
+    const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+
+    const [editingCategory, setEditingCategory] = useState(null);
+
+    /*
+    |--------------------------------------------------------------------------
+    | その他
+    |--------------------------------------------------------------------------
+    */
+
+    const [loading, setLoading] = useState(false);
+
+    const [errorMessage, setErrorMessage] = useState("");
+
+    /*
+    |--------------------------------------------------------------------------
+    | Form
+    |--------------------------------------------------------------------------
+    */
+
+    const { data, setData, post, processing, errors, reset } = useForm({
+        study_time: "",
+        category_id: "",
+        study_date: today,
+    });
+
     const editForm = useForm({
         study_time: "",
         category_id: "",
         study_date: "",
     });
-    const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
-    const [editingCategory, setEditingCategory] = useState(null);
+
     const categoryForm = useForm({
         category_name: "",
     });
-    const [selectedDate, setSelectedDate] = useState(today);
-    const [listDate, setListDate] = useState(today);
-    const [displayRecords, setDisplayRecords] = useState(records);
-    const [displayStudyTime, setDisplayStudyTime] = useState(todayStudyTime);
-    const [loading, setLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
 
-    const { data, setData, post, processing, errors, reset } = useForm({
-        study_time: "",
-        category_id: "",
-        study_date: selectedDate,
-    });
+    /*
+    |--------------------------------------------------------------------------
+    | 一覧取得
+    |--------------------------------------------------------------------------
+    */
 
-    const fetchRecordsByDate = async (date) => {
+    const fetchListRecordsByDate = async (date) => {
         try {
             setLoading(true);
+
             setErrorMessage("");
 
             const response = await fetch(`/records/by-date?date=${date}`);
@@ -78,12 +142,9 @@ export default function Top({
 
             const result = await response.json();
 
-            setDisplayRecords(result.records);
-            setDisplayStudyTime(result.todayStudyTime);
-            setWeeklyStudyTime(result.weeklyStudyTime);
-            setMonthlyStudyTime(result.monthlyStudyTime);
-            setYearlyStudyTime(result.yearlyStudyTime);
-            setTotalStudyTime(result.totalStudyTime);
+            setListRecords(result.records);
+
+            setListStudyTime(result.todayStudyTime);
         } catch (error) {
             setErrorMessage(error.message);
         } finally {
@@ -91,12 +152,41 @@ export default function Top({
         }
     };
 
-    const handleListDateChange = (e) => {
-        const date = e.target.value;
+    /*
+    |--------------------------------------------------------------------------
+    | ダッシュボード取得
+    |--------------------------------------------------------------------------
+    */
 
-        setListDate(date);
-        fetchRecordsByDate(date);
+    const fetchDashboardData = async () => {
+        try {
+            const response = await fetch("/records/dashboard");
+
+            if (!response.ok) {
+                throw new Error("ダッシュボードデータ取得失敗");
+            }
+
+            const result = await response.json();
+
+            setDashboardTodayTime(result.todayStudyTime);
+
+            setDashboardWeeklyTime(result.weeklyStudyTime);
+
+            setDashboardMonthlyTime(result.monthlyStudyTime);
+
+            setDashboardYearlyTime(result.yearlyStudyTime);
+
+            setDashboardTotalTime(result.totalStudyTime);
+        } catch (error) {
+            setErrorMessage(error.message);
+        }
     };
+
+    /*
+    |--------------------------------------------------------------------------
+    | グラフ取得
+    |--------------------------------------------------------------------------
+    */
 
     const fetchChartData = async () => {
         try {
@@ -109,21 +199,48 @@ export default function Top({
             const response = await fetch(`/records/chart?${params.toString()}`);
 
             if (!response.ok) {
-                throw new Error("グラフデータの取得に失敗しました");
+                throw new Error("グラフデータ取得失敗");
             }
 
             const result = await response.json();
 
             setBarChartData(result.barChartData);
+
             setPieChartData(result.pieChartData);
         } catch (error) {
             setErrorMessage(error.message);
         }
     };
 
+    /*
+    |--------------------------------------------------------------------------
+    | useEffect
+    |--------------------------------------------------------------------------
+    */
+
     useEffect(() => {
         fetchChartData();
     }, [chartDate, chartPeriod, chartCategoryId]);
+
+    /*
+    |--------------------------------------------------------------------------
+    | 左列日付変更
+    |--------------------------------------------------------------------------
+    */
+
+    const handleListDateChange = (e) => {
+        const date = e.target.value;
+
+        setListDate(date);
+
+        fetchListRecordsByDate(date);
+    };
+
+    /*
+    |--------------------------------------------------------------------------
+    | 登録
+    |--------------------------------------------------------------------------
+    */
 
     const submit = (e) => {
         e.preventDefault();
@@ -131,42 +248,31 @@ export default function Top({
         post("/store", {
             onSuccess: () => {
                 reset();
-                fetchRecordsByDate(selectedDate);
+
+                fetchListRecordsByDate(listDate);
+
+                fetchDashboardData();
+
                 fetchChartData();
             },
         });
     };
 
-    const handleDateChange = (e) => {
-        const date = e.target.value;
-
-        setSelectedDate(date);
-        setData("study_date", date);
-        fetchRecordsByDate(date);
-    };
-
-    const summaryLabels = {
-        daily: `${selectedDate} 勉強時間`,
-        weekly: "今週の勉強時間",
-        monthly: "今月の勉強時間",
-        yearly: "今年の勉強時間",
-        total: "総勉強時間",
-    };
-
-    const summaryValues = {
-        daily: displayStudyTime,
-        weekly: weeklyStudyTime,
-        monthly: monthlyStudyTime,
-        yearly: yearlyStudyTime,
-        total: totalStudyTime,
-    };
+    /*
+    |--------------------------------------------------------------------------
+    | グラフラベル
+    |--------------------------------------------------------------------------
+    */
 
     const formatChartLabel = (value) => {
         if (chartPeriod === "daily") {
             const date = new Date(value);
+
             const weekDays = ["日", "月", "火", "水", "木", "金", "土"];
 
-            return `${date.getMonth() + 1}/${date.getDate()}(${weekDays[date.getDay()]})`;
+            return `${date.getMonth() + 1}/${date.getDate()}(${
+                weekDays[date.getDay()]
+            })`;
         }
 
         if (chartPeriod === "weekly") {
@@ -183,6 +289,12 @@ export default function Top({
 
         return value;
     };
+
+    /*
+    |--------------------------------------------------------------------------
+    | Y軸
+    |--------------------------------------------------------------------------
+    */
 
     const getYAxisConfig = () => {
         if (chartPeriod === "daily") {
@@ -219,6 +331,12 @@ export default function Top({
 
     const yAxisConfig = getYAxisConfig();
 
+    /*
+    |--------------------------------------------------------------------------
+    | 円グラフ期間
+    |--------------------------------------------------------------------------
+    */
+
     const getPieChartRangeLabel = () => {
         const date = new Date(chartDate);
 
@@ -227,42 +345,24 @@ export default function Top({
         }
 
         if (chartPeriod === "weekly") {
-            const startDate = new Date(date);
-            const day = startDate.getDay();
-            const diff = day === 0 ? -6 : 1 - day;
-
-            startDate.setDate(startDate.getDate() + diff);
-
-            const endDate = new Date(startDate);
-            endDate.setDate(startDate.getDate() + 6);
-
-            return `${startDate.getMonth() + 1}/${startDate.getDate()}〜${endDate.getMonth() + 1}/${endDate.getDate()} の割合`;
+            return "週間カテゴリー割合";
         }
 
         if (chartPeriod === "monthly") {
             return `${date.getFullYear()}年${date.getMonth() + 1}月 の割合`;
         }
 
-        return "カテゴリー別の割合";
+        return "カテゴリー別割合";
     };
 
     return (
         <>
             <div className="h-screen overflow-hidden bg-white p-3">
-                <div className="mb-6 flex items-center justify-between">
-                    <h1 className="text-2xl font-bold ml-4">
-                        学習時間記録アプリ
-                    </h1>
-                    <div className="mr-4 ">
-                        <label>{auth.user.name}</label>
-                        <form method="POST" action="/logout" className="inline">
-                            <button className="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xl ml-4">
-                                ログアウト
-                            </button>
-                        </form>
-                    </div>
-                </div>
-                <div className="grid h-[calc(100vh-68px)] grid-cols-12 gap-3 overflow-hidden">
+                <div className="grid h-[calc(100vh-24px)] grid-cols-12 gap-3 overflow-hidden">
+                    {/* ========================= */}
+                    {/* 左列 */}
+                    {/* ========================= */}
+
                     <section className="col-span-3 h-full overflow-hidden rounded-xl border p-4">
                         <div className="mb-3">
                             <h2 className="text-lg font-bold text-blue-600">
@@ -270,7 +370,7 @@ export default function Top({
                             </h2>
 
                             <p className="text-sm text-gray-500">
-                                選択した日の記録を表示します
+                                選択した日の記録
                             </p>
                         </div>
 
@@ -283,6 +383,7 @@ export default function Top({
                                 type="date"
                                 value={listDate}
                                 onChange={handleListDateChange}
+                                className="w-full rounded border px-3 py-2"
                             />
                         </div>
 
@@ -292,19 +393,19 @@ export default function Top({
                             </p>
 
                             <p className="text-xl font-bold text-blue-600">
-                                {formatMinutes(displayStudyTime)}
+                                {formatMinutes(listStudyTime)}
                             </p>
                         </div>
 
                         <div className="h-[calc(100%-170px)] overflow-y-auto space-y-3">
                             {loading ? (
                                 <p>読み込み中...</p>
-                            ) : displayRecords.length === 0 ? (
+                            ) : listRecords.length === 0 ? (
                                 <p className="text-sm text-gray-500">
                                     この日の記録はありません。
                                 </p>
                             ) : (
-                                displayRecords.map((record) => (
+                                listRecords.map((record) => (
                                     <div
                                         key={record.id}
                                         className="rounded-xl border bg-white p-3 shadow-sm"
@@ -326,20 +427,44 @@ export default function Top({
                                             <button
                                                 type="button"
                                                 onClick={() => {
+                                                    setEditingRecord(record);
+
+                                                    editForm.setData({
+                                                        study_time:
+                                                            record.study_time,
+
+                                                        category_id:
+                                                            record.category_id ??
+                                                            "",
+
+                                                        study_date:
+                                                            record.study_date,
+                                                    });
+                                                }}
+                                                className="rounded border px-3 py-1 text-sm hover:bg-blue-500 hover:text-white"
+                                            >
+                                                編集
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                onClick={() => {
                                                     if (
                                                         confirm(
                                                             "本当に削除しますか？",
                                                         )
                                                     ) {
                                                         router.delete(
-                                                            "/destroy/" +
-                                                                record.id,
+                                                            `/destroy/${record.id}`,
                                                             {
                                                                 onSuccess:
                                                                     () => {
-                                                                        fetchRecordsByDate(
-                                                                            selectedDate,
+                                                                        fetchListRecordsByDate(
+                                                                            listDate,
                                                                         );
+
+                                                                        fetchDashboardData();
+
                                                                         fetchChartData();
                                                                     },
                                                             },
@@ -350,99 +475,71 @@ export default function Top({
                                             >
                                                 削除
                                             </button>
-
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                    setEditingRecord(record);
-                                                    editForm.setData({
-                                                        study_time:
-                                                            record.study_time,
-                                                        category_id:
-                                                            record.category_id ||
-                                                            "",
-                                                        study_date:
-                                                            record.study_date,
-                                                    });
-                                                }}
-                                                className="rounded border px-3 py-1 text-sm hover:bg-blue-500 hover:text-white"
-                                            >
-                                                編集
-                                            </button>
                                         </div>
                                     </div>
                                 ))
                             )}
                         </div>
                     </section>
-                    <section className="col-span-4 h-full overflow-hidden rounded-xl border p-4">
-                        <div className="rounded-xl border p-4">
-                            <h2 className="mb-4 text-lg font-bold text-blue-600">
-                                期間別の合計時間
-                            </h2>
 
-                            <div className="w-full flex flex-col gap-3">
-                                {/* 1段目 */}
-                                <div className="grid w-full grid-cols-3 gap-3">
-                                    <div className="w-full rounded-lg border p-3">
-                                        <p className="text-xs font-bold">
-                                            日別
-                                        </p>
+                    {/* ========================= */}
+                    {/* 中央列 */}
+                    {/* ========================= */}
 
-                                        <p className="mt-1 text-lg font-bold">
-                                            {formatMinutes(displayStudyTime)}
-                                        </p>
-                                    </div>
+                    <section className="col-span-4 h-full overflow-y-auto rounded-xl border p-4">
+                        <h2 className="mb-3 text-lg font-bold text-blue-600">
+                            学習時間
+                        </h2>
 
-                                    <div className="w-full rounded-lg border p-3">
-                                        <p className="text-xs font-bold">
-                                            週別
-                                        </p>
+                        <div className="w-full flex flex-col gap-3">
+                            <div className="grid w-full grid-cols-3 gap-3">
+                                <div className="w-full rounded-lg border p-3">
+                                    <p className="text-sm font-bold">日別</p>
 
-                                        <p className="mt-1 text-lg font-bold">
-                                            {formatMinutes(weeklyStudyTime)}
-                                        </p>
-                                    </div>
-
-                                    <div className="w-full rounded-lg border p-3">
-                                        <p className="text-xs font-bold">
-                                            月別
-                                        </p>
-
-                                        <p className="mt-1 text-lg font-bold">
-                                            {formatMinutes(monthlyStudyTime)}
-                                        </p>
-                                    </div>
+                                    <p className="mt-2 text-2xl font-bold">
+                                        {formatMinutes(dashboardTodayTime)}
+                                    </p>
                                 </div>
 
-                                {/* 2段目 */}
-                                <div className="grid w-full grid-cols-2 gap-3">
-                                    <div className="w-full rounded-lg border p-3">
-                                        <p className="text-xs font-bold">
-                                            年別
-                                        </p>
+                                <div className="w-full rounded-lg border p-3">
+                                    <p className="text-sm font-bold">週別</p>
 
-                                        <p className="mt-1 text-lg font-bold">
-                                            {formatMinutes(yearlyStudyTime)}
-                                        </p>
-                                    </div>
+                                    <p className="mt-2 text-2xl font-bold">
+                                        {formatMinutes(dashboardWeeklyTime)}
+                                    </p>
+                                </div>
 
-                                    <div className="w-full rounded-lg border p-3">
-                                        <p className="text-xs font-bold">
-                                            総合計
-                                        </p>
+                                <div className="w-full rounded-lg border p-3">
+                                    <p className="text-sm font-bold">月別</p>
 
-                                        <p className="mt-1 text-lg font-bold">
-                                            {formatMinutes(totalStudyTime)}
-                                        </p>
-                                    </div>
+                                    <p className="mt-2 text-2xl font-bold">
+                                        {formatMinutes(dashboardMonthlyTime)}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="grid w-full grid-cols-2 gap-3">
+                                <div className="w-full rounded-lg border p-3">
+                                    <p className="text-sm font-bold">年別</p>
+
+                                    <p className="mt-2 text-2xl font-bold">
+                                        {formatMinutes(dashboardYearlyTime)}
+                                    </p>
+                                </div>
+
+                                <div className="w-full rounded-lg border p-3">
+                                    <p className="text-sm font-bold">総合計</p>
+
+                                    <p className="mt-2 text-2xl font-bold">
+                                        {formatMinutes(dashboardTotalTime)}
+                                    </p>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="mt-2 rounded-xl border p-3">
-                            <h2 className="mb-4 text-lg font-bold text-blue-600">
-                                🖊 時間記録（新しく記録する）
+                        <div className="mt-4 rounded-xl border p-3">
+                            <h2 className="mb-2 text-base font-bold text-blue-600">
+                                🖊 時間記録
                             </h2>
 
                             <form
@@ -454,7 +551,7 @@ export default function Top({
                                     <div>
                                         <div className="mb-1 flex h-7 items-center">
                                             <label className="text-xs font-bold">
-                                                日付を選択
+                                                日付
                                             </label>
                                         </div>
 
@@ -501,6 +598,7 @@ export default function Top({
                                             <option value="">
                                                 選択してください
                                             </option>
+
                                             {categories.map((category) => (
                                                 <option
                                                     key={category.id}
@@ -512,6 +610,7 @@ export default function Top({
                                         </select>
                                     </div>
                                 </div>
+
                                 <div>
                                     <label className="mb-1 block text-xs font-bold">
                                         勉強時間
@@ -535,24 +634,29 @@ export default function Top({
                                 <button
                                     type="submit"
                                     disabled={processing}
-                                    className="w-full rounded bg-blue-600 px-3 py-1 text-white hover:bg-blue-700"
+                                    className="w-full rounded bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-700"
                                 >
                                     登録する
                                 </button>
                             </form>
                         </div>
                     </section>
+
+                    {/* ========================= */}
+                    {/* 右列 */}
+                    {/* ========================= */}
+
                     <section className="col-span-5 h-full min-h-0 overflow-hidden rounded-xl border p-3 flex flex-col">
                         <h2 className="mb-2 text-lg font-bold text-blue-600 shrink-0">
                             学習時間のグラフ
                         </h2>
 
-                        {/* 条件選択 */}
                         <div className="grid grid-cols-3 gap-2 mb-2 shrink-0">
                             <div>
                                 <label className="mb-1 block text-sm">
-                                    日付を選択
+                                    日付
                                 </label>
+
                                 <input
                                     type="date"
                                     value={chartDate}
@@ -567,6 +671,7 @@ export default function Top({
                                 <label className="mb-1 block text-sm">
                                     期間
                                 </label>
+
                                 <div className="flex">
                                     <button
                                         type="button"
@@ -579,6 +684,7 @@ export default function Top({
                                     >
                                         日別
                                     </button>
+
                                     <button
                                         type="button"
                                         onClick={() => setChartPeriod("weekly")}
@@ -590,6 +696,7 @@ export default function Top({
                                     >
                                         週別
                                     </button>
+
                                     <button
                                         type="button"
                                         onClick={() =>
@@ -610,6 +717,7 @@ export default function Top({
                                 <label className="mb-1 block text-sm">
                                     カテゴリー
                                 </label>
+
                                 <select
                                     value={chartCategoryId}
                                     onChange={(e) =>
@@ -617,7 +725,8 @@ export default function Top({
                                     }
                                     className="w-full rounded border px-2 py-1"
                                 >
-                                    <option value="">すべてのカテゴリー</option>
+                                    <option value="">すべて</option>
+
                                     {categories.map((category) => (
                                         <option
                                             key={category.id}
@@ -630,10 +739,9 @@ export default function Top({
                             </div>
                         </div>
 
-                        {/* 円グラフ */}
                         <div className="rounded-xl border p-2 mb-2 shrink-0">
                             <h3 className="mb-1 text-sm font-bold">
-                                カテゴリー別の学習時間（
+                                カテゴリー別割合（
                                 {getPieChartRangeLabel()}）
                             </h3>
 
@@ -687,11 +795,13 @@ export default function Top({
                                                 <th className="py-1 text-left">
                                                     カテゴリ
                                                 </th>
+
                                                 <th className="py-1 text-right">
                                                     時間
                                                 </th>
+
                                                 <th className="py-1 text-right">
-                                                    割合
+                                                    %
                                                 </th>
                                             </tr>
                                         </thead>
@@ -740,6 +850,7 @@ export default function Top({
                                                                             ],
                                                                     }}
                                                                 />
+
                                                                 {
                                                                     item.category_name
                                                                 }
@@ -764,10 +875,9 @@ export default function Top({
                             </div>
                         </div>
 
-                        {/* 棒グラフ */}
                         <div className="rounded-xl border p-2 flex-1 min-h-0">
                             <h3 className="mb-1 text-sm font-bold">
-                                学習時間の推移（棒グラフ）
+                                学習時間推移
                             </h3>
 
                             <div className="h-full min-h-0">
@@ -795,9 +905,7 @@ export default function Top({
                                             formatter={(value) =>
                                                 formatMinutes(value)
                                             }
-                                            labelFormatter={(value) =>
-                                                formatChartLabel(value)
-                                            }
+                                            labelFormatter={formatChartLabel}
                                         />
 
                                         <Bar dataKey="total" fill="#2563eb" />
@@ -808,17 +916,18 @@ export default function Top({
                     </section>
                 </div>
             </div>
+            );
             {/* 学習記録編集モーダル */}
             {editingRecord && (
                 <div
-                    className="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
                     onClick={() => setEditingRecord(null)}
                 >
                     <div
-                        className="bg-white p-6 rounded-xl w-[400px]"
+                        className="w-[400px] rounded-xl bg-white p-6"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <h2 className="text-xl font-bold mb-4">学習記録編集</h2>
+                        <h2 className="mb-4 text-xl font-bold">学習記録編集</h2>
 
                         <form
                             onSubmit={(e) => {
@@ -827,14 +936,42 @@ export default function Top({
                                 editForm.put(`/update/${editingRecord.id}`, {
                                     onSuccess: () => {
                                         setEditingRecord(null);
-                                        fetchRecordsByDate(listDate);
+                                        fetchListRecordsByDate(listDate);
+                                        fetchDashboardData();
                                         fetchChartData();
                                     },
                                 });
                             }}
                         >
                             <div className="mb-4">
-                                <label>カテゴリー</label>
+                                <label className="mb-1 block text-sm font-bold">
+                                    日付
+                                </label>
+
+                                <input
+                                    type="date"
+                                    value={editForm.data.study_date}
+                                    onChange={(e) =>
+                                        editForm.setData(
+                                            "study_date",
+                                            e.target.value,
+                                        )
+                                    }
+                                    className="w-full rounded border px-2 py-1"
+                                />
+
+                                {editForm.errors.study_date && (
+                                    <p className="text-red-500">
+                                        {editForm.errors.study_date}
+                                    </p>
+                                )}
+                            </div>
+
+                            <div className="mb-4">
+                                <label className="mb-1 block text-sm font-bold">
+                                    カテゴリー
+                                </label>
+
                                 <select
                                     value={editForm.data.category_id}
                                     onChange={(e) =>
@@ -843,7 +980,7 @@ export default function Top({
                                             e.target.value,
                                         )
                                     }
-                                    className="w-full border mt-1"
+                                    className="w-full rounded border px-2 py-1"
                                 >
                                     <option value="">選択してください</option>
                                     {categories.map((category) => (
@@ -857,14 +994,17 @@ export default function Top({
                                 </select>
 
                                 {editForm.errors.category_id && (
-                                    <div className="text-red-500">
+                                    <p className="text-red-500">
                                         {editForm.errors.category_id}
-                                    </div>
+                                    </p>
                                 )}
                             </div>
 
                             <div className="mb-4">
-                                <label>勉強時間（分）</label>
+                                <label className="mb-1 block text-sm font-bold">
+                                    勉強時間
+                                </label>
+
                                 <TimeInput
                                     value={editForm.data.study_time}
                                     onChange={(value) =>
@@ -874,9 +1014,9 @@ export default function Top({
                                 />
 
                                 {editForm.errors.study_time && (
-                                    <div className="text-red-500">
+                                    <p className="text-red-500">
                                         {editForm.errors.study_time}
-                                    </div>
+                                    </p>
                                 )}
                             </div>
 
@@ -884,7 +1024,7 @@ export default function Top({
                                 <button
                                     type="button"
                                     onClick={() => setEditingRecord(null)}
-                                    className="border px-4 py-2 rounded"
+                                    className="rounded border px-4 py-2"
                                 >
                                     キャンセル
                                 </button>
@@ -892,7 +1032,7 @@ export default function Top({
                                 <button
                                     type="submit"
                                     disabled={editForm.processing}
-                                    className="border px-4 py-2 rounded bg-blue-500 text-white"
+                                    className="rounded bg-blue-500 px-4 py-2 text-white"
                                 >
                                     更新
                                 </button>
@@ -901,17 +1041,17 @@ export default function Top({
                     </div>
                 </div>
             )}
-            {/* カテゴリー一覧モーダル */}
+            {/* カテゴリー管理モーダル */}
             {isCategoryModalOpen && (
                 <div
-                    className="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
                     onClick={() => setIsCategoryModalOpen(false)}
                 >
                     <div
-                        className="bg-white p-6 rounded-xl w-[500px]"
+                        className="w-[500px] rounded-xl bg-white p-6"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <h2 className="text-xl font-bold mb-4">
+                        <h2 className="mb-4 text-xl font-bold">
                             カテゴリー管理
                         </h2>
 
@@ -925,7 +1065,7 @@ export default function Top({
                                     },
                                 });
                             }}
-                            className="flex gap-2 mb-4"
+                            className="mb-4 flex gap-2"
                         >
                             <input
                                 type="text"
@@ -936,27 +1076,27 @@ export default function Top({
                                         e.target.value,
                                     )
                                 }
-                                className="border px-2 py-1 flex-1"
+                                className="flex-1 rounded border px-2 py-1"
                                 placeholder="カテゴリー名"
                             />
 
                             <button
                                 type="submit"
                                 disabled={categoryForm.processing}
-                                className="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xs"
+                                className="rounded bg-blue-500 px-4 py-1 text-white"
                             >
                                 追加
                             </button>
                         </form>
 
                         {categoryForm.errors.category_name && (
-                            <p className="text-red-500">
+                            <p className="mb-2 text-red-500">
                                 {categoryForm.errors.category_name}
                             </p>
                         )}
 
                         <div className="max-h-64 overflow-y-auto">
-                            <table className="w-full border-separate border-spacing-y-2">
+                            <table className="w-full border-separate border-spacing-y-2 text-center">
                                 <thead>
                                     <tr>
                                         <th>カテゴリー名</th>
@@ -965,14 +1105,14 @@ export default function Top({
                                     </tr>
                                 </thead>
 
-                                <tbody className="text-center">
+                                <tbody>
                                     {categories.map((category) => (
                                         <tr key={category.id}>
                                             <td>{category.category_name}</td>
+
                                             <td>
                                                 <button
                                                     type="button"
-                                                    className="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xs"
                                                     onClick={() => {
                                                         if (
                                                             confirm(
@@ -984,14 +1124,15 @@ export default function Top({
                                                             );
                                                         }
                                                     }}
+                                                    className="rounded border px-3 py-1 text-sm hover:bg-red-500 hover:text-white"
                                                 >
                                                     削除
                                                 </button>
                                             </td>
+
                                             <td>
                                                 <button
                                                     type="button"
-                                                    className="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xs"
                                                     onClick={() => {
                                                         setEditingCategory(
                                                             category,
@@ -1001,6 +1142,7 @@ export default function Top({
                                                             category.category_name,
                                                         );
                                                     }}
+                                                    className="rounded border px-3 py-1 text-sm hover:bg-blue-500 hover:text-white"
                                                 >
                                                     編集
                                                 </button>
@@ -1011,11 +1153,11 @@ export default function Top({
                             </table>
                         </div>
 
-                        <div className="flex justify-end mt-4">
+                        <div className="mt-4 flex justify-end">
                             <button
                                 type="button"
-                                className="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xs"
                                 onClick={() => setIsCategoryModalOpen(false)}
+                                className="rounded border px-4 py-2"
                             >
                                 閉じる
                             </button>
@@ -1023,17 +1165,17 @@ export default function Top({
                     </div>
                 </div>
             )}
-
+            {/* カテゴリー編集モーダル */}
             {editingCategory && (
                 <div
-                    className="fixed inset-0 bg-black/40 flex items-center justify-center z-[60]"
+                    className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40"
                     onClick={() => setEditingCategory(null)}
                 >
                     <div
-                        className="bg-white p-6 rounded-xl w-[400px]"
+                        className="w-[400px] rounded-xl bg-white p-6"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <h2 className="text-xl font-bold mb-4">
+                        <h2 className="mb-4 text-xl font-bold">
                             カテゴリー編集
                         </h2>
 
@@ -1061,11 +1203,11 @@ export default function Top({
                                         e.target.value,
                                     )
                                 }
-                                className="w-full border px-2 py-1 mb-4"
+                                className="mb-4 w-full rounded border px-2 py-1"
                             />
 
                             {categoryForm.errors.category_name && (
-                                <p className="text-red-500">
+                                <p className="mb-2 text-red-500">
                                     {categoryForm.errors.category_name}
                                 </p>
                             )}
@@ -1073,8 +1215,8 @@ export default function Top({
                             <div className="flex justify-end gap-2">
                                 <button
                                     type="button"
-                                    className="border px-4 py-2 rounded"
                                     onClick={() => setEditingCategory(null)}
+                                    className="rounded border px-4 py-2"
                                 >
                                     キャンセル
                                 </button>
@@ -1082,7 +1224,7 @@ export default function Top({
                                 <button
                                     type="submit"
                                     disabled={categoryForm.processing}
-                                    className="border px-4 py-2 rounded bg-blue-500 text-white"
+                                    className="rounded bg-blue-500 px-4 py-2 text-white"
                                 >
                                     更新
                                 </button>
