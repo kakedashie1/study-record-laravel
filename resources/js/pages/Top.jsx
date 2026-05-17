@@ -348,136 +348,182 @@ export default function Top({
                         </div>
                     </section>
                     <section className="col-span-4 h-full overflow-hidden rounded-xl border p-4">
-                        <input
-                            type="date"
-                            value={selectedDate}
-                            onChange={handleDateChange}
-                            className="text-2xl  cursor-pointer"
-                        />
-                        <div className="flex flex-col items-center outline-2 outline-offset-2 outline-gray-200 p-4">
-                            <div className="rounded-xl border p-3">
+                            <div className="rounded-xl border p-4">
                                 <h2 className="mb-4 text-lg font-bold text-blue-600">
                                     期間別の合計時間
                                 </h2>
 
-                                <div className="grid grid-cols-2 gap-3">
-                                    <div className="rounded-lg border p-3">
-                                        <p className="text-sm font-bold">
-                                            日別
-                                        </p>
-                                        <p className="mt-2 text-2xl font-bold">
-                                            {formatMinutes(displayStudyTime)}
-                                        </p>
+                                <div className="w-full flex flex-col gap-3">
+                                    {/* 1段目 */}
+                                    <div className="grid w-full grid-cols-3 gap-3">
+                                        <div className="w-full rounded-lg border p-3">
+                                            <p className="text-xs font-bold">
+                                                日別
+                                            </p>
+
+                                            <p className="mt-1 text-lg font-bold">
+                                                {formatMinutes(
+                                                    displayStudyTime,
+                                                )}
+                                            </p>
+                                        </div>
+
+                                        <div className="w-full rounded-lg border p-3">
+                                            <p className="text-xs font-bold">
+                                                週別
+                                            </p>
+
+                                            <p className="mt-1 text-lg font-bold">
+                                                {formatMinutes(weeklyStudyTime)}
+                                            </p>
+                                        </div>
+
+                                        <div className="w-full rounded-lg border p-3">
+                                            <p className="text-xs font-bold">
+                                                月別
+                                            </p>
+
+                                            <p className="mt-1 text-lg font-bold">
+                                                {formatMinutes(
+                                                    monthlyStudyTime,
+                                                )}
+                                            </p>
+                                        </div>
                                     </div>
 
-                                    <div className="rounded-lg border p-3">
-                                        <p className="text-sm font-bold">
-                                            週別
-                                        </p>
-                                        <p className="mt-2 text-2xl font-bold">
-                                            {formatMinutes(weeklyStudyTime)}
-                                        </p>
-                                    </div>
+                                    {/* 2段目 */}
+                                    <div className="grid w-full grid-cols-2 gap-3">
+                                        <div className="w-full rounded-lg border p-3">
+                                            <p className="text-xs font-bold">
+                                                年別
+                                            </p>
 
-                                    <div className="rounded-lg border p-3">
-                                        <p className="text-sm font-bold">
-                                            月別
-                                        </p>
-                                        <p className="mt-2 text-2xl font-bold">
-                                            {formatMinutes(monthlyStudyTime)}
-                                        </p>
-                                    </div>
+                                            <p className="mt-1 text-lg font-bold">
+                                                {formatMinutes(yearlyStudyTime)}
+                                            </p>
+                                        </div>
 
-                                    <div className="rounded-lg border p-3">
-                                        <p className="text-sm font-bold">
-                                            年別
-                                        </p>
-                                        <p className="mt-2 text-2xl font-bold">
-                                            {formatMinutes(yearlyStudyTime)}
-                                        </p>
+                                        <div className="w-full rounded-lg border p-3">
+                                            <p className="text-xs font-bold">
+                                                総合計
+                                            </p>
+
+                                            <p className="mt-1 text-lg font-bold">
+                                                {formatMinutes(totalStudyTime)}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-
-                                <div className="mt-3 rounded-lg border p-3">
-                                    <p className="text-sm font-bold">総合計</p>
-                                    <p className="mt-2 text-2xl font-bold">
-                                        {formatMinutes(totalStudyTime)}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <h2 className="col-span-4 flex justify-center text-xl">
-                            学習記録登録
-                        </h2>
-
-                        <form
-                            onSubmit={submit}
-                            noValidate
-                            className="flex flex-row items-center gap-8 outline-2 outline-offset-2 outline-gray-200 p-4"
-                        >
-                            <div className="">
-                                <button
-                                    type="button"
-                                    onClick={() => setIsCategoryModalOpen(true)}
-                                    className="border-1 border-solid w-full rounded-xl cursor-pointer hover:bg-blue-500 hover:text-white"
-                                >
-                                    カテゴリー
-                                </button>
-                                <br />
-                                <select
-                                    value={data.category_id}
-                                    onChange={(e) =>
-                                        setData("category_id", e.target.value)
-                                    }
-                                    className="border-1 border-solid mt-2"
-                                >
-                                    <option value="">選択してください</option>
-                                    {categories.map((category) => (
-                                        <option
-                                            key={category.id}
-                                            value={category.id}
-                                        >
-                                            {category.category_name}
-                                        </option>
-                                    ))}
-                                </select>
-                                {errors.category_id && (
-                                    <div className="text-red-500">
-                                        {errors.category_id}
-                                    </div>
-                                )}
                             </div>
 
-                            <div className="flex justify-center flex-col items-center">
-                                <label className="text-center">
-                                    勉強時間（分）
-                                </label>
-                                <input
-                                    type="number"
-                                    value={data.study_time}
-                                    step="30"
-                                    min="30"
-                                    onChange={(e) =>
-                                        setData("study_time", e.target.value)
-                                    }
-                                    className="border-2 border-solid mt-2 text-center"
-                                />
-                                {errors.study_time && (
-                                    <div className="text-red-500">
-                                        {errors.study_time}
-                                    </div>
-                                )}
-                            </div>
 
-                            <button
-                                type="submit"
-                                disabled={processing}
-                                className="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xs"
+                        <div className="mt-2 rounded-xl border p-3">
+                            <h2 className="mb-4 text-lg font-bold text-blue-600">
+                                🖊 時間記録（新しく記録する）
+                            </h2>
+
+                            <form
+                                onSubmit={submit}
+                                noValidate
+                                className="space-y-2"
                             >
-                                登録
-                            </button>
-                        </form>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <div className="mb-1 flex h-7 items-center">
+                                            <label className="text-xs font-bold">
+                                                日付を選択
+                                            </label>
+                                        </div>
+
+                                        <input
+                                            type="date"
+                                            value={data.study_date}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "study_date",
+                                                    e.target.value,
+                                                )
+                                            }
+                                            className="h-9 w-full rounded border px-2 py-1"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <div className="mb-1 flex h-7 items-center justify-between">
+                                            <label className="text-xs font-bold">
+                                                カテゴリー
+                                            </label>
+
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    setIsCategoryModalOpen(true)
+                                                }
+                                                className="rounded border px-2 py-1 text-xs hover:bg-blue-500 hover:text-white"
+                                            >
+                                                編集
+                                            </button>
+                                        </div>
+
+                                        <select
+                                            value={data.category_id}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "category_id",
+                                                    e.target.value,
+                                                )
+                                            }
+                                            className="h-9 w-full rounded border px-2 py-1"
+                                        >
+                                            <option value="">
+                                                選択してください
+                                            </option>
+                                            {categories.map((category) => (
+                                                <option
+                                                    key={category.id}
+                                                    value={category.id}
+                                                >
+                                                    {category.category_name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="mb-1 block text-sm font-bold">
+                                        勉強時間（分）
+                                    </label>
+                                    <input
+                                        type="number"
+                                        value={data.study_time}
+                                        step="30"
+                                        min="30"
+                                        onChange={(e) =>
+                                            setData(
+                                                "study_time",
+                                                e.target.value,
+                                            )
+                                        }
+                                        className="w-full rounded border px-2 py-1"
+                                        placeholder="例：30"
+                                    />
+
+                                    {errors.study_time && (
+                                        <p className="mt-1 text-sm text-red-500">
+                                            {errors.study_time}
+                                        </p>
+                                    )}
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    disabled={processing}
+                                    className="w-full rounded bg-blue-600 px-3 py-1 text-white hover:bg-blue-700"
+                                >
+                                    登録する
+                                </button>
+                            </form>
+                        </div>
                     </section>
                     <section className="col-span-5 h-full min-h-0 overflow-hidden rounded-xl border p-3 flex flex-col">
                         <h2 className="mb-2 text-lg font-bold text-blue-600 shrink-0">
