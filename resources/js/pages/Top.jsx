@@ -3,6 +3,7 @@ import { useForm } from "@inertiajs/react";
 import { formatMinutes } from "../utils/format";
 import { router } from "@inertiajs/react";
 import { usePage } from "@inertiajs/react";
+import TimeInput from "../components/TimeInput";
 import {
     BarChart,
     Bar,
@@ -348,74 +349,69 @@ export default function Top({
                         </div>
                     </section>
                     <section className="col-span-4 h-full overflow-hidden rounded-xl border p-4">
-                            <div className="rounded-xl border p-4">
-                                <h2 className="mb-4 text-lg font-bold text-blue-600">
-                                    期間別の合計時間
-                                </h2>
+                        <div className="rounded-xl border p-4">
+                            <h2 className="mb-4 text-lg font-bold text-blue-600">
+                                期間別の合計時間
+                            </h2>
 
-                                <div className="w-full flex flex-col gap-3">
-                                    {/* 1段目 */}
-                                    <div className="grid w-full grid-cols-3 gap-3">
-                                        <div className="w-full rounded-lg border p-3">
-                                            <p className="text-xs font-bold">
-                                                日別
-                                            </p>
+                            <div className="w-full flex flex-col gap-3">
+                                {/* 1段目 */}
+                                <div className="grid w-full grid-cols-3 gap-3">
+                                    <div className="w-full rounded-lg border p-3">
+                                        <p className="text-xs font-bold">
+                                            日別
+                                        </p>
 
-                                            <p className="mt-1 text-lg font-bold">
-                                                {formatMinutes(
-                                                    displayStudyTime,
-                                                )}
-                                            </p>
-                                        </div>
-
-                                        <div className="w-full rounded-lg border p-3">
-                                            <p className="text-xs font-bold">
-                                                週別
-                                            </p>
-
-                                            <p className="mt-1 text-lg font-bold">
-                                                {formatMinutes(weeklyStudyTime)}
-                                            </p>
-                                        </div>
-
-                                        <div className="w-full rounded-lg border p-3">
-                                            <p className="text-xs font-bold">
-                                                月別
-                                            </p>
-
-                                            <p className="mt-1 text-lg font-bold">
-                                                {formatMinutes(
-                                                    monthlyStudyTime,
-                                                )}
-                                            </p>
-                                        </div>
+                                        <p className="mt-1 text-lg font-bold">
+                                            {formatMinutes(displayStudyTime)}
+                                        </p>
                                     </div>
 
-                                    {/* 2段目 */}
-                                    <div className="grid w-full grid-cols-2 gap-3">
-                                        <div className="w-full rounded-lg border p-3">
-                                            <p className="text-xs font-bold">
-                                                年別
-                                            </p>
+                                    <div className="w-full rounded-lg border p-3">
+                                        <p className="text-xs font-bold">
+                                            週別
+                                        </p>
 
-                                            <p className="mt-1 text-lg font-bold">
-                                                {formatMinutes(yearlyStudyTime)}
-                                            </p>
-                                        </div>
+                                        <p className="mt-1 text-lg font-bold">
+                                            {formatMinutes(weeklyStudyTime)}
+                                        </p>
+                                    </div>
 
-                                        <div className="w-full rounded-lg border p-3">
-                                            <p className="text-xs font-bold">
-                                                総合計
-                                            </p>
+                                    <div className="w-full rounded-lg border p-3">
+                                        <p className="text-xs font-bold">
+                                            月別
+                                        </p>
 
-                                            <p className="mt-1 text-lg font-bold">
-                                                {formatMinutes(totalStudyTime)}
-                                            </p>
-                                        </div>
+                                        <p className="mt-1 text-lg font-bold">
+                                            {formatMinutes(monthlyStudyTime)}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* 2段目 */}
+                                <div className="grid w-full grid-cols-2 gap-3">
+                                    <div className="w-full rounded-lg border p-3">
+                                        <p className="text-xs font-bold">
+                                            年別
+                                        </p>
+
+                                        <p className="mt-1 text-lg font-bold">
+                                            {formatMinutes(yearlyStudyTime)}
+                                        </p>
+                                    </div>
+
+                                    <div className="w-full rounded-lg border p-3">
+                                        <p className="text-xs font-bold">
+                                            総合計
+                                        </p>
+
+                                        <p className="mt-1 text-lg font-bold">
+                                            {formatMinutes(totalStudyTime)}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
-
+                        </div>
 
                         <div className="mt-2 rounded-xl border p-3">
                             <h2 className="mb-4 text-lg font-bold text-blue-600">
@@ -490,26 +486,20 @@ export default function Top({
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="mb-1 block text-sm font-bold">
-                                        勉強時間（分）
+                                    <label className="mb-1 block text-xs font-bold">
+                                        勉強時間
                                     </label>
-                                    <input
-                                        type="number"
+
+                                    <TimeInput
                                         value={data.study_time}
-                                        step="30"
-                                        min="30"
-                                        onChange={(e) =>
-                                            setData(
-                                                "study_time",
-                                                e.target.value,
-                                            )
+                                        onChange={(value) =>
+                                            setData("study_time", value)
                                         }
-                                        className="w-full rounded border px-2 py-1"
-                                        placeholder="例：30"
+                                        min={30}
                                     />
 
                                     {errors.study_time && (
-                                        <p className="mt-1 text-sm text-red-500">
+                                        <p className="mt-1 text-xs text-red-500">
                                             {errors.study_time}
                                         </p>
                                     )}
@@ -848,18 +838,12 @@ export default function Top({
 
                             <div className="mb-4">
                                 <label>勉強時間（分）</label>
-                                <input
-                                    type="number"
+                                <TimeInput
                                     value={editForm.data.study_time}
-                                    step="30"
-                                    min="30"
-                                    onChange={(e) =>
-                                        editForm.setData(
-                                            "study_time",
-                                            e.target.value,
-                                        )
+                                    onChange={(value) =>
+                                        editForm.setData("study_time", value)
                                     }
-                                    className="w-full border mt-1 text-center"
+                                    min={30}
                                 />
 
                                 {editForm.errors.study_time && (
