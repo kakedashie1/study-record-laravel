@@ -53,6 +53,7 @@ export default function Top({
         category_name: "",
     });
     const [selectedDate, setSelectedDate] = useState(today);
+    const [listDate, setListDate] = useState(today);
     const [displayRecords, setDisplayRecords] = useState(records);
     const [displayStudyTime, setDisplayStudyTime] = useState(todayStudyTime);
     const [loading, setLoading] = useState(false);
@@ -88,6 +89,13 @@ export default function Top({
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleListDateChange = (e) => {
+        const date = e.target.value;
+
+        setListDate(date);
+        fetchRecordsByDate(date);
     };
 
     const fetchChartData = async () => {
@@ -256,95 +264,114 @@ export default function Top({
                 </div>
                 <div className="grid h-[calc(100vh-68px)] grid-cols-12 gap-3 overflow-hidden">
                     <section className="col-span-3 h-full overflow-hidden rounded-xl border p-4">
-                        <div className="h-86 overflow-y-auto  outline-2 outline-offset-2 outline-gray-200">
+                        <div className="mb-3">
+                            <h2 className="text-lg font-bold text-blue-600">
+                                学習記録一覧
+                            </h2>
+
+                            <p className="text-sm text-gray-500">
+                                選択した日の記録を表示します
+                            </p>
+                        </div>
+
+                        <div className="mb-3">
+                            <label className="mb-1 block text-sm font-bold">
+                                日付を選択
+                            </label>
+
+                            <input
+                                type="date"
+                                value={listDate}
+                                onChange={handleListDateChange}
+                            />
+                        </div>
+
+                        <div className="mb-3 rounded-lg bg-blue-50 p-3">
+                            <p className="text-sm text-gray-600">
+                                {listDate} の合計時間
+                            </p>
+
+                            <p className="text-xl font-bold text-blue-600">
+                                {formatMinutes(displayStudyTime)}
+                            </p>
+                        </div>
+
+                        <div className="h-[calc(100%-170px)] overflow-y-auto space-y-3">
                             {loading ? (
                                 <p>読み込み中...</p>
                             ) : displayRecords.length === 0 ? (
-                                <p>この日の記録はありません。</p>
+                                <p className="text-sm text-gray-500">
+                                    この日の記録はありません。
+                                </p>
                             ) : (
-                                <table className="table-auto table-fixed border-separate border-spacing-x-8 border-spacing-y-4">
-                                    <thead>
-                                        <tr className="py-6">
-                                            <th className="sticky top-0 bg-stone-50">
-                                                カテゴリー
-                                            </th>
-                                            <th className="sticky top-0 bg-stone-50">
-                                                勉強時間
-                                            </th>
-                                            <th className="sticky top-0 bg-stone-50">
-                                                削除
-                                            </th>
-                                            <th className="sticky top-0 bg-stone-50 py-2">
-                                                編集
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {displayRecords.map((record) => (
-                                            <tr key={record.id}>
-                                                <td>
-                                                    {record.category
-                                                        ?.category_name ??
-                                                        "未設定"}
-                                                </td>
-                                                <td>
-                                                    {formatMinutes(
-                                                        record.study_time,
-                                                    )}
-                                                </td>
-                                                <td>
-                                                    <button
-                                                        onClick={() => {
-                                                            if (
-                                                                confirm(
-                                                                    "本当に削除しますか？",
-                                                                )
-                                                            ) {
-                                                                router.delete(
-                                                                    "/destroy/" +
-                                                                        record.id,
-                                                                    {
-                                                                        onSuccess:
-                                                                            () => {
-                                                                                fetchRecordsByDate(
-                                                                                    selectedDate,
-                                                                                );
-                                                                                fetchChartData();
-                                                                            },
+                                displayRecords.map((record) => (
+                                    <div
+                                        key={record.id}
+                                        className="rounded-xl border bg-white p-3 shadow-sm"
+                                    >
+                                        <div className="mb-2 flex items-center justify-between">
+                                            <p className="font-bold text-blue-600">
+                                                {record.category
+                                                    ?.category_name ?? "未設定"}
+                                            </p>
+
+                                            <p className="text-lg font-bold">
+                                                {formatMinutes(
+                                                    record.study_time,
+                                                )}
+                                            </p>
+                                        </div>
+
+                                        <div className="flex justify-end gap-2">
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    if (
+                                                        confirm(
+                                                            "本当に削除しますか？",
+                                                        )
+                                                    ) {
+                                                        router.delete(
+                                                            "/destroy/" +
+                                                                record.id,
+                                                            {
+                                                                onSuccess:
+                                                                    () => {
+                                                                        fetchRecordsByDate(
+                                                                            selectedDate,
+                                                                        );
+                                                                        fetchChartData();
                                                                     },
-                                                                );
-                                                            }
-                                                        }}
-                                                        className="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xs"
-                                                    >
-                                                        削除
-                                                    </button>
-                                                </td>
-                                                <td>
-                                                    <button
-                                                        onClick={() => {
-                                                            setEditingRecord(
-                                                                record,
-                                                            );
-                                                            editForm.setData({
-                                                                study_time:
-                                                                    record.study_time,
-                                                                category_id:
-                                                                    record.category_id ||
-                                                                    "",
-                                                                study_date:
-                                                                    record.study_date,
-                                                            });
-                                                        }}
-                                                        className="border-1 border-solid cursor-pointer p-1 transition delay-5 duration-30 ease-in-out hover:-translate-y-1 hover:scale-100 hover:gray-200 hover:shadow-xl rounded-xs"
-                                                    >
-                                                        編集
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                                            },
+                                                        );
+                                                    }
+                                                }}
+                                                className="rounded border px-3 py-1 text-sm hover:bg-red-500 hover:text-white"
+                                            >
+                                                削除
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setEditingRecord(record);
+                                                    editForm.setData({
+                                                        study_time:
+                                                            record.study_time,
+                                                        category_id:
+                                                            record.category_id ||
+                                                            "",
+                                                        study_date:
+                                                            record.study_date,
+                                                    });
+                                                }}
+                                                className="rounded border px-3 py-1 text-sm hover:bg-blue-500 hover:text-white"
+                                            >
+                                                編集
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))
                             )}
                         </div>
                     </section>
@@ -800,7 +827,7 @@ export default function Top({
                                 editForm.put(`/update/${editingRecord.id}`, {
                                     onSuccess: () => {
                                         setEditingRecord(null);
-                                        fetchRecordsByDate(selectedDate);
+                                        fetchRecordsByDate(listDate);
                                         fetchChartData();
                                     },
                                 });
