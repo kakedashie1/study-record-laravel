@@ -359,20 +359,20 @@ export default function Top({
         <>
             <div className="h-screen overflow-hidden bg-white p-3">
                 {/* ヘッダー */}
-            <div className="mb-3 flex h-10 items-center justify-between">
-                <h1 className="ml-4 text-2xl font-bold">
-                    学習時間記録アプリ
-                </h1>
+                <div className="mb-3 flex h-10 items-center justify-between">
+                    <h1 className="ml-4 text-2xl font-bold">
+                        学習時間記録アプリ
+                    </h1>
 
-                <div className="mr-4 flex items-center gap-4">
-                    <label>{auth.user?.name}</label>
+                    <div className="mr-4 flex items-center gap-4">
+                        <label>{auth.user?.name}</label>
 
-                    <form method="POST" action="/logout" className="inline">
-                        <button className="rounded-xl border px-3 py-1 hover:bg-gray-100">
-                            ログアウト
-                        </button>
-                    </form>
-                </div>
+                        <form method="POST" action="/logout" className="inline">
+                            <button className="rounded-xl border px-3 py-1 hover:bg-gray-100">
+                                ログアウト
+                            </button>
+                        </form>
+                    </div>
                 </div>
 
                 <div className="grid h-[calc(100vh-24px)] grid-cols-12 gap-3 overflow-hidden">
@@ -659,14 +659,15 @@ export default function Top({
                     {/* 右列 */}
                     {/* ========================= */}
 
-                    <section className="col-span-5 h-full min-h-0 overflow-hidden rounded-xl border p-3 flex flex-col">
-                        <h2 className="mb-2 text-lg font-bold text-blue-600 shrink-0">
+                    <section className="col-span-5 h-full min-h-0 overflow-hidden rounded-xl border p-2 flex flex-col">
+                        <h2 className="mb-1 text-base font-bold text-blue-600 shrink-0">
                             学習時間のグラフ
                         </h2>
 
+                        {/* 条件 */}
                         <div className="grid grid-cols-3 gap-2 mb-2 shrink-0">
                             <div>
-                                <label className="mb-1 block text-sm">
+                                <label className="mb-1 block text-xs">
                                     日付
                                 </label>
 
@@ -676,20 +677,20 @@ export default function Top({
                                     onChange={(e) =>
                                         setChartDate(e.target.value)
                                     }
-                                    className="w-full rounded border px-2 py-1"
+                                    className="h-8 w-full rounded border px-2 text-sm"
                                 />
                             </div>
 
                             <div>
-                                <label className="mb-1 block text-sm">
+                                <label className="mb-1 block text-xs">
                                     期間
                                 </label>
 
-                                <div className="flex">
+                                <div className="flex h-8">
                                     <button
                                         type="button"
                                         onClick={() => setChartPeriod("daily")}
-                                        className={`px-3 py-1 ${
+                                        className={`flex-1 text-sm ${
                                             chartPeriod === "daily"
                                                 ? "bg-blue-600 text-white"
                                                 : "border"
@@ -701,7 +702,7 @@ export default function Top({
                                     <button
                                         type="button"
                                         onClick={() => setChartPeriod("weekly")}
-                                        className={`px-3 py-1 ${
+                                        className={`flex-1 text-sm ${
                                             chartPeriod === "weekly"
                                                 ? "bg-blue-600 text-white"
                                                 : "border"
@@ -715,7 +716,7 @@ export default function Top({
                                         onClick={() =>
                                             setChartPeriod("monthly")
                                         }
-                                        className={`px-3 py-1 ${
+                                        className={`flex-1 text-sm ${
                                             chartPeriod === "monthly"
                                                 ? "bg-blue-600 text-white"
                                                 : "border"
@@ -727,7 +728,7 @@ export default function Top({
                             </div>
 
                             <div>
-                                <label className="mb-1 block text-sm">
+                                <label className="mb-1 block text-xs">
                                     カテゴリー
                                 </label>
 
@@ -736,7 +737,7 @@ export default function Top({
                                     onChange={(e) =>
                                         setChartCategoryId(e.target.value)
                                     }
-                                    className="w-full rounded border px-2 py-1"
+                                    className="h-8 w-full rounded border px-2 text-sm"
                                 >
                                     <option value="">すべて</option>
 
@@ -752,13 +753,14 @@ export default function Top({
                             </div>
                         </div>
 
-                        <div className="rounded-xl border p-2 mb-2 shrink-0">
-                            <h3 className="mb-1 text-sm font-bold">
+                        {/* 円グラフ */}
+                        <div className="rounded-xl border p-2 mb-2 flex-[0.9] min-h-0 flex flex-col">
+                            <h3 className="mb-1 text-xs font-bold">
                                 カテゴリー別割合（
                                 {getPieChartRangeLabel()}）
                             </h3>
 
-                            <div className="flex h-[170px] items-center">
+                            <div className="flex flex-1 min-h-0 items-center">
                                 <div className="w-1/2 h-full">
                                     <ResponsiveContainer
                                         width="100%"
@@ -771,8 +773,8 @@ export default function Top({
                                                 nameKey="category_name"
                                                 cx="50%"
                                                 cy="50%"
-                                                innerRadius={35}
-                                                outerRadius={60}
+                                                innerRadius={32}
+                                                outerRadius={55}
                                             >
                                                 {pieChartData.map(
                                                     (entry, index) => (
@@ -801,8 +803,8 @@ export default function Top({
                                     </ResponsiveContainer>
                                 </div>
 
-                                <div className="w-1/2 pl-3">
-                                    <table className="w-full text-xs">
+                                <div className="w-1/2 pl-2">
+                                    <table className="w-full text-[10px]">
                                         <thead>
                                             <tr className="border-b">
                                                 <th className="py-1 text-left">
@@ -846,7 +848,7 @@ export default function Top({
                                                         className="border-b"
                                                     >
                                                         <td className="py-1">
-                                                            <div className="flex items-center gap-2">
+                                                            <div className="flex items-center gap-1">
                                                                 <div
                                                                     className="h-2 w-2 rounded-full"
                                                                     style={{
@@ -888,26 +890,38 @@ export default function Top({
                             </div>
                         </div>
 
-                        <div className="rounded-xl border p-2 flex-1 min-h-0">
-                            <h3 className="mb-1 text-sm font-bold">
+                        {/* 棒グラフ */}
+                        <div className="rounded-xl border p-2 flex-1 min-h-0 flex flex-col">
+                            <h3 className="mb-1 text-xs font-bold">
                                 学習時間推移
                             </h3>
 
-                            <div className="h-full min-h-0">
+                            <div className="flex-1 min-h-0">
                                 <ResponsiveContainer width="100%" height="100%">
-                                    <BarChart data={barChartData}>
+                                    <BarChart
+                                        data={barChartData}
+                                        margin={{
+                                            top: 4,
+                                            right: 8,
+                                            left: 0,
+                                            bottom: 20,
+                                        }}
+                                    >
                                         <CartesianGrid strokeDasharray="3 3" />
 
                                         <XAxis
                                             dataKey="label"
                                             interval={0}
-                                            fontSize={10}
+                                            height={32}
+                                            fontSize={12}
+                                            tickMargin={4}
                                             tickFormatter={formatChartLabel}
                                         />
 
                                         <YAxis
                                             domain={yAxisConfig.domain}
                                             ticks={yAxisConfig.ticks}
+                                            width={45}
                                             fontSize={10}
                                             tickFormatter={(value) =>
                                                 formatMinutes(value)
@@ -929,7 +943,7 @@ export default function Top({
                     </section>
                 </div>
             </div>
-            );
+
             {/* 学習記録編集モーダル */}
             {editingRecord && (
                 <div
