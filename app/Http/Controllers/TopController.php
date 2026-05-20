@@ -153,35 +153,101 @@ class TopController extends Controller
     {
         $selectedDate = Carbon::parse($date);
 
-        $startDate = $selectedDate->copy()->subDays(6)->toDateString();
-        $endDate = $selectedDate->copy()->toDateString();
+        $startDate = $selectedDate
+            ->copy()
+            ->subDays(6)
+            ->toDateString();
 
-        $records = $this->baseChartQuery($categoryId)
-            ->whereBetween('study_date', [$startDate, $endDate])
-            ->selectRaw('study_date as label, SUM(study_time) as total')
-            ->groupBy('study_date')
-            ->orderBy('study_date')
-            ->get()
-            ->keyBy('label');
+        $endDate = $selectedDate
+            ->copy()
+            ->toDateString();
+
+        $categories = Category::where(
+            'user_id',
+            Auth::id()
+        )->get([
+            'id',
+            'category_name',
+            'color',
+        ]);
+
+        $records = Record::join(
+            'categories',
+            'records.category_id',
+            '=',
+            'categories.id'
+        )
+            ->where(
+                'records.user_id',
+                Auth::id()
+            )
+            ->whereBetween(
+                'records.study_date',
+                [$startDate, $endDate]
+            )
+            ->when(
+                $categoryId,
+                function ($query) use ($categoryId) {
+                    $query->where(
+                        'records.category_id',
+                        $categoryId
+                    );
+                }
+            )
+            ->selectRaw(
+                'records.study_date,
+             categories.category_name,
+             SUM(records.study_time) as total'
+            )
+            ->groupBy(
+                'records.study_date',
+                'categories.category_name'
+            )
+            ->get();
 
         $barChartData = [];
 
         for (
-            $date = Carbon::parse($startDate);
-            $date->lte(Carbon::parse($endDate));
-            $date->addDay()
+            $day = Carbon::parse($startDate);
+            $day->lte(Carbon::parse($endDate));
+            $day->addDay()
         ) {
-            $dateString = $date->toDateString();
+            $dateString =
+                $day->toDateString();
 
-            $barChartData[] = [
+            $row = [
                 'label' => $dateString,
-                'total' => $records[$dateString]->total ?? 0,
             ];
+
+            foreach (
+                $categories as $category
+            ) {
+                $row[$category->category_name] = 0;
+            }
+
+            foreach (
+                $records->where(
+                    'study_date',
+                    $dateString
+                ) as $record
+            ) {
+                $row[$record->category_name] =
+                    (int) $record->total;
+            }
+
+            $barChartData[] = $row;
         }
 
         return response()->json([
-            'barChartData' => $barChartData,
-            'pieChartData' => $this->pieChartData($selectedDate, 'daily'),
+            'barChartData' =>
+            $barChartData,
+            'pieChartData' =>
+            $this->pieChartData(
+                $selectedDate,
+                'daily'
+            ),
+            'categories' =>
+            $categories,
         ]);
     }
 
@@ -195,12 +261,18 @@ class TopController extends Controller
         $startDate = $startWeek->copy()->startOfWeek()->toDateString();
         $endDate = $endWeek->copy()->endOfWeek()->toDateString();
 
-        $records = $this->baseChartQuery($categoryId)
-            ->whereBetween('study_date', [$startDate, $endDate])
-            ->get()
-            ->groupBy(function ($record) {
-                return Carbon::parse($record->study_date)->startOfWeek()->toDateString();
-            });
+        $categories = Category::where('user_id', Auth::id())
+            ->get(['id', 'category_name', 'color']);
+
+        $records = Record::join('categories', 'records.category_id', '=', 'categories.id')
+            ->where('records.user_id', Auth::id())
+            ->whereBetween('records.study_date', [$startDate, $endDate])
+            ->when($categoryId, function ($query) use ($categoryId) {
+                $query->where('records.category_id', $categoryId);
+            })
+            ->selectRaw('records.study_date, categories.category_name, SUM(records.study_time) as total')
+            ->groupBy('records.study_date', 'categories.category_name')
+            ->get();
 
         $barChartData = [];
 
@@ -208,20 +280,29 @@ class TopController extends Controller
             $weekStart = $week->copy()->startOfWeek()->toDateString();
             $weekEnd = $week->copy()->endOfWeek()->toDateString();
 
-            $total = isset($records[$weekStart])
-                ? $records[$weekStart]->sum('study_time')
-                : 0;
-
-            $barChartData[] = [
+            $row = [
                 'label' => $weekStart,
-                'displayLabel' => Carbon::parse($weekStart)->format('n/j') . '週',
-                'total' => $total,
             ];
+
+            foreach ($categories as $category) {
+                $row[$category->category_name] = 0;
+            }
+
+            foreach ($records as $record) {
+                $recordDate = Carbon::parse($record->study_date)->toDateString();
+
+                if ($recordDate >= $weekStart && $recordDate <= $weekEnd) {
+                    $row[$record->category_name] += (int) $record->total;
+                }
+            }
+
+            $barChartData[] = $row;
         }
 
         return response()->json([
             'barChartData' => $barChartData,
             'pieChartData' => $this->pieChartData($selectedDate, 'weekly'),
+            'categories' => $categories,
         ]);
     }
 
@@ -232,35 +313,50 @@ class TopController extends Controller
         $startMonth = $selectedDate->copy()->startOfYear();
         $endMonth = $selectedDate->copy()->endOfYear();
 
-        $records = $this->baseChartQuery($categoryId)
-            ->whereBetween('study_date', [
+        $categories = Category::where('user_id', Auth::id())
+            ->get(['id', 'category_name', 'color']);
+
+        $records = Record::join('categories', 'records.category_id', '=', 'categories.id')
+            ->where('records.user_id', Auth::id())
+            ->whereBetween('records.study_date', [
                 $startMonth->toDateString(),
                 $endMonth->toDateString(),
             ])
-            ->get()
-            ->groupBy(function ($record) {
-                return Carbon::parse($record->study_date)->format('Y-m');
-            });
+            ->when($categoryId, function ($query) use ($categoryId) {
+                $query->where('records.category_id', $categoryId);
+            })
+            ->selectRaw('records.study_date, categories.category_name, SUM(records.study_time) as total')
+            ->groupBy('records.study_date', 'categories.category_name')
+            ->get();
 
         $barChartData = [];
 
         for ($month = $startMonth->copy(); $month->lte($endMonth); $month->addMonth()) {
             $monthKey = $month->format('Y-m');
 
-            $total = isset($records[$monthKey])
-                ? $records[$monthKey]->sum('study_time')
-                : 0;
-
-            $barChartData[] = [
+            $row = [
                 'label' => $monthKey,
-                'displayLabel' => $month->format('n月'),
-                'total' => $total,
             ];
+
+            foreach ($categories as $category) {
+                $row[$category->category_name] = 0;
+            }
+
+            foreach ($records as $record) {
+                $recordMonth = Carbon::parse($record->study_date)->format('Y-m');
+
+                if ($recordMonth === $monthKey) {
+                    $row[$record->category_name] += (int) $record->total;
+                }
+            }
+
+            $barChartData[] = $row;
         }
 
         return response()->json([
             'barChartData' => $barChartData,
             'pieChartData' => $this->pieChartData($selectedDate, 'monthly'),
+            'categories' => $categories,
         ]);
     }
 
@@ -283,8 +379,8 @@ class TopController extends Controller
         return Record::join('categories', 'records.category_id', '=', 'categories.id')
             ->where('records.user_id', Auth::id())
             ->whereBetween('study_date', [$startDate, $endDate])
-            ->selectRaw('categories.category_name, SUM(records.study_time) as total')
-            ->groupBy('categories.category_name')
+            ->selectRaw('categories.category_name, categories.color, SUM(records.study_time) as total')
+            ->groupBy('categories.category_name', 'categories.color')
             ->orderByDesc('total')
             ->get();
     }

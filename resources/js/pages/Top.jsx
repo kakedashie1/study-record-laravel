@@ -45,6 +45,8 @@ export default function Top({
 
     const [pieChartData, setPieChartData] = useState([]);
 
+    const [chartCategories, setChartCategories] = useState([]);
+
     /*
     |--------------------------------------------------------------------------
     | ダッシュボード
@@ -120,6 +122,7 @@ export default function Top({
 
     const categoryForm = useForm({
         category_name: "",
+        color: "#2563eb",
     });
 
     /*
@@ -207,6 +210,8 @@ export default function Top({
             setBarChartData(result.barChartData);
 
             setPieChartData(result.pieChartData);
+
+            setChartCategories(result.categories);
         } catch (error) {
             setErrorMessage(error.message);
         }
@@ -781,13 +786,8 @@ export default function Top({
                                                         <Cell
                                                             key={`cell-${index}`}
                                                             fill={
-                                                                [
-                                                                    "#2563eb",
-                                                                    "#22c55e",
-                                                                    "#f59e0b",
-                                                                    "#8b5cf6",
-                                                                    "#ef4444",
-                                                                ][index % 5]
+                                                                entry.color ??
+                                                                "#2563eb"
                                                             }
                                                         />
                                                     ),
@@ -853,16 +853,8 @@ export default function Top({
                                                                     className="h-2 w-2 rounded-full"
                                                                     style={{
                                                                         backgroundColor:
-                                                                            [
-                                                                                "#2563eb",
-                                                                                "#22c55e",
-                                                                                "#f59e0b",
-                                                                                "#8b5cf6",
-                                                                                "#ef4444",
-                                                                            ][
-                                                                                index %
-                                                                                    5
-                                                                            ],
+                                                                            item.color ??
+                                                                            "#2563eb",
                                                                     }}
                                                                 />
 
@@ -929,13 +921,98 @@ export default function Top({
                                         />
 
                                         <Tooltip
-                                            formatter={(value) =>
-                                                formatMinutes(value)
-                                            }
-                                            labelFormatter={formatChartLabel}
+                                            content={({
+                                                active,
+                                                payload,
+                                                label,
+                                            }) => {
+                                                if (
+                                                    !active ||
+                                                    !payload ||
+                                                    payload.length === 0
+                                                ) {
+                                                    return null;
+                                                }
+
+                                                const filteredPayload =
+                                                    payload.filter(
+                                                        (item) =>
+                                                            Number(item.value) >
+                                                            0,
+                                                    );
+
+                                                const total =
+                                                    filteredPayload.reduce(
+                                                        (sum, item) =>
+                                                            sum +
+                                                            Number(item.value),
+                                                        0,
+                                                    );
+
+                                                return (
+                                                    <div className="rounded border bg-white p-3 shadow-md text-sm">
+                                                        {/* 日付 */}
+                                                        <p className="mb-2 font-bold">
+                                                            {formatChartLabel(
+                                                                label,
+                                                            )}
+                                                        </p>
+
+                                                        {/* カテゴリー別 */}
+                                                        {filteredPayload.map(
+                                                            (entry, index) => (
+                                                                <div
+                                                                    key={index}
+                                                                    className="flex items-center justify-between gap-4"
+                                                                >
+                                                                    <div className="flex items-center gap-2">
+                                                                        <div
+                                                                            className="h-3 w-3 rounded-full"
+                                                                            style={{
+                                                                                backgroundColor:
+                                                                                    entry.color,
+                                                                            }}
+                                                                        />
+                                                                        <span>
+                                                                            {
+                                                                                entry.name
+                                                                            }
+                                                                        </span>
+                                                                    </div>
+
+                                                                    <span>
+                                                                        {formatMinutes(
+                                                                            entry.value,
+                                                                        )}
+                                                                    </span>
+                                                                </div>
+                                                            ),
+                                                        )}
+
+                                                        {/* 合計 */}
+                                                        <div className="mt-2 border-t pt-2 flex justify-between font-bold">
+                                                            <span>合計</span>
+                                                            <span>
+                                                                {formatMinutes(
+                                                                    total,
+                                                                )}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            }}
                                         />
 
-                                        <Bar dataKey="total" fill="#2563eb" />
+                                        {chartCategories.map((category) => (
+                                            <Bar
+                                                key={category.id}
+                                                dataKey={category.category_name}
+                                                stackId="study"
+                                                fill={
+                                                    category.color ?? "#2563eb"
+                                                }
+                                            />
+                                        ))}
                                     </BarChart>
                                 </ResponsiveContainer>
                             </div>
@@ -1085,6 +1162,10 @@ export default function Top({
                                 categoryForm.post("/categories/store", {
                                     onSuccess: () => {
                                         categoryForm.reset();
+                                        categoryForm.setData(
+                                            "color",
+                                            "#2563eb",
+                                        );
                                     },
                                 });
                             }}
@@ -1101,6 +1182,18 @@ export default function Top({
                                 }
                                 className="flex-1 rounded border px-2 py-1"
                                 placeholder="カテゴリー名"
+                            />
+
+                            <input
+                                type="color"
+                                value={categoryForm.data.color}
+                                onChange={(e) =>
+                                    categoryForm.setData(
+                                        "color",
+                                        e.target.value,
+                                    )
+                                }
+                                className="h-9 w-12"
                             />
 
                             <button
@@ -1123,6 +1216,7 @@ export default function Top({
                                 <thead>
                                     <tr>
                                         <th>カテゴリー名</th>
+                                        <th>色</th>
                                         <th>削除</th>
                                         <th>編集</th>
                                     </tr>
@@ -1134,6 +1228,15 @@ export default function Top({
                                             <td>{category.category_name}</td>
 
                                             <td>
+                                                <td>
+                                                    <div
+                                                        className="mx-auto h-5 w-5 rounded-full border"
+                                                        style={{
+                                                            backgroundColor:
+                                                                category.color,
+                                                        }}
+                                                    />
+                                                </td>
                                                 <button
                                                     type="button"
                                                     onClick={() => {
@@ -1160,10 +1263,13 @@ export default function Top({
                                                         setEditingCategory(
                                                             category,
                                                         );
-                                                        categoryForm.setData(
-                                                            "category_name",
-                                                            category.category_name,
-                                                        );
+                                                        categoryForm.setData({
+                                                            category_name:
+                                                                category.category_name,
+                                                            color:
+                                                                category.color ??
+                                                                "#2563eb",
+                                                        });
                                                     }}
                                                     className="rounded border px-3 py-1 text-sm hover:bg-blue-500 hover:text-white"
                                                 >
@@ -1234,6 +1340,17 @@ export default function Top({
                                     {categoryForm.errors.category_name}
                                 </p>
                             )}
+                            <input
+                                type="color"
+                                value={categoryForm.data.color}
+                                onChange={(e) =>
+                                    categoryForm.setData(
+                                        "color",
+                                        e.target.value,
+                                    )
+                                }
+                                className="mb-4 h-10 w-full"
+                            />
 
                             <div className="flex justify-end gap-2">
                                 <button
