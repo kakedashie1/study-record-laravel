@@ -102,6 +102,8 @@ export default function Top({
 
     const [errorMessage, setErrorMessage] = useState("");
 
+    const [activePanel, setActivePanel] = useState("center");
+
     /*
     |--------------------------------------------------------------------------
     | Form
@@ -916,7 +918,9 @@ export default function Top({
                                             width={45}
                                             fontSize={10}
                                             tickFormatter={(value) =>
-                                                formatMinutes(value)
+                                                Number(value) === 0
+                                                    ? ""
+                                                    : formatMinutes(value)
                                             }
                                         />
 
@@ -1212,31 +1216,43 @@ export default function Top({
                         )}
 
                         <div className="max-h-64 overflow-y-auto">
-                            <table className="w-full border-separate border-spacing-y-2 text-center">
+                            <table className="w-full table-fixed border-separate border-spacing-y-2 text-center">
                                 <thead>
                                     <tr>
-                                        <th>カテゴリー名</th>
-                                        <th>色</th>
-                                        <th>削除</th>
-                                        <th>編集</th>
+                                        <th className="w-2/5 px-2 py-2 text-center">
+                                            カテゴリー名
+                                        </th>
+                                        <th className="w-1/5 px-2 py-2 text-center">
+                                            色
+                                        </th>
+                                        <th className="w-1/5 px-2 py-2 text-center">
+                                            削除
+                                        </th>
+                                        <th className="w-1/5 px-2 py-2 text-center">
+                                            編集
+                                        </th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
                                     {categories.map((category) => (
                                         <tr key={category.id}>
-                                            <td>{category.category_name}</td>
+                                            <td className="px-2 py-2 text-center align-middle">
+                                                {category.category_name}
+                                            </td>
 
-                                            <td>
-                                                <td>
-                                                    <div
-                                                        className="mx-auto h-5 w-5 rounded-full border"
-                                                        style={{
-                                                            backgroundColor:
-                                                                category.color,
-                                                        }}
-                                                    />
-                                                </td>
+                                            <td className="px-2 py-2 text-center align-middle">
+                                                <div
+                                                    className="mx-auto h-5 w-5 rounded-full border"
+                                                    style={{
+                                                        backgroundColor:
+                                                            category.color ??
+                                                            "#2563eb",
+                                                    }}
+                                                />
+                                            </td>
+
+                                            <td className="px-2 py-2 text-center align-middle">
                                                 <button
                                                     type="button"
                                                     onClick={() => {
@@ -1256,7 +1272,7 @@ export default function Top({
                                                 </button>
                                             </td>
 
-                                            <td>
+                                            <td className="px-2 py-2 text-center align-middle">
                                                 <button
                                                     type="button"
                                                     onClick={() => {
