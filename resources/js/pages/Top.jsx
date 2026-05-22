@@ -366,28 +366,36 @@ export default function Top({
         <>
             <div className="h-screen overflow-hidden bg-white p-3">
                 {/* ヘッダー */}
-                <div className="mb-3 flex h-10 items-center justify-between">
-                    <h1 className="ml-4 text-2xl font-bold">
+                <div className="mb-3 flex items-center justify-between rounded-xl border bg-white px-3 py-2 lg:ml-0 lg:mr-0 lg:border-0 lg:px-4">
+                    {/* 左：タイトル */}
+                    <h1 className="truncate text-base font-bold sm:text-lg md:text-xl lg:text-2xl">
                         学習時間記録アプリ
                     </h1>
 
-                    <div className="mr-4 flex items-center gap-4">
-                        <label>{auth.user?.name}</label>
+                    {/* 右：ユーザー名 + ログアウト */}
+                    <div className="ml-3 flex shrink-0 items-center gap-2 sm:gap-3">
+                        <label className="hidden text-sm text-gray-600 sm:block">
+                            {auth.user?.name}
+                        </label>
 
                         <form method="POST" action="/logout" className="inline">
-                            <button className="rounded-xl border px-3 py-1 hover:bg-gray-100">
+                            <button className="rounded-xl border px-2 py-1 text-xs hover:bg-gray-100 sm:px-3 sm:text-sm">
                                 ログアウト
                             </button>
                         </form>
                     </div>
                 </div>
 
-                <div className="grid h-[calc(100vh-24px)] grid-cols-12 gap-3 overflow-hidden">
+                <div className="grid h-[calc(100vh-80px)] grid-cols-1 gap-3 overflow-hidden lg:h-[calc(100vh-24px)] lg:grid-cols-12">
                     {/* ========================= */}
                     {/* 左列 */}
                     {/* ========================= */}
 
-                    <section className="col-span-3 h-full overflow-hidden rounded-xl border p-4">
+                    <section
+                        className={`${
+                            activePanel === "left" ? "block" : "hidden"
+                        } h-full overflow-hidden rounded-xl border p-4 lg:col-span-3 lg:block`}
+                    >
                         <div className="mb-3">
                             <h2 className="text-lg font-bold text-blue-600">
                                 学習記録一覧
@@ -510,13 +518,17 @@ export default function Top({
                     {/* 中央列 */}
                     {/* ========================= */}
 
-                    <section className="col-span-4 h-full overflow-y-auto rounded-xl border p-4">
+                    <section
+                        className={`${
+                            activePanel === "center" ? "block" : "hidden"
+                        } h-full overflow-y-auto rounded-xl border p-4 lg:col-span-4 lg:block`}
+                    >
                         <h2 className="mb-3 text-lg font-bold text-blue-600">
                             学習時間
                         </h2>
 
                         <div className="w-full flex flex-col gap-3">
-                            <div className="grid w-full grid-cols-3 gap-3">
+                            <div className="grid w-full grid-cols-1 gap-3 lg:grid-cols-3">
                                 <div className="w-full rounded-lg border p-3">
                                     <p className="text-sm font-bold">日別</p>
 
@@ -542,7 +554,7 @@ export default function Top({
                                 </div>
                             </div>
 
-                            <div className="grid w-full grid-cols-2 gap-3">
+                            <div className="grid w-full grid-cols-2 gap-3 md:grid-cols-1 lg:grid-cols-2">
                                 <div className="w-full rounded-lg border p-3">
                                     <p className="text-sm font-bold">年別</p>
 
@@ -666,7 +678,11 @@ export default function Top({
                     {/* 右列 */}
                     {/* ========================= */}
 
-                    <section className="col-span-5 h-full min-h-0 overflow-hidden rounded-xl border p-2 flex flex-col">
+                    <section
+                        className={`${
+                            activePanel === "right" ? "flex" : "hidden"
+                        } h-full min-h-0 overflow-hidden rounded-xl border p-2 flex-col lg:col-span-5 lg:flex`}
+                    >
                         <h2 className="mb-1 text-base font-bold text-blue-600 shrink-0">
                             学習時間のグラフ
                         </h2>
@@ -1023,6 +1039,44 @@ export default function Top({
                         </div>
                     </section>
                 </div>
+            </div>
+
+            <div className="fixed bottom-0 left-0 z-40 grid h-14 w-full grid-cols-3 border-t bg-white lg:hidden">
+                <button
+                    type="button"
+                    onClick={() => setActivePanel("left")}
+                    className={`${
+                        activePanel === "left"
+                            ? "font-bold text-blue-600"
+                            : "text-gray-500"
+                    }`}
+                >
+                    一覧
+                </button>
+
+                <button
+                    type="button"
+                    onClick={() => setActivePanel("center")}
+                    className={`${
+                        activePanel === "center"
+                            ? "font-bold text-blue-600"
+                            : "text-gray-500"
+                    }`}
+                >
+                    記録
+                </button>
+
+                <button
+                    type="button"
+                    onClick={() => setActivePanel("right")}
+                    className={`${
+                        activePanel === "right"
+                            ? "font-bold text-blue-600"
+                            : "text-gray-500"
+                    }`}
+                >
+                    グラフ
+                </button>
             </div>
 
             {/* 学習記録編集モーダル */}
