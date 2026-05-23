@@ -149,7 +149,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug((string) env('APP_NAME', 'laravel')).'-database-'),
+            'prefix' => env('REDIS_PREFIX', Str::slug((string) env('APP_NAME', 'laravel')) . '-database-'),
             'persistent' => env('REDIS_PERSISTENT', false),
         ],
 
@@ -179,6 +179,14 @@ return [
             'backoff_cap' => env('REDIS_BACKOFF_CAP', 1000),
         ],
 
+    ],
+
+    'sqlite_old' => [
+        'driver' => 'sqlite',
+        'url' => env('DATABASE_URL'),
+        'database' => env('SQLITE_OLD_DATABASE', database_path('database_backup.sqlite')),
+        'prefix' => '',
+        'foreign_key_constraints' => true,
     ],
 
 ];
