@@ -532,7 +532,7 @@ export default function Top({
                                 <div className="w-full rounded-lg border p-3">
                                     <p className="text-sm font-bold">日別</p>
 
-                                    <p className="mt-2 text-2xl font-bold">
+                                    <p className="mt-2 whitespace-nowrap text-lg font-bold tracking-tight xl:text-xl 2xl:text-2xl">
                                         {formatMinutes(dashboardTodayTime)}
                                     </p>
                                 </div>
@@ -540,7 +540,7 @@ export default function Top({
                                 <div className="w-full rounded-lg border p-3">
                                     <p className="text-sm font-bold">週別</p>
 
-                                    <p className="mt-2 text-2xl font-bold">
+                                    <p className="mt-2 whitespace-nowrap text-lg font-bold tracking-tight xl:text-xl 2xl:text-2xl">
                                         {formatMinutes(dashboardWeeklyTime)}
                                     </p>
                                 </div>
@@ -548,7 +548,7 @@ export default function Top({
                                 <div className="w-full rounded-lg border p-3">
                                     <p className="text-sm font-bold">月別</p>
 
-                                    <p className="mt-2 text-2xl font-bold">
+                                    <p className="mt-2 whitespace-nowrap text-lg font-bold tracking-tight xl:text-xl 2xl:text-2xl">
                                         {formatMinutes(dashboardMonthlyTime)}
                                     </p>
                                 </div>
@@ -558,7 +558,7 @@ export default function Top({
                                 <div className="w-full rounded-lg border p-3">
                                     <p className="text-sm font-bold">年別</p>
 
-                                    <p className="mt-2 text-2xl font-bold">
+                                    <p className="mt-2 whitespace-nowrap text-lg font-bold tracking-tight xl:text-xl 2xl:text-2xl">
                                         {formatMinutes(dashboardYearlyTime)}
                                     </p>
                                 </div>
@@ -566,7 +566,7 @@ export default function Top({
                                 <div className="w-full rounded-lg border p-3">
                                     <p className="text-sm font-bold">総合計</p>
 
-                                    <p className="mt-2 text-2xl font-bold">
+                                    <p className="mt-2 whitespace-nowrap text-lg font-bold tracking-tight xl:text-xl 2xl:text-2xl">
                                         {formatMinutes(dashboardTotalTime)}
                                     </p>
                                 </div>
@@ -575,7 +575,7 @@ export default function Top({
 
                         <div className="mt-4 rounded-xl border p-3">
                             <h2 className="mb-2 text-base font-bold text-blue-600">
-                                🖊 時間記録
+                                🖊 学習時間記録
                             </h2>
 
                             <form
@@ -798,6 +798,7 @@ export default function Top({
                                                 cy="50%"
                                                 innerRadius={32}
                                                 outerRadius={55}
+                                                stroke="none"
                                             >
                                                 {pieChartData.map(
                                                     (entry, index) => (
@@ -1206,7 +1207,7 @@ export default function Top({
                     onClick={() => setIsCategoryModalOpen(false)}
                 >
                     <div
-                        className="w-[500px] rounded-xl bg-white p-6"
+                        className="w-[92vw] max-w-[500px] rounded-xl bg-white p-4 sm:p-6"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <h2 className="mb-4 text-xl font-bold">
@@ -1270,7 +1271,74 @@ export default function Top({
                         )}
 
                         <div className="max-h-64 overflow-y-auto">
-                            <table className="w-full table-fixed border-separate border-spacing-y-2 text-center">
+                            {/* スマホ用：カード表示 */}
+                            <div className="space-y-3 md:hidden">
+                                {categories.map((category) => (
+                                    <div
+                                        key={category.id}
+                                        className="rounded-xl border bg-white p-3 shadow-sm"
+                                    >
+                                        <div className="mb-3 flex items-center justify-between">
+                                            <div className="flex items-center gap-2">
+                                                <div
+                                                    className="h-4 w-4 rounded-full border"
+                                                    style={{
+                                                        backgroundColor:
+                                                            category.color ??
+                                                            "#2563eb",
+                                                    }}
+                                                />
+
+                                                <span className="font-bold">
+                                                    {category.category_name}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex justify-end gap-2">
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    if (
+                                                        confirm(
+                                                            "本当に削除しますか？",
+                                                        )
+                                                    ) {
+                                                        router.delete(
+                                                            `/categories/destroy/${category.id}`,
+                                                        );
+                                                    }
+                                                }}
+                                                className="rounded border px-3 py-1 text-sm hover:bg-red-500 hover:text-white"
+                                            >
+                                                削除
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setEditingCategory(
+                                                        category,
+                                                    );
+                                                    categoryForm.setData({
+                                                        category_name:
+                                                            category.category_name,
+                                                        color:
+                                                            category.color ??
+                                                            "#2563eb",
+                                                    });
+                                                }}
+                                                className="rounded border px-3 py-1 text-sm hover:bg-blue-500 hover:text-white"
+                                            >
+                                                編集
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* PC・タブレット用：テーブル表示 */}
+                            <table className="hidden w-full table-fixed border-separate border-spacing-y-2 text-center md:table">
                                 <thead>
                                     <tr>
                                         <th className="w-2/5 px-2 py-2 text-center">
