@@ -394,7 +394,7 @@ export default function Top({
                     <section
                         className={`${
                             activePanel === "left" ? "block" : "hidden"
-                        } h-full overflow-hidden rounded-xl border p-4 lg:col-span-3 lg:block`}
+                        } h-full min-w-0 overflow-hidden rounded-xl border p-2 sm:p-4 lg:col-span-3 lg:block`}
                     >
                         <div className="mb-3">
                             <h2 className="text-lg font-bold text-blue-600">
@@ -415,7 +415,7 @@ export default function Top({
                                 type="date"
                                 value={listDate}
                                 onChange={handleListDateChange}
-                                className="h-9 w-full max-w-full min-w-0 rounded border px-1 py-1 text-xs sm:h-10 sm:px-3 sm:py-2 sm:text-sm"
+                                className="block h-9 w-full max-w-full min-w-0 appearance-none rounded border px-1 py-1 text-xs sm:h-10 sm:px-3 sm:py-2 sm:text-sm"
                             />
                         </div>
 
@@ -693,8 +693,7 @@ export default function Top({
                         </h2>
 
                         {/* 条件 */}
-                        {/* 条件 */}
-                        <div className="grid w-full grid-cols-[36%_30%_1fr] gap-2 mb-2 shrink-0">
+                        <div className="mb-2 grid w-full grid-cols-2 gap-2 shrink-0">
                             {/* 日付 */}
                             <div className="min-w-0">
                                 <label className="mb-1 block text-xs">
@@ -707,27 +706,8 @@ export default function Top({
                                     onChange={(e) =>
                                         setChartDate(e.target.value)
                                     }
-                                    className="h-8 w-full max-w-full min-w-0 rounded border px-1 text-[10px] sm:text-xs"
+                                    className="h-8 w-full max-w-full min-w-0 rounded border px-1 text-xs sm:px-2 sm:text-sm"
                                 />
-                            </div>
-
-                            {/* 期間 */}
-                            <div className="min-w-0">
-                                <label className="mb-1 block text-xs">
-                                    期間
-                                </label>
-
-                                <select
-                                    value={chartPeriod}
-                                    onChange={(e) =>
-                                        setChartPeriod(e.target.value)
-                                    }
-                                    className="h-8 w-full max-w-full min-w-0 rounded border px-1 text-xs"
-                                >
-                                    <option value="daily">日別</option>
-                                    <option value="weekly">週別</option>
-                                    <option value="monthly">月別</option>
-                                </select>
                             </div>
 
                             {/* カテゴリー */}
@@ -741,7 +721,7 @@ export default function Top({
                                     onChange={(e) =>
                                         setChartCategoryId(e.target.value)
                                     }
-                                    className="h-8 w-full max-w-full min-w-0 rounded border px-1 text-xs"
+                                    className="h-8 w-full max-w-full min-w-0 rounded border px-1 text-xs sm:px-2 sm:text-sm"
                                 >
                                     <option value="">すべて</option>
 
@@ -753,6 +733,25 @@ export default function Top({
                                             {category.category_name}
                                         </option>
                                     ))}
+                                </select>
+                            </div>
+
+                            {/* 期間 */}
+                            <div className="col-span-2 min-w-0">
+                                <label className="mb-1 block text-xs">
+                                    期間
+                                </label>
+
+                                <select
+                                    value={chartPeriod}
+                                    onChange={(e) =>
+                                        setChartPeriod(e.target.value)
+                                    }
+                                    className="h-8 w-full max-w-full min-w-0 rounded border px-1 text-xs sm:px-2 sm:text-sm"
+                                >
+                                    <option value="daily">日別</option>
+                                    <option value="weekly">週別</option>
+                                    <option value="monthly">月別</option>
                                 </select>
                             </div>
                         </div>
