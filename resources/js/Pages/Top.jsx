@@ -406,7 +406,7 @@ export default function Top({
                             </p>
                         </div>
 
-                        <div className="mb-3">
+                        <div className="mb-3 min-w-0">
                             <label className="mb-1 block text-sm font-bold">
                                 日付を選択
                             </label>
@@ -415,7 +415,7 @@ export default function Top({
                                 type="date"
                                 value={listDate}
                                 onChange={handleListDateChange}
-                                className="w-full rounded border px-3 py-2"
+                                className="h-10 w-full max-w-full min-w-0 rounded border px-2 py-1 text-sm"
                             />
                         </div>
 
@@ -528,45 +528,38 @@ export default function Top({
                         </h2>
 
                         <div className="w-full flex flex-col gap-3">
-                            <div className="grid w-full grid-cols-1 gap-3 lg:grid-cols-3">
+                            <div className="w-full grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
                                 <div className="w-full rounded-lg border p-3">
                                     <p className="text-sm font-bold">日別</p>
-
-                                    <p className="mt-2 whitespace-nowrap text-lg font-bold tracking-tight xl:text-xl 2xl:text-2xl">
+                                    <p className="mt-2 text-lg font-bold tracking-tight break-words">
                                         {formatMinutes(dashboardTodayTime)}
                                     </p>
                                 </div>
 
                                 <div className="w-full rounded-lg border p-3">
                                     <p className="text-sm font-bold">週別</p>
-
-                                    <p className="mt-2 whitespace-nowrap text-lg font-bold tracking-tight xl:text-xl 2xl:text-2xl">
+                                    <p className="mt-2 text-lg font-bold tracking-tight break-words">
                                         {formatMinutes(dashboardWeeklyTime)}
                                     </p>
                                 </div>
 
                                 <div className="w-full rounded-lg border p-3">
                                     <p className="text-sm font-bold">月別</p>
-
-                                    <p className="mt-2 whitespace-nowrap text-lg font-bold tracking-tight xl:text-xl 2xl:text-2xl">
+                                    <p className="mt-2 text-lg font-bold tracking-tight break-words">
                                         {formatMinutes(dashboardMonthlyTime)}
                                     </p>
                                 </div>
-                            </div>
 
-                            <div className="grid w-full grid-cols-2 gap-3 md:grid-cols-1 lg:grid-cols-2">
                                 <div className="w-full rounded-lg border p-3">
                                     <p className="text-sm font-bold">年別</p>
-
-                                    <p className="mt-2 whitespace-nowrap text-lg font-bold tracking-tight xl:text-xl 2xl:text-2xl">
+                                    <p className="mt-2 text-lg font-bold tracking-tight break-words">
                                         {formatMinutes(dashboardYearlyTime)}
                                     </p>
                                 </div>
 
                                 <div className="w-full rounded-lg border p-3">
                                     <p className="text-sm font-bold">総合計</p>
-
-                                    <p className="mt-2 whitespace-nowrap text-lg font-bold tracking-tight xl:text-xl 2xl:text-2xl">
+                                    <p className="mt-2 text-lg font-bold tracking-tight break-words">
                                         {formatMinutes(dashboardTotalTime)}
                                     </p>
                                 </div>
@@ -583,8 +576,9 @@ export default function Top({
                                 noValidate
                                 className="space-y-2"
                             >
-                                <div className="grid grid-cols-2 gap-3">
-                                    <div>
+                                <div className="flex w-full gap-2">
+                                    {/* 日付：少し狭め */}
+                                    <div className="w-[44%] min-w-0">
                                         <div className="mb-1 flex h-7 items-center">
                                             <label className="text-xs font-bold">
                                                 日付
@@ -600,13 +594,14 @@ export default function Top({
                                                     e.target.value,
                                                 )
                                             }
-                                            className="h-9 w-full rounded border px-2 py-1"
+                                            className="h-10 w-full min-w-0 rounded border px-1 py-1 text-xs"
                                         />
                                     </div>
 
-                                    <div>
-                                        <div className="mb-1 flex h-7 items-center justify-between">
-                                            <label className="text-xs font-bold">
+                                    {/* カテゴリー：少し広め */}
+                                    <div className="w-[56%] min-w-0">
+                                        <div className="mb-1 flex h-7 items-center justify-between gap-1">
+                                            <label className="truncate text-xs font-bold">
                                                 カテゴリー
                                             </label>
 
@@ -615,7 +610,7 @@ export default function Top({
                                                 onClick={() =>
                                                     setIsCategoryModalOpen(true)
                                                 }
-                                                className="rounded border px-2 py-1 text-xs hover:bg-blue-500 hover:text-white"
+                                                className="shrink-0 rounded border px-1 py-1 text-[10px] hover:bg-blue-500 hover:text-white"
                                             >
                                                 編集
                                             </button>
@@ -629,7 +624,7 @@ export default function Top({
                                                     e.target.value,
                                                 )
                                             }
-                                            className="h-9 w-full rounded border px-2 py-1"
+                                            className="h-10 w-full min-w-0 truncate rounded border bg-white px-1 py-1 text-xs"
                                         >
                                             <option value="">
                                                 選択してください
@@ -688,8 +683,10 @@ export default function Top({
                         </h2>
 
                         {/* 条件 */}
+                        {/* 条件 */}
                         <div className="grid grid-cols-3 gap-2 mb-2 shrink-0">
-                            <div>
+                            {/* 日付 */}
+                            <div className="min-w-0">
                                 <label className="mb-1 block text-xs">
                                     日付
                                 </label>
@@ -700,16 +697,31 @@ export default function Top({
                                     onChange={(e) =>
                                         setChartDate(e.target.value)
                                     }
-                                    className="h-8 w-full rounded border px-2 text-sm"
+                                    className="h-8 w-full min-w-0 rounded border px-1 text-xs sm:px-2 sm:text-sm"
                                 />
                             </div>
 
-                            <div>
+                            {/* 期間 */}
+                            <div className="min-w-0">
                                 <label className="mb-1 block text-xs">
                                     期間
                                 </label>
 
-                                <div className="flex h-8">
+                                {/* スマホ：セレクト */}
+                                <select
+                                    value={chartPeriod}
+                                    onChange={(e) =>
+                                        setChartPeriod(e.target.value)
+                                    }
+                                    className="block h-8 w-full rounded border px-1 text-xs sm:hidden"
+                                >
+                                    <option value="daily">日別</option>
+                                    <option value="weekly">週別</option>
+                                    <option value="monthly">月別</option>
+                                </select>
+
+                                {/* タブレット・PC：ボタン */}
+                                <div className="hidden h-8 sm:flex">
                                     <button
                                         type="button"
                                         onClick={() => setChartPeriod("daily")}
@@ -750,7 +762,8 @@ export default function Top({
                                 </div>
                             </div>
 
-                            <div>
+                            {/* カテゴリー */}
+                            <div className="min-w-0">
                                 <label className="mb-1 block text-xs">
                                     カテゴリー
                                 </label>
@@ -760,7 +773,7 @@ export default function Top({
                                     onChange={(e) =>
                                         setChartCategoryId(e.target.value)
                                     }
-                                    className="h-8 w-full rounded border px-2 text-sm"
+                                    className="h-8 w-full min-w-0 rounded border px-1 text-xs sm:px-2 sm:text-sm"
                                 >
                                     <option value="">すべて</option>
 
@@ -926,7 +939,23 @@ export default function Top({
                                             height={32}
                                             fontSize={12}
                                             tickMargin={4}
-                                            tickFormatter={formatChartLabel}
+                                            tickFormatter={(value) => {
+                                                const isMobile =
+                                                    window.innerWidth < 640;
+
+                                                if (
+                                                    chartPeriod === "daily" &&
+                                                    isMobile
+                                                ) {
+                                                    const date = new Date(
+                                                        value,
+                                                    );
+
+                                                    return `${date.getMonth() + 1}/${date.getDate()}`;
+                                                }
+
+                                                return formatChartLabel(value);
+                                            }}
                                         />
 
                                         <YAxis
@@ -1258,7 +1287,7 @@ export default function Top({
                             <button
                                 type="submit"
                                 disabled={categoryForm.processing}
-                                className="rounded bg-blue-500 px-4 py-1 text-white"
+                                className="whitespace-nowrap rounded bg-blue-500 px-2 py-1 text-xs text-white sm:px-4 sm:text-sm"
                             >
                                 追加
                             </button>
