@@ -4,15 +4,15 @@ import "./bootstrap";
 import { createInertiaApp } from "@inertiajs/react";
 import { createRoot } from "react-dom/client";
 
+const pages = import.meta.glob("./Pages/**/*.jsx", { eager: true });
+
+console.log("Available pages:", Object.keys(pages));
+
 createInertiaApp({
     title: (title) => `${title} - 学習時間記録アプリ`,
 
     resolve: (name) => {
-        const pages = import.meta.glob("/resources/js/Pages/**/*.jsx", {
-            eager: true,
-        });
-
-        const page = pages[`/resources/js/Pages/${name}.jsx`];
+        const page = pages[`./Pages/${name}.jsx`];
 
         if (!page) {
             console.error("Inertia page not found:", name);
