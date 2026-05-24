@@ -586,9 +586,9 @@ export default function Top({
                                 noValidate
                                 className="space-y-2"
                             >
-                                <div className="flex w-full gap-2 sm:grid sm:grid-cols-2 sm:gap-3">
-                                    {/* 日付：少し狭め */}
-                                    <div className="w-[40%] min-w-0 sm:w-full">
+                                <div className="grid w-full grid-cols-[42%_1fr] gap-3">
+                                    {/* 日付 */}
+                                    <div className="min-w-0">
                                         <div className="mb-1 flex h-7 items-center">
                                             <label className="text-xs font-bold">
                                                 日付
@@ -604,12 +604,12 @@ export default function Top({
                                                     e.target.value,
                                                 )
                                             }
-                                            className="h-10 w-full min-w-0 rounded border px-1 py-1 text-[10px] sm:text-sm"
+                                            className="h-10 w-full max-w-full min-w-0 rounded border px-1 py-1 text-xs sm:px-2 sm:text-sm"
                                         />
                                     </div>
 
-                                    {/* カテゴリー：少し広め */}
-                                    <div className="w-[60%] min-w-0 sm:w-full">
+                                    {/* カテゴリー */}
+                                    <div className="min-w-0">
                                         <div className="mb-1 flex h-7 items-center justify-between gap-1">
                                             <label className="truncate text-xs font-bold">
                                                 カテゴリー
@@ -620,7 +620,7 @@ export default function Top({
                                                 onClick={() =>
                                                     setIsCategoryModalOpen(true)
                                                 }
-                                                className="shrink-0 rounded border px-1 py-1 text-[10px] hover:bg-blue-500 hover:text-white"
+                                                className="shrink-0 whitespace-nowrap rounded border px-1 py-1 text-[10px] hover:bg-blue-500 hover:text-white sm:px-2 sm:text-xs"
                                             >
                                                 編集
                                             </button>
@@ -634,7 +634,7 @@ export default function Top({
                                                     e.target.value,
                                                 )
                                             }
-                                            className="h-10 w-full min-w-0 truncate rounded border bg-white px-1 py-1 text-xs"
+                                            className="h-10 w-full max-w-full min-w-0 rounded border bg-white px-1 py-1 text-xs sm:px-2 sm:text-sm"
                                         >
                                             <option value="">
                                                 選択してください
@@ -693,9 +693,10 @@ export default function Top({
                         </h2>
 
                         {/* 条件 */}
-                        <div className="flex gap-2 mb-2 shrink-0 sm:grid sm:grid-cols-3">
+                        {/* 条件 */}
+                        <div className="grid w-full grid-cols-[36%_30%_1fr] gap-2 mb-2 shrink-0">
                             {/* 日付 */}
-                            <div className="w-[34%] min-w-0 sm:w-full">
+                            <div className="min-w-0">
                                 <label className="mb-1 block text-xs">
                                     日付
                                 </label>
@@ -706,7 +707,7 @@ export default function Top({
                                     onChange={(e) =>
                                         setChartDate(e.target.value)
                                     }
-                                    className="h-8 w-full min-w-0 rounded border px-1 text-[10px] sm:px-2 sm:text-sm"
+                                    className="h-8 w-full max-w-full min-w-0 rounded border px-1 text-[10px] sm:text-xs"
                                 />
                             </div>
 
@@ -716,59 +717,17 @@ export default function Top({
                                     期間
                                 </label>
 
-                                {/* スマホ：セレクト */}
                                 <select
                                     value={chartPeriod}
                                     onChange={(e) =>
                                         setChartPeriod(e.target.value)
                                     }
-                                    className="block h-8 w-full rounded border px-1 text-xs sm:hidden"
+                                    className="h-8 w-full max-w-full min-w-0 rounded border px-1 text-xs"
                                 >
                                     <option value="daily">日別</option>
                                     <option value="weekly">週別</option>
                                     <option value="monthly">月別</option>
                                 </select>
-
-                                {/* タブレット・PC：ボタン */}
-                                <div className="hidden h-8 sm:flex">
-                                    <button
-                                        type="button"
-                                        onClick={() => setChartPeriod("daily")}
-                                        className={`flex-1 text-sm ${
-                                            chartPeriod === "daily"
-                                                ? "bg-blue-600 text-white"
-                                                : "border"
-                                        }`}
-                                    >
-                                        日別
-                                    </button>
-
-                                    <button
-                                        type="button"
-                                        onClick={() => setChartPeriod("weekly")}
-                                        className={`flex-1 text-sm ${
-                                            chartPeriod === "weekly"
-                                                ? "bg-blue-600 text-white"
-                                                : "border"
-                                        }`}
-                                    >
-                                        週別
-                                    </button>
-
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            setChartPeriod("monthly")
-                                        }
-                                        className={`flex-1 text-sm ${
-                                            chartPeriod === "monthly"
-                                                ? "bg-blue-600 text-white"
-                                                : "border"
-                                        }`}
-                                    >
-                                        月別
-                                    </button>
-                                </div>
                             </div>
 
                             {/* カテゴリー */}
@@ -782,7 +741,7 @@ export default function Top({
                                     onChange={(e) =>
                                         setChartCategoryId(e.target.value)
                                     }
-                                    className="h-8 w-full min-w-0 rounded border px-1 text-xs sm:px-2 sm:text-sm"
+                                    className="h-8 w-full max-w-full min-w-0 rounded border px-1 text-xs"
                                 >
                                     <option value="">すべて</option>
 
@@ -797,7 +756,6 @@ export default function Top({
                                 </select>
                             </div>
                         </div>
-
                         {/* 円グラフ */}
                         <div className="rounded-xl border p-2 mb-2 flex-[0.9] min-h-0 flex flex-col">
                             <h3 className="mb-1 text-xs font-bold">
