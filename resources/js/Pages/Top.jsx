@@ -406,7 +406,7 @@ export default function Top({
                             </p>
                         </div>
 
-                        <div className="mb-3 min-w-0">
+                        <div className="mb-3 min-w-0 overflow-hidden">
                             <label className="mb-1 block text-sm font-bold">
                                 日付を選択
                             </label>
@@ -415,7 +415,7 @@ export default function Top({
                                 type="date"
                                 value={listDate}
                                 onChange={handleListDateChange}
-                                className="h-10 w-full max-w-full min-w-0 rounded border px-2 py-1 text-sm"
+                                className="h-9 w-full max-w-full min-w-0 rounded border px-1 py-1 text-xs sm:h-10 sm:px-3 sm:py-2 sm:text-sm"
                             />
                         </div>
 
@@ -528,38 +528,48 @@ export default function Top({
                         </h2>
 
                         <div className="w-full flex flex-col gap-3">
-                            <div className="w-full grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
-                                <div className="w-full rounded-lg border p-3">
-                                    <p className="text-sm font-bold">日別</p>
-                                    <p className="mt-2 text-lg font-bold tracking-tight break-words">
+                            <div className="w-full grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-3">
+                                <div className="w-full rounded-lg border p-2 sm:p-3">
+                                    <p className="text-xs font-bold sm:text-sm">
+                                        日別
+                                    </p>
+                                    <p className="mt-1 text-sm font-bold tracking-tight break-words sm:mt-2 sm:text-lg">
                                         {formatMinutes(dashboardTodayTime)}
                                     </p>
                                 </div>
 
-                                <div className="w-full rounded-lg border p-3">
-                                    <p className="text-sm font-bold">週別</p>
-                                    <p className="mt-2 text-lg font-bold tracking-tight break-words">
+                                <div className="w-full rounded-lg border p-2 sm:p-3">
+                                    <p className="text-xs font-bold sm:text-sm">
+                                        週別
+                                    </p>
+                                    <p className="mt-1 text-sm font-bold tracking-tight break-words sm:mt-2 sm:text-lg">
                                         {formatMinutes(dashboardWeeklyTime)}
                                     </p>
                                 </div>
 
-                                <div className="w-full rounded-lg border p-3">
-                                    <p className="text-sm font-bold">月別</p>
-                                    <p className="mt-2 text-lg font-bold tracking-tight break-words">
+                                <div className="w-full rounded-lg border p-2 sm:p-3">
+                                    <p className="text-xs font-bold sm:text-sm">
+                                        月別
+                                    </p>
+                                    <p className="mt-1 text-sm font-bold tracking-tight break-words sm:mt-2 sm:text-lg">
                                         {formatMinutes(dashboardMonthlyTime)}
                                     </p>
                                 </div>
 
-                                <div className="w-full rounded-lg border p-3">
-                                    <p className="text-sm font-bold">年別</p>
-                                    <p className="mt-2 text-lg font-bold tracking-tight break-words">
+                                <div className="w-full rounded-lg border p-2 sm:p-3">
+                                    <p className="text-xs font-bold sm:text-sm">
+                                        年別
+                                    </p>
+                                    <p className="mt-1 text-sm font-bold tracking-tight break-words sm:mt-2 sm:text-lg">
                                         {formatMinutes(dashboardYearlyTime)}
                                     </p>
                                 </div>
 
-                                <div className="w-full rounded-lg border p-3">
-                                    <p className="text-sm font-bold">総合計</p>
-                                    <p className="mt-2 text-lg font-bold tracking-tight break-words">
+                                <div className="w-full rounded-lg border p-2 sm:p-3">
+                                    <p className="text-xs font-bold sm:text-sm">
+                                        総合計
+                                    </p>
+                                    <p className="mt-1 text-sm font-bold tracking-tight break-words sm:mt-2 sm:text-lg">
                                         {formatMinutes(dashboardTotalTime)}
                                     </p>
                                 </div>
@@ -576,9 +586,9 @@ export default function Top({
                                 noValidate
                                 className="space-y-2"
                             >
-                                <div className="flex w-full gap-2">
+                                <div className="flex w-full gap-2 sm:grid sm:grid-cols-2 sm:gap-3">
                                     {/* 日付：少し狭め */}
-                                    <div className="w-[44%] min-w-0">
+                                    <div className="w-[40%] min-w-0 sm:w-full">
                                         <div className="mb-1 flex h-7 items-center">
                                             <label className="text-xs font-bold">
                                                 日付
@@ -594,12 +604,12 @@ export default function Top({
                                                     e.target.value,
                                                 )
                                             }
-                                            className="h-10 w-full min-w-0 rounded border px-1 py-1 text-xs"
+                                            className="h-10 w-full min-w-0 rounded border px-1 py-1 text-[10px] sm:text-sm"
                                         />
                                     </div>
 
                                     {/* カテゴリー：少し広め */}
-                                    <div className="w-[56%] min-w-0">
+                                    <div className="w-[60%] min-w-0 sm:w-full">
                                         <div className="mb-1 flex h-7 items-center justify-between gap-1">
                                             <label className="truncate text-xs font-bold">
                                                 カテゴリー
@@ -683,10 +693,9 @@ export default function Top({
                         </h2>
 
                         {/* 条件 */}
-                        {/* 条件 */}
-                        <div className="grid grid-cols-3 gap-2 mb-2 shrink-0">
+                        <div className="flex gap-2 mb-2 shrink-0 sm:grid sm:grid-cols-3">
                             {/* 日付 */}
-                            <div className="min-w-0">
+                            <div className="w-[34%] min-w-0 sm:w-full">
                                 <label className="mb-1 block text-xs">
                                     日付
                                 </label>
@@ -697,7 +706,7 @@ export default function Top({
                                     onChange={(e) =>
                                         setChartDate(e.target.value)
                                     }
-                                    className="h-8 w-full min-w-0 rounded border px-1 text-xs sm:px-2 sm:text-sm"
+                                    className="h-8 w-full min-w-0 rounded border px-1 text-[10px] sm:px-2 sm:text-sm"
                                 />
                             </div>
 
