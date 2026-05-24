@@ -8,9 +8,11 @@ createInertiaApp({
     title: (title) => `${title} - 学習時間記録アプリ`,
 
     resolve: (name) => {
-        const pages = import.meta.glob("./Pages/**/*.jsx", { eager: true });
+        const pages = import.meta.glob("/resources/js/Pages/**/*.jsx", {
+            eager: true,
+        });
 
-        const page = pages[`./Pages/${name}.jsx`];
+        const page = pages[`/resources/js/Pages/${name}.jsx`];
 
         if (!page) {
             console.error("Inertia page not found:", name);
