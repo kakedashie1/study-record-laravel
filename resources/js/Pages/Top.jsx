@@ -693,7 +693,8 @@ export default function Top({
                         </h2>
 
                         {/* 条件 */}
-                        <div className="mb-2 grid w-full grid-cols-2 gap-2 shrink-0">
+                        <div className="mb-2 grid w-full grid-cols-[40%_1fr] gap-x-3 gap-y-2 shrink-0">
+                            {/* 日付 */}
                             {/* 日付 */}
                             <div className="min-w-0">
                                 <label className="mb-1 block text-xs">
@@ -706,7 +707,7 @@ export default function Top({
                                     onChange={(e) =>
                                         setChartDate(e.target.value)
                                     }
-                                    className="h-8 w-full max-w-full min-w-0 rounded border px-1 text-xs sm:px-2 sm:text-sm"
+                                    className="h-8 w-full max-w-full min-w-0 rounded border px-1 text-[10px] sm:text-sm"
                                 />
                             </div>
 
