@@ -1,13 +1,19 @@
-import { createInertiaApp } from '@inertiajs/react';
-import { createRoot } from 'react-dom/client';
-import '../css/app.css';
+import "../css/app.css";
+import "./bootstrap";
+
+import { createInertiaApp } from "@inertiajs/react";
+import { createRoot } from "react-dom/client";
+
 createInertiaApp({
-    resolve: async (name) => {
-        const pages = import.meta.glob('./Pages/**/*.jsx');
-        const page = await pages[`./Pages/${name}.jsx`]();
-        return page;
+    title: (title) => `${title} - 学習時間記録アプリ`,
+    resolve: (name) => {
+        const pages = import.meta.glob("./Pages/**/*.jsx", { eager: true });
+        return pages[`./Pages/${name}.jsx`].default;
     },
     setup({ el, App, props }) {
         createRoot(el).render(<App {...props} />);
+    },
+    progress: {
+        color: "#4B5563",
     },
 });
