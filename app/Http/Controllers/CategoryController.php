@@ -10,14 +10,14 @@ use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
 {
-    public function index()
-    {
-        $categories = Category::where('user_id', Auth::id())->get();
+    // public function index()
+    // {
+    //     $categories = Category::where('user_id', Auth::id())->get();
 
-        return Inertia::render('Category', [
-            'categories' => $categories,
-        ]);
-    }
+    //     return Inertia::render('Category', [
+    //         'categories' => $categories,
+    //     ]);
+    // }
 
     public function store(Request $request)
     {
@@ -63,16 +63,16 @@ class CategoryController extends Controller
         }
     }
 
-    public function edit($id)
-    {
-        $category = Category::where('id', $id)
-            ->where('user_id', Auth::id())
-            ->firstOrFail();
+    // public function edit($id)
+    // {
+    //     $category = Category::where('id', $id)
+    //         ->where('user_id', Auth::id())
+    //         ->firstOrFail();
 
-        return Inertia::render('CategoryEdit', [
-            'category' => $category,
-        ]);
-    }
+    //     return Inertia::render('CategoryEdit', [
+    //         'category' => $category,
+    //     ]);
+    // }
 
     public function update($id, Request $request)
     {

@@ -57,18 +57,18 @@ class RecordController extends Controller
         }
     }
 
-    public function edit($id)
-    {
-        $record = Record::where('id', $id)
-            ->where('user_id', Auth::id())
-            ->firstOrFail();
-        $categories = Category::where('user_id', Auth::id())->get();
+    // public function edit($id)
+    // {
+    //     $record = Record::where('id', $id)
+    //         ->where('user_id', Auth::id())
+    //         ->firstOrFail();
+    //     $categories = Category::where('user_id', Auth::id())->get();
 
-        return Inertia::render('RecordEdit', [
-            'record' => $record,
-            'categories' => $categories,
-        ]);
-    }
+    //     return Inertia::render('RecordEdit', [
+    //         'record' => $record,
+    //         'categories' => $categories,
+    //     ]);
+    // }
 
     public function update($id, Request $request)
     {
