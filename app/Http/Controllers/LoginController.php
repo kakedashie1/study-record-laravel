@@ -10,7 +10,7 @@ class LoginController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Login');
+        return Inertia::render('Auth/Login');
     }
 
     public function login(Request $request)
@@ -37,8 +37,8 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         Auth::logout();
-        // $request->session()->invalidate();
-        // $request->session()->regenerateToken();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
         return redirect('/login');
     }
 }

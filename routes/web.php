@@ -4,12 +4,19 @@ use App\Http\Controllers\TopController;
 use App\Http\Controllers\RecordController;
 use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\RegisterController;
+
 
 
 Route::get('/login', [LoginController::class, 'index']);
 
 Route::post('/login', [LoginController::class, 'login']);
 
+Route::get('/register', [RegisterController::class, 'create'])
+    ->name('register');
+
+Route::post('/register', [RegisterController::class, 'store'])
+    ->name('register.store');
 
 
 Route::middleware('auth')->group(function () {
