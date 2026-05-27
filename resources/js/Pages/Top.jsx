@@ -743,17 +743,61 @@ export default function Top({
                                     期間
                                 </label>
 
-                                <select
-                                    value={chartPeriod}
-                                    onChange={(e) =>
-                                        setChartPeriod(e.target.value)
-                                    }
-                                    className="h-8 w-full max-w-full min-w-0 rounded border px-1 text-xs sm:px-2 sm:text-sm"
-                                >
-                                    <option value="daily">日別</option>
-                                    <option value="weekly">週別</option>
-                                    <option value="monthly">月別</option>
-                                </select>
+                                {/* スマホ */}
+                                <div className="block md:hidden">
+                                    <select
+                                        value={chartPeriod}
+                                        onChange={(e) =>
+                                            setChartPeriod(e.target.value)
+                                        }
+                                        className="h-8 w-full max-w-full min-w-0 rounded border px-1 text-xs sm:px-2 sm:text-sm"
+                                    >
+                                        <option value="daily">日別</option>
+                                        <option value="weekly">週別</option>
+                                        <option value="monthly">月別</option>
+                                    </select>
+                                </div>
+
+                                {/* PC */}
+                                <div className="hidden md:flex gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => setChartPeriod("daily")}
+                                        className={`rounded border px-4 py-2 text-sm transition ${
+                                            chartPeriod === "daily"
+                                                ? "bg-blue-500 text-white"
+                                                : "bg-white hover:bg-gray-100"
+                                        }`}
+                                    >
+                                        日別
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => setChartPeriod("weekly")}
+                                        className={`rounded border px-4 py-2 text-sm transition ${
+                                            chartPeriod === "weekly"
+                                                ? "bg-blue-500 text-white"
+                                                : "bg-white hover:bg-gray-100"
+                                        }`}
+                                    >
+                                        週別
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            setChartPeriod("monthly")
+                                        }
+                                        className={`rounded border px-4 py-2 text-sm transition ${
+                                            chartPeriod === "monthly"
+                                                ? "bg-blue-500 text-white"
+                                                : "bg-white hover:bg-gray-100"
+                                        }`}
+                                    >
+                                        月別
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         {/* 円グラフ */}
