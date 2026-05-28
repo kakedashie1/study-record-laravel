@@ -649,6 +649,12 @@ export default function Top({
                                                 </option>
                                             ))}
                                         </select>
+
+                                        {errors.category_id && (
+                                            <p className="mt-1 text-xs text-red-500">
+                                                {errors.category_id}
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
 
