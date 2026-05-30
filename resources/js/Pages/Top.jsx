@@ -9,7 +9,6 @@ import BottomNavigation from "../components/Navigation/BottomNavigation";
 import ChartPanel from "../components/Charts/ChartPanel";
 import CategoryManageModal from "../components/Categories/CategoryManageModal";
 
-
 export default function Top({
     categories,
     records,
@@ -346,7 +345,20 @@ export default function Top({
         }
 
         if (chartPeriod === "weekly") {
-            return "週間カテゴリー割合";
+            const date = new Date(chartDate);
+
+            const day = date.getDay();
+            const diff = day === 0 ? -6 : 1 - day;
+
+            const start = new Date(date);
+            start.setDate(date.getDate() + diff);
+
+            const end = new Date(start);
+            end.setDate(start.getDate() + 6);
+
+            return `${start.getMonth() + 1}/${start.getDate()} ～ ${
+                end.getMonth() + 1
+            }/${end.getDate()} の割合`;
         }
 
         if (chartPeriod === "monthly") {
