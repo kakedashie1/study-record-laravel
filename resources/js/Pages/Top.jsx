@@ -6,6 +6,7 @@ import TimeInput from "../components/Records/TimeInput";
 
 import RecordCreateForm from "../components/Records/RecordCreateForm";
 import DashboardCards from "../components/Dashboard/DashboardCards";
+import BottomNavigation from "../components/Navigation/BottomNavigation";
 import {
     BarChart,
     Bar,
@@ -954,44 +955,11 @@ export default function Top({
                     </section>
                 </div>
             </div>
-
-            <div className="fixed bottom-0 left-0 z-40 grid h-14 w-full grid-cols-3 border-t bg-white lg:hidden">
-                <button
-                    type="button"
-                    onClick={() => setActivePanel("left")}
-                    className={`${
-                        activePanel === "left"
-                            ? "font-bold text-blue-600"
-                            : "text-gray-500"
-                    }`}
-                >
-                    一覧
-                </button>
-
-                <button
-                    type="button"
-                    onClick={() => setActivePanel("center")}
-                    className={`${
-                        activePanel === "center"
-                            ? "font-bold text-blue-600"
-                            : "text-gray-500"
-                    }`}
-                >
-                    記録
-                </button>
-
-                <button
-                    type="button"
-                    onClick={() => setActivePanel("right")}
-                    className={`${
-                        activePanel === "right"
-                            ? "font-bold text-blue-600"
-                            : "text-gray-500"
-                    }`}
-                >
-                    グラフ
-                </button>
-            </div>
+             {/* Navigation */}
+            <BottomNavigation
+                activePanel={activePanel}
+                setActivePanel={setActivePanel}
+            />
 
             {/* 学習記録編集モーダル */}
             {editingRecord && (
