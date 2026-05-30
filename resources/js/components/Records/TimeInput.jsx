@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { formatMinutes } from "../utils/format";
+import { formatMinutes } from "../../utils/format";
 
 export default function TimeInput({ value, onChange, min = 0 }) {
     const [step, setStep] = useState(30);
