@@ -1,26 +1,13 @@
 import { useState, useEffect } from "react";
 import { useForm, router, usePage } from "@inertiajs/react";
 
-import { formatMinutes } from "../utils/format";
-import TimeInput from "../components/Records/TimeInput";
 import RecordList from "../components/Records/RecordList";
 import RecordCreateForm from "../components/Records/RecordCreateForm";
 import RecordEditModal from "../components/Records/RecordEditModal";
 import DashboardCards from "../components/Dashboard/DashboardCards";
 import BottomNavigation from "../components/Navigation/BottomNavigation";
 
-import {
-    BarChart,
-    Bar,
-    XAxis,
-    YAxis,
-    Tooltip,
-    CartesianGrid,
-    ResponsiveContainer,
-    PieChart,
-    Pie,
-    Cell,
-} from "recharts";
+
 
 export default function Top({
     categories,
