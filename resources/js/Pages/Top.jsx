@@ -5,6 +5,7 @@ import { formatMinutes } from "../utils/format";
 import TimeInput from "../components/Records/TimeInput";
 
 import RecordCreateForm from "../components/Records/RecordCreateForm";
+import DashboardCards from "../components/Dashboard/DashboardCards";
 import {
     BarChart,
     Bar,
@@ -528,55 +529,13 @@ export default function Top({
                         <h2 className="mb-3 text-lg font-bold text-blue-600">
                             学習時間
                         </h2>
-
-                        <div className="w-full flex flex-col gap-3">
-                            <div className="w-full grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-3">
-                                <div className="w-full rounded-lg border p-2 sm:p-3">
-                                    <p className="text-xs font-bold sm:text-sm">
-                                        日別
-                                    </p>
-                                    <p className="mt-1 text-sm font-bold tracking-tight break-words sm:mt-2 sm:text-lg">
-                                        {formatMinutes(dashboardTodayTime)}
-                                    </p>
-                                </div>
-
-                                <div className="w-full rounded-lg border p-2 sm:p-3">
-                                    <p className="text-xs font-bold sm:text-sm">
-                                        週別
-                                    </p>
-                                    <p className="mt-1 text-sm font-bold tracking-tight break-words sm:mt-2 sm:text-lg">
-                                        {formatMinutes(dashboardWeeklyTime)}
-                                    </p>
-                                </div>
-
-                                <div className="w-full rounded-lg border p-2 sm:p-3">
-                                    <p className="text-xs font-bold sm:text-sm">
-                                        月別
-                                    </p>
-                                    <p className="mt-1 text-sm font-bold tracking-tight break-words sm:mt-2 sm:text-lg">
-                                        {formatMinutes(dashboardMonthlyTime)}
-                                    </p>
-                                </div>
-
-                                <div className="w-full rounded-lg border p-2 sm:p-3">
-                                    <p className="text-xs font-bold sm:text-sm">
-                                        年別
-                                    </p>
-                                    <p className="mt-1 text-sm font-bold tracking-tight break-words sm:mt-2 sm:text-lg">
-                                        {formatMinutes(dashboardYearlyTime)}
-                                    </p>
-                                </div>
-
-                                <div className="w-full rounded-lg border p-2 sm:p-3">
-                                    <p className="text-xs font-bold sm:text-sm">
-                                        総合計
-                                    </p>
-                                    <p className="mt-1 text-sm font-bold tracking-tight break-words sm:mt-2 sm:text-lg">
-                                        {formatMinutes(dashboardTotalTime)}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                        <DashboardCards
+                            dashboardTodayTime={dashboardTodayTime}
+                            dashboardWeeklyTime={dashboardWeeklyTime}
+                            dashboardMonthlyTime={dashboardMonthlyTime}
+                            dashboardYearlyTime={dashboardYearlyTime}
+                            dashboardTotalTime={dashboardTotalTime}
+                        />
 
                         <div className="mt-4 rounded-xl border p-3">
                             <h2 className="mb-2 text-base font-bold text-blue-600">
@@ -609,7 +568,6 @@ export default function Top({
 
                         {/* 条件 */}
                         <div className="mb-2 grid w-full grid-cols-[40%_1fr] gap-x-3 gap-y-2 shrink-0">
-                            {/* 日付 */}
                             {/* 日付 */}
                             <div className="min-w-0">
                                 <label className="mb-1 block text-xs">
