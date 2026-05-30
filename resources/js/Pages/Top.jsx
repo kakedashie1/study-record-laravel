@@ -6,7 +6,8 @@ import RecordCreateForm from "../components/Records/RecordCreateForm";
 import RecordEditModal from "../components/Records/RecordEditModal";
 import DashboardCards from "../components/Dashboard/DashboardCards";
 import BottomNavigation from "../components/Navigation/BottomNavigation";
-
+import ChartPanel from "../components/Charts/ChartPanel";
+import CategoryManageModal from "../components/Categories/CategoryManageModal";
 
 
 export default function Top({
