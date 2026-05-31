@@ -127,31 +127,53 @@ export default function ChartPanel({
 
                 <div className="flex flex-1 min-h-0 items-center">
                     <div className="w-1/2 h-full">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                                <Pie
-                                    data={pieChartData}
-                                    dataKey="total"
-                                    nameKey="category_name"
-                                    cx="50%"
-                                    cy="50%"
-                                    innerRadius={32}
-                                    outerRadius={55}
-                                    stroke="none"
-                                >
-                                    {pieChartData.map((entry, index) => (
-                                        <Cell
-                                            key={`cell-${index}`}
-                                            fill={entry.color ?? "#2563eb"}
-                                        />
-                                    ))}
-                                </Pie>
+                        {pieChartData.length === 0 ? (
+                            <div className="flex h-full items-center justify-center">
+                                <div className="text-center">
+                                    <Icon
+                                        icon="twemoji:bar-chart"
+                                        width="40"
+                                        className="mx-auto mb-2 opacity-40"
+                                    />
 
-                                <Tooltip
-                                    formatter={(value) => formatMinutes(value)}
-                                />
-                            </PieChart>
-                        </ResponsiveContainer>
+                                    <p className="text-xl font-bold text-gray-400">
+                                        NO DATA
+                                    </p>
+
+                                    <p className="mt-1 text-xs text-gray-400">
+                                        データがありません
+                                    </p>
+                                </div>
+                            </div>
+                        ) : (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+                                    <Pie
+                                        data={pieChartData}
+                                        dataKey="total"
+                                        nameKey="category_name"
+                                        cx="50%"
+                                        cy="50%"
+                                        innerRadius={32}
+                                        outerRadius={55}
+                                        stroke="none"
+                                    >
+                                        {pieChartData.map((entry, index) => (
+                                            <Cell
+                                                key={`cell-${index}`}
+                                                fill={entry.color ?? "#2563eb"}
+                                            />
+                                        ))}
+                                    </Pie>
+
+                                    <Tooltip
+                                        formatter={(value) =>
+                                            formatMinutes(value)
+                                        }
+                                    />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        )}
                     </div>
 
                     <div className="w-1/2 pl-2">
