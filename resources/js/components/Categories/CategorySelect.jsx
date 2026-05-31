@@ -33,6 +33,14 @@ export default function CategorySelect({
         setIsOpen(false);
     };
 
+    const getSoftColor = (color) => {
+        if (!color) {
+            return "#f3f4f6";
+        }
+
+        return `${color}22`;
+    };
+
     return (
         <div ref={selectRef} className="relative w-full">
             <button
@@ -61,12 +69,12 @@ export default function CategorySelect({
             </button>
 
             {isOpen && (
-                <div className="absolute left-0 top-11 z-50 max-h-56 w-full overflow-y-auto rounded-xl border bg-white p-1 shadow-lg">
+                <div className="absolute left-0 top-11 z-50 max-h-48 w-full overflow-y-auto rounded-xl border bg-white p-1 pb-2 shadow-lg">
                     {allLabel !== null && (
                         <button
                             type="button"
                             onClick={() => handleSelect("")}
-                            className={`flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left text-xs hover:bg-gray-100 sm:text-sm ${
+                            className={`mb-1 flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left text-xs hover:bg-gray-100 sm:text-sm ${
                                 value === "" ? "bg-gray-100 font-bold" : ""
                             }`}
                         >
@@ -79,7 +87,7 @@ export default function CategorySelect({
                         <button
                             type="button"
                             onClick={() => handleSelect("")}
-                            className={`flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left text-xs hover:bg-gray-100 sm:text-sm ${
+                            className={`mb-1 flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left text-xs hover:bg-gray-100 sm:text-sm ${
                                 value === "" ? "bg-gray-100 font-bold" : ""
                             }`}
                         >
@@ -93,11 +101,15 @@ export default function CategorySelect({
                             key={category.id}
                             type="button"
                             onClick={() => handleSelect(category.id)}
-                            className={`flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left text-xs hover:bg-gray-100 sm:text-sm ${
+                            className={`mb-1 flex w-full items-center gap-2 rounded-lg border px-2 py-2 text-left text-xs hover:brightness-95 sm:text-sm ${
                                 String(value) === String(category.id)
-                                    ? "bg-blue-50 font-bold text-blue-700"
+                                    ? "font-bold ring-2 ring-blue-300"
                                     : ""
                             }`}
+                            style={{
+                                backgroundColor: getSoftColor(category.color),
+                                borderColor: category.color ?? "#e5e7eb",
+                            }}
                         >
                             <span
                                 className="h-3 w-3 shrink-0 rounded-full border"

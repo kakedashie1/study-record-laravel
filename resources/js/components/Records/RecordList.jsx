@@ -61,7 +61,12 @@ export default function RecordList({
                         listRecords.map((record) => (
                             <div
                                 key={record.id}
-                                className="rounded-xl border bg-white p-3 shadow-sm"
+                                className="rounded-xl border p-3 shadow-sm transition"
+                                style={{
+                                    backgroundColor: `${record.category?.color ?? "#9ca3af"}15`,
+                                    borderColor:
+                                        record.category?.color ?? "#d1d5db",
+                                }}
                             >
                                 {/* カテゴリー */}
                                 <div className="flex items-center gap-2">
@@ -74,15 +79,29 @@ export default function RecordList({
                                         }}
                                     />
 
-                                    <p className="font-bold text-blue-600">
+                                    <p
+                                        className="font-bold"
+                                        style={{
+                                            color:
+                                                record.category?.color ??
+                                                "#374151",
+                                        }}
+                                    >
                                         {record.category?.category_name ??
                                             "未設定"}
                                     </p>
                                 </div>
 
-                                {/* 時間 + 編集削除 */}
+                                {/* 時間 + ボタン */}
                                 <div className="mt-3 flex items-center justify-between">
-                                    <p className="text-xl font-bold text-gray-800">
+                                    <p
+                                        className="text-2xl font-bold"
+                                        style={{
+                                            color:
+                                                record.category?.color ??
+                                                "#1f2937",
+                                        }}
+                                    >
                                         {formatMinutes(record.study_time)}
                                     </p>
 
