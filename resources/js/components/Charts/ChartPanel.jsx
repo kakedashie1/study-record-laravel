@@ -67,6 +67,7 @@ export default function ChartPanel({
                     />
                 </div>
 
+                {/* 期間 */}
                 <div className="col-span-2 min-w-0">
                     <label className="mb-1 block text-xs">期間</label>
 
@@ -76,12 +77,21 @@ export default function ChartPanel({
                             onClick={() => setChartPeriod("daily")}
                             className={`flex h-8 flex-1 items-center justify-center gap-1 rounded border text-xs font-bold transition ${
                                 chartPeriod === "daily"
-                                    ? "border-blue-600 bg-blue-600 shadow-md"
-                                    : "border-blue-200 bg-blue-50"
+                                    ? "border-blue-600 bg-blue-600 text-white shadow-md"
+                                    : "border-blue-200 bg-blue-50 text-gray-900"
                             }`}
                         >
                             <Icon icon="twemoji:calendar" width="16" />
-                            <span className="text-gray-900">日別</span>
+
+                            <span
+                                className={
+                                    chartPeriod === "daily"
+                                        ? "text-white"
+                                        : "text-gray-900"
+                                }
+                            >
+                                日別
+                            </span>
                         </button>
 
                         <button
@@ -89,12 +99,21 @@ export default function ChartPanel({
                             onClick={() => setChartPeriod("weekly")}
                             className={`flex h-8 flex-1 items-center justify-center gap-1 rounded border text-xs font-bold transition ${
                                 chartPeriod === "weekly"
-                                    ? "border-green-600 bg-green-600 shadow-md"
-                                    : "border-green-200 bg-green-50"
+                                    ? "border-green-600 bg-green-600 text-white shadow-md"
+                                    : "border-green-200 bg-green-50 text-gray-900"
                             }`}
                         >
                             <Icon icon="twemoji:chart-increasing" width="16" />
-                            <span className="text-gray-900">週別</span>
+
+                            <span
+                                className={
+                                    chartPeriod === "weekly"
+                                        ? "text-white"
+                                        : "text-gray-900"
+                                }
+                            >
+                                週別
+                            </span>
                         </button>
 
                         <button
@@ -102,12 +121,21 @@ export default function ChartPanel({
                             onClick={() => setChartPeriod("monthly")}
                             className={`flex h-8 flex-1 items-center justify-center gap-1 rounded border text-xs font-bold transition ${
                                 chartPeriod === "monthly"
-                                    ? "border-purple-600 bg-purple-600 shadow-md"
-                                    : "border-purple-200 bg-purple-50"
+                                    ? "border-purple-600 bg-purple-600 text-white shadow-md"
+                                    : "border-purple-200 bg-purple-50 text-gray-900"
                             }`}
                         >
                             <Icon icon="twemoji:spiral-calendar" width="16" />
-                            <span className="text-gray-900">月別</span>
+
+                            <span
+                                className={
+                                    chartPeriod === "monthly"
+                                        ? "text-white"
+                                        : "text-gray-900"
+                                }
+                            >
+                                月別
+                            </span>
                         </button>
                     </div>
                 </div>
