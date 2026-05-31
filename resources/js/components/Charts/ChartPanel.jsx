@@ -1,4 +1,5 @@
 import { formatMinutes } from "../../utils/format";
+import { CalendarDays, CalendarRange, Calendar } from "lucide-react";
 
 import {
     BarChart,
@@ -72,58 +73,46 @@ export default function ChartPanel({
                     </select>
                 </div>
 
-                {/* 期間 */}
                 <div className="col-span-2 min-w-0">
                     <label className="mb-1 block text-xs">期間</label>
 
-                    {/* スマホ */}
-                    <div className="block md:hidden">
-                        <select
-                            value={chartPeriod}
-                            onChange={(e) => setChartPeriod(e.target.value)}
-                            className="h-8 w-full max-w-full min-w-0 rounded border px-1 text-xs sm:px-2 sm:text-sm"
-                        >
-                            <option value="daily">日別</option>
-                            <option value="weekly">週別</option>
-                            <option value="monthly">月別</option>
-                        </select>
-                    </div>
-
-                    {/* PC */}
-                    <div className="hidden md:flex gap-2">
+                    <div className="flex gap-2">
                         <button
                             type="button"
                             onClick={() => setChartPeriod("daily")}
-                            className={`rounded border px-4 py-2 text-sm transition ${
+                            className={`flex h-8 flex-1 items-center justify-center gap-1 rounded border text-xs font-bold transition ${
                                 chartPeriod === "daily"
-                                    ? "bg-blue-500 text-white"
-                                    : "bg-white hover:bg-gray-100"
+                                    ? "border-blue-600 bg-blue-600 text-white shadow-md"
+                                    : "border-blue-200 bg-blue-50 text-blue-700"
                             }`}
                         >
+                            <CalendarDays size={14} />
                             日別
                         </button>
 
                         <button
                             type="button"
                             onClick={() => setChartPeriod("weekly")}
-                            className={`rounded border px-4 py-2 text-sm transition ${
+                            className={`flex h-8 flex-1 items-center justify-center gap-1 rounded border text-xs font-bold transition ${
                                 chartPeriod === "weekly"
-                                    ? "bg-blue-500 text-white"
-                                    : "bg-white hover:bg-gray-100"
+                                    ? "border-green-600 bg-green-600 text-white shadow-md"
+                                    : "border-green-200 bg-green-50 text-green-700"
                             }`}
                         >
+                            <CalendarRange size={14} />
                             週別
                         </button>
 
                         <button
                             type="button"
                             onClick={() => setChartPeriod("monthly")}
-                            className={`rounded border px-4 py-2 text-sm transition ${
+                            className={`flex h-8 flex-1 items-center justify-center gap-1 rounded border text-xs font-bold transition ${
                                 chartPeriod === "monthly"
-                                    ? "bg-blue-500 text-white"
-                                    : "bg-white hover:bg-gray-100"
+                                    ? "border-purple-600 bg-purple-600 text-white shadow-md"
+                                    : "border-purple-200 bg-purple-50 text-purple-700"
                             }`}
                         >
+                            <Calendar size={14} />
                             月別
                         </button>
                     </div>
