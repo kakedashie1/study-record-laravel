@@ -87,14 +87,7 @@ export default function RecordList({
 
                                 {/* 時間 + ボタン */}
                                 <div className="mt-3 flex items-center justify-between">
-                                    <p
-                                        className="text-2xl font-bold"
-                                        style={{
-                                            color:
-                                                record.category?.color ??
-                                                "#1f2937",
-                                        }}
-                                    >
+                                    <p className="text-2xl font-bold text-gray-900">
                                         {formatMinutes(record.study_time)}
                                     </p>
 
