@@ -1,4 +1,5 @@
 import TimeInput from "./TimeInput";
+import CategorySelect from "../Categories/CategorySelect";
 
 export default function RecordCreateForm({
     data,
@@ -42,19 +43,12 @@ export default function RecordCreateForm({
                         </button>
                     </div>
 
-                    <select
+                    <CategorySelect
+                        categories={categories}
                         value={data.category_id}
-                        onChange={(e) => setData("category_id", e.target.value)}
-                        className="h-10 w-full max-w-full min-w-0 rounded border bg-white px-1 py-1 text-xs sm:px-2 sm:text-sm"
-                    >
-                        <option value="">選択してください</option>
-
-                        {categories.map((category) => (
-                            <option key={category.id} value={category.id}>
-                                {category.category_name}
-                            </option>
-                        ))}
-                    </select>
+                        onChange={(value) => setData("category_id", value)}
+                        placeholder="選択してください"
+                    />
 
                     {errors.category_id && (
                         <p className="mt-1 text-xs text-red-500">

@@ -1,5 +1,6 @@
 import { formatMinutes } from "../../utils/format";
 import { Icon } from "@iconify/react";
+import CategorySelect from "../Categories/CategorySelect";
 
 import {
     BarChart,
@@ -58,19 +59,12 @@ export default function ChartPanel({
                 <div className="min-w-0">
                     <label className="mb-1 block text-xs">カテゴリー</label>
 
-                    <select
+                    <CategorySelect
+                        categories={categories}
                         value={chartCategoryId}
-                        onChange={(e) => setChartCategoryId(e.target.value)}
-                        className="h-8 w-full max-w-full min-w-0 rounded border px-1 text-xs sm:px-2 sm:text-sm"
-                    >
-                        <option value="">すべて</option>
-
-                        {categories.map((category) => (
-                            <option key={category.id} value={category.id}>
-                                {category.category_name}
-                            </option>
-                        ))}
-                    </select>
+                        onChange={(value) => setChartCategoryId(value)}
+                        allLabel="すべて"
+                    />
                 </div>
 
                 <div className="col-span-2 min-w-0">
