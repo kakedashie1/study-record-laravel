@@ -38,7 +38,7 @@ export default function RecordCreateForm({
                             onClick={() => setIsCategoryModalOpen(true)}
                             className="shrink-0 whitespace-nowrap rounded border px-1 py-1 text-[10px] hover:bg-blue-500 hover:text-white sm:px-2 sm:text-xs"
                         >
-                            編集
+                            カテゴリー編集
                         </button>
                     </div>
 
