@@ -1,4 +1,5 @@
 import { formatMinutes } from "../../utils/format";
+import { Icon } from "@iconify/react";
 
 export default function DashboardCards({
     dashboardTodayTime,
@@ -38,12 +39,18 @@ export default function DashboardCards({
         <div className="relative mx-auto h-56 w-full max-w-sm">
             {/* 左上：週別 */}
             <div className="absolute left-0 top-0 w-[42%] rounded-xl border-2 border-green-300 bg-green-50 p-3 shadow-sm">
-                <p className="text-xs font-bold text-green-700">
-                    📈 週別
-                    <span className="ml-1 text-[10px] font-normal text-green-600">
+                <div className="flex items-center gap-1 text-xs font-bold text-green-700">
+                    <Icon
+                        icon="twemoji:chart-increasing"
+                        width="16"
+                    />
+
+                    <span>週別</span>
+
+                    <span className="text-[10px] font-normal text-green-600">
                         {weeklyLabel}
                     </span>
-                </p>
+                </div>
 
                 <p className="mt-1 break-words text-sm font-bold text-green-800 sm:text-base">
                     {formatMinutes(dashboardWeeklyTime)}
@@ -52,12 +59,18 @@ export default function DashboardCards({
 
             {/* 右上：月別 */}
             <div className="absolute right-0 top-0 w-[42%] rounded-xl border-2 border-purple-300 bg-purple-50 p-3 shadow-sm">
-                <p className="text-xs font-bold text-purple-700">
-                    🗓️ 月別
-                    <span className="ml-1 text-[10px] font-normal text-purple-600">
+                <div className="flex items-center gap-1 text-xs font-bold text-purple-700">
+                    <Icon
+                        icon="twemoji:spiral-calendar"
+                        width="16"
+                    />
+
+                    <span>月別</span>
+
+                    <span className="text-[10px] font-normal text-purple-600">
                         {monthlyLabel}
                     </span>
-                </p>
+                </div>
 
                 <p className="mt-1 break-words text-sm font-bold text-purple-800 sm:text-base">
                     {formatMinutes(dashboardMonthlyTime)}
@@ -66,12 +79,18 @@ export default function DashboardCards({
 
             {/* 左下：総合計 */}
             <div className="absolute bottom-0 left-0 w-[42%] rounded-xl border-2 border-gray-300 bg-gray-50 p-3 shadow-sm">
-                <p className="text-xs font-bold text-gray-700">
-                    🏆 総合計
-                    <span className="ml-1 text-[10px] font-normal text-gray-600">
+                <div className="flex items-center gap-1 text-xs font-bold text-gray-700">
+                    <Icon
+                        icon="twemoji:trophy"
+                        width="16"
+                    />
+
+                    <span>総合計</span>
+
+                    <span className="text-[10px] font-normal text-gray-600">
                         {totalLabel}
                     </span>
-                </p>
+                </div>
 
                 <p className="mt-1 break-words text-sm font-bold text-gray-800 sm:text-base">
                     {formatMinutes(dashboardTotalTime)}
@@ -80,12 +99,18 @@ export default function DashboardCards({
 
             {/* 右下：年別 */}
             <div className="absolute bottom-0 right-0 w-[42%] rounded-xl border-2 border-orange-300 bg-orange-50 p-3 shadow-sm">
-                <p className="text-xs font-bold text-orange-700">
-                    🎯 年別
-                    <span className="ml-1 text-[10px] font-normal text-orange-600">
+                <div className="flex items-center gap-1 text-xs font-bold text-orange-700">
+                    <Icon
+                        icon="twemoji:direct-hit"
+                        width="16"
+                    />
+
+                    <span>年別</span>
+
+                    <span className="text-[10px] font-normal text-orange-600">
                         {yearlyLabel}
                     </span>
-                </p>
+                </div>
 
                 <p className="mt-1 break-words text-sm font-bold text-orange-800 sm:text-base">
                     {formatMinutes(dashboardYearlyTime)}
@@ -94,12 +119,18 @@ export default function DashboardCards({
 
             {/* 中央：日別 */}
             <div className="absolute left-1/2 top-1/2 z-10 w-[52%] -translate-x-1/2 -translate-y-1/2 rounded-2xl border-2 border-blue-500 bg-blue-50 p-4 text-center shadow-lg">
-                <p className="text-sm font-bold text-blue-600">
-                    📅 日別
-                    <span className="ml-1 text-xs font-normal text-blue-500">
+                <div className="flex items-center justify-center gap-1 text-sm font-bold text-blue-600">
+                    <Icon
+                        icon="twemoji:calendar"
+                        width="18"
+                    />
+
+                    <span>日別</span>
+
+                    <span className="text-xs font-normal text-blue-500">
                         {dailyLabel}
                     </span>
-                </p>
+                </div>
 
                 <p className="mt-2 break-words text-xl font-bold text-blue-700 sm:text-2xl">
                     {formatMinutes(dashboardTodayTime)}

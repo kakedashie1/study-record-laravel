@@ -1,8 +1,4 @@
-import {
-    List,
-    PencilLine,
-    BarChart3,
-} from "lucide-react";
+import { Icon } from "@iconify/react";
 
 export default function BottomNavigation({ activePanel, setActivePanel }) {
     return (
@@ -16,7 +12,7 @@ export default function BottomNavigation({ activePanel, setActivePanel }) {
                         : "text-gray-400"
                 }`}
             >
-                <List size={20} />
+                <Icon icon="twemoji:clipboard" width="22" />
                 一覧
             </button>
 
@@ -29,7 +25,7 @@ export default function BottomNavigation({ activePanel, setActivePanel }) {
                         : "text-gray-400"
                 }`}
             >
-                <PencilLine size={20} />
+                <Icon icon="twemoji:pencil" width="22" />
                 記録
             </button>
 
@@ -42,7 +38,7 @@ export default function BottomNavigation({ activePanel, setActivePanel }) {
                         : "text-gray-400"
                 }`}
             >
-                <BarChart3 size={20} />
+                <Icon icon="twemoji:bar-chart" width="22" />
                 グラフ
             </button>
         </div>

@@ -1,5 +1,5 @@
 import { formatMinutes } from "../../utils/format";
-import { CalendarDays, CalendarRange, Calendar } from "lucide-react";
+import { Icon } from "@iconify/react";
 
 import {
     BarChart,
@@ -86,7 +86,7 @@ export default function ChartPanel({
                                     : "border-blue-200 bg-blue-50 text-blue-700"
                             }`}
                         >
-                            <CalendarDays size={14} />
+                            <Icon icon="twemoji:calendar" width="16" />
                             日別
                         </button>
 
@@ -99,7 +99,7 @@ export default function ChartPanel({
                                     : "border-green-200 bg-green-50 text-green-700"
                             }`}
                         >
-                            <CalendarRange size={14} />
+                            <Icon icon="twemoji:chart-increasing" width="16" />
                             週別
                         </button>
 
@@ -112,7 +112,7 @@ export default function ChartPanel({
                                     : "border-purple-200 bg-purple-50 text-purple-700"
                             }`}
                         >
-                            <Calendar size={14} />
+                            <Icon icon="twemoji:spiral-calendar" width="16" />
                             月別
                         </button>
                     </div>
