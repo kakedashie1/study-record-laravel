@@ -17,8 +17,8 @@ export default function RecordList({
     return (
         <section
             className={`${
-                activePanel === "left" ? "block" : "hidden"
-            } h-full min-w-0 overflow-hidden rounded-xl border p-2 sm:p-4 lg:col-span-3 lg:block`}
+                activePanel === "left" ? "flex" : "hidden"
+            } h-full min-w-0 flex-col overflow-hidden rounded-xl border p-2 sm:p-4 lg:col-span-3 lg:flex`}
         >
             <div className="mb-3">
                 <h2 className="text-lg font-bold text-blue-600">
@@ -42,16 +42,15 @@ export default function RecordList({
             </div>
 
             <div className="mb-3 rounded-lg bg-blue-50 p-3">
-                <p className="text-sm text-gray-600">
-                    {listDate} の合計時間
-                </p>
+                <p className="text-sm text-gray-600">{listDate} の合計時間</p>
 
                 <p className="text-xl font-bold text-blue-600">
                     {formatMinutes(listStudyTime)}
                 </p>
             </div>
 
-            <div className="h-[calc(100%-170px)] overflow-y-auto space-y-3">
+            <div className="min-h-0 flex-1 overflow-hidden rounded-xl bg-gray-50 p-2">
+                <div className="h-full overflow-y-auto space-y-3 pb-6 pr-1">
                 {loading ? (
                     <p>読み込み中...</p>
                 ) : listRecords.length === 0 ? (
@@ -118,6 +117,7 @@ export default function RecordList({
                         </div>
                     ))
                 )}
+                </div>
             </div>
         </section>
     );
