@@ -1,24 +1,50 @@
+import {
+    List,
+    PencilLine,
+    BarChart3,
+} from "lucide-react";
+
 export default function BottomNavigation({ activePanel, setActivePanel }) {
     return (
         <div className="fixed bottom-0 left-0 z-40 grid h-14 w-full grid-cols-3 border-t bg-white lg:hidden">
-            {[
-                { key: "left", label: "一覧" },
-                { key: "center", label: "記録" },
-                { key: "right", label: "グラフ" },
-            ].map((item) => (
-                <button
-                    key={item.key}
-                    type="button"
-                    onClick={() => setActivePanel(item.key)}
-                    className={
-                        activePanel === item.key
-                            ? "font-bold text-blue-600"
-                            : "text-gray-500"
-                    }
-                >
-                    {item.label}
-                </button>
-            ))}
+            <button
+                type="button"
+                onClick={() => setActivePanel("left")}
+                className={`flex flex-col items-center justify-center gap-0.5 text-xs font-bold transition ${
+                    activePanel === "left"
+                        ? "bg-green-50 text-green-600"
+                        : "text-gray-400"
+                }`}
+            >
+                <List size={20} />
+                一覧
+            </button>
+
+            <button
+                type="button"
+                onClick={() => setActivePanel("center")}
+                className={`flex flex-col items-center justify-center gap-0.5 text-xs font-bold transition ${
+                    activePanel === "center"
+                        ? "bg-blue-50 text-blue-600"
+                        : "text-gray-400"
+                }`}
+            >
+                <PencilLine size={20} />
+                記録
+            </button>
+
+            <button
+                type="button"
+                onClick={() => setActivePanel("right")}
+                className={`flex flex-col items-center justify-center gap-0.5 text-xs font-bold transition ${
+                    activePanel === "right"
+                        ? "bg-purple-50 text-purple-600"
+                        : "text-gray-400"
+                }`}
+            >
+                <BarChart3 size={20} />
+                グラフ
+            </button>
         </div>
     );
 }
