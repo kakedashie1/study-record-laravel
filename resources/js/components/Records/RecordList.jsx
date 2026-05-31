@@ -79,14 +79,7 @@ export default function RecordList({
                                         }}
                                     />
 
-                                    <p
-                                        className="font-bold"
-                                        style={{
-                                            color:
-                                                record.category?.color ??
-                                                "#374151",
-                                        }}
-                                    >
+                                    <p className="font-bold text-gray-900">
                                         {record.category?.category_name ??
                                             "未設定"}
                                     </p>
