@@ -13,6 +13,7 @@ import {
     PieChart,
     Pie,
     Cell,
+    Label,
 } from "recharts";
 
 export default function ChartPanel({
@@ -31,22 +32,24 @@ export default function ChartPanel({
     formatChartLabel,
     yAxisConfig,
 }) {
+    const pieTotal = pieChartData.reduce(
+        (sum, item) => sum + Number(item.total),
+        0,
+    );
+
     return (
         <section
             className={`${
                 activePanel === "right" ? "flex" : "hidden"
             } h-full min-h-0 overflow-hidden rounded-xl border p-2 flex-col lg:col-span-5 lg:flex`}
         >
-            <h2 className="mb-1 text-base font-bold text-blue-600 shrink-0">
+            <h2 className="mb-1 shrink-0 text-base font-bold text-blue-600">
                 学習時間のグラフ
             </h2>
 
-            {/* 条件 */}
-            <div className="mb-2 grid w-full grid-cols-[40%_1fr] gap-x-3 gap-y-2 shrink-0">
-                {/* 日付 */}
+            <div className="mb-2 grid w-full shrink-0 grid-cols-[40%_1fr] gap-x-3 gap-y-2">
                 <div className="min-w-0">
                     <label className="mb-1 block text-xs">日付</label>
-
                     <input
                         type="date"
                         value={chartDate}
@@ -55,10 +58,8 @@ export default function ChartPanel({
                     />
                 </div>
 
-                {/* カテゴリー */}
                 <div className="min-w-0">
                     <label className="mb-1 block text-xs">カテゴリー</label>
-
                     <CategorySelect
                         categories={categories}
                         value={chartCategoryId}
@@ -67,7 +68,6 @@ export default function ChartPanel({
                     />
                 </div>
 
-                {/* 期間 */}
                 <div className="col-span-2 min-w-0">
                     <label className="mb-1 block text-xs">期間</label>
 
@@ -82,16 +82,7 @@ export default function ChartPanel({
                             }`}
                         >
                             <Icon icon="twemoji:calendar" width="16" />
-
-                            <span
-                                className={
-                                    chartPeriod === "daily"
-                                        ? "text-white"
-                                        : "text-gray-900"
-                                }
-                            >
-                                日別
-                            </span>
+                            <span>日別</span>
                         </button>
 
                         <button
@@ -104,16 +95,7 @@ export default function ChartPanel({
                             }`}
                         >
                             <Icon icon="twemoji:chart-increasing" width="16" />
-
-                            <span
-                                className={
-                                    chartPeriod === "weekly"
-                                        ? "text-white"
-                                        : "text-gray-900"
-                                }
-                            >
-                                週別
-                            </span>
+                            <span>週別</span>
                         </button>
 
                         <button
@@ -126,29 +108,19 @@ export default function ChartPanel({
                             }`}
                         >
                             <Icon icon="twemoji:spiral-calendar" width="16" />
-
-                            <span
-                                className={
-                                    chartPeriod === "monthly"
-                                        ? "text-white"
-                                        : "text-gray-900"
-                                }
-                            >
-                                月別
-                            </span>
+                            <span>月別</span>
                         </button>
                     </div>
                 </div>
             </div>
-            {/* 円グラフ */}
-            <div className="rounded-xl border p-2 mb-2 flex-[0.9] min-h-0 flex flex-col">
+
+            <div className="mb-2 flex min-h-0 flex-[0.9] flex-col rounded-xl border p-2">
                 <h3 className="mb-1 text-xs font-bold">
-                    カテゴリー別割合（
-                    {getPieChartRangeLabel()}）
+                    カテゴリー別割合（{getPieChartRangeLabel()}）
                 </h3>
 
-                <div className="flex flex-1 min-h-0 items-center">
-                    <div className="w-1/2 h-full">
+                <div className="flex min-h-0 flex-1 items-center">
+                    <div className="h-full w-1/2">
                         {pieChartData.length === 0 ? (
                             <div className="flex h-full items-center justify-center">
                                 <div className="text-center">
@@ -157,11 +129,9 @@ export default function ChartPanel({
                                         width="40"
                                         className="mx-auto mb-2 opacity-40"
                                     />
-
                                     <p className="text-xl font-bold text-gray-400">
                                         NO DATA
                                     </p>
-
                                     <p className="mt-1 text-xs text-gray-400">
                                         データがありません
                                     </p>
@@ -176,8 +146,8 @@ export default function ChartPanel({
                                         nameKey="category_name"
                                         cx="50%"
                                         cy="50%"
-                                        innerRadius={32}
-                                        outerRadius={55}
+                                        innerRadius={38}
+                                        outerRadius={58}
                                         stroke="none"
                                     >
                                         {pieChartData.map((entry, index) => (
@@ -186,6 +156,36 @@ export default function ChartPanel({
                                                 fill={entry.color ?? "#2563eb"}
                                             />
                                         ))}
+
+                                        <Label
+                                            position="center"
+                                            content={() => (
+                                                <text
+                                                    x="50%"
+                                                    y="50%"
+                                                    textAnchor="middle"
+                                                    dominantBaseline="middle"
+                                                >
+                                                    <tspan
+                                                        x="50%"
+                                                        dy="-0.4em"
+                                                        fontSize="10"
+                                                        fill="#6b7280"
+                                                    >
+                                                        合計
+                                                    </tspan>
+                                                    <tspan
+                                                        x="50%"
+                                                        dy="1.4em"
+                                                        fontSize="12"
+                                                        fontWeight="bold"
+                                                        fill="#111827"
+                                                    >
+                                                        {formatMinutes(pieTotal)}
+                                                    </tspan>
+                                                </text>
+                                            )}
+                                        />
                                     </Pie>
 
                                     <Tooltip
@@ -203,24 +203,18 @@ export default function ChartPanel({
                             <thead>
                                 <tr className="border-b">
                                     <th className="py-1 text-left">カテゴリ</th>
-
                                     <th className="py-1 text-right">時間</th>
-
                                     <th className="py-1 text-right">%</th>
                                 </tr>
                             </thead>
 
                             <tbody>
                                 {pieChartData.map((item, index) => {
-                                    const total = pieChartData.reduce(
-                                        (sum, data) => sum + Number(data.total),
-                                        0,
-                                    );
-
                                     const percent =
-                                        total > 0
+                                        pieTotal > 0
                                             ? (
-                                                  (Number(item.total) / total) *
+                                                  (Number(item.total) /
+                                                      pieTotal) *
                                                   100
                                               ).toFixed(1)
                                             : 0;
@@ -237,7 +231,6 @@ export default function ChartPanel({
                                                                 "#2563eb",
                                                         }}
                                                     />
-
                                                     {item.category_name}
                                                 </div>
                                             </td>
@@ -258,11 +251,10 @@ export default function ChartPanel({
                 </div>
             </div>
 
-            {/* 棒グラフ */}
-            <div className="rounded-xl border p-2 flex-1 min-h-0 flex flex-col">
+            <div className="flex min-h-0 flex-1 flex-col rounded-xl border p-2">
                 <h3 className="mb-1 text-xs font-bold">学習時間推移</h3>
 
-                <div className="flex-1 min-h-0">
+                <div className="min-h-0 flex-1">
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart
                             data={barChartData}
@@ -286,7 +278,6 @@ export default function ChartPanel({
 
                                     if (chartPeriod === "daily" && isMobile) {
                                         const date = new Date(value);
-
                                         return `${date.getMonth() + 1}/${date.getDate()}`;
                                     }
 
@@ -307,76 +298,7 @@ export default function ChartPanel({
                             />
 
                             <Tooltip
-                                allowEscapeViewBox={{ x: false, y: false }}
-                                wrapperStyle={{
-                                    zIndex: 50,
-                                    maxWidth: "92vw",
-                                    maxHeight: "55vh",
-                                    overflow: "hidden",
-                                    pointerEvents: "none",
-                                }}
-                                content={({ active, payload, label }) => {
-                                    if (
-                                        !active ||
-                                        !payload ||
-                                        payload.length === 0
-                                    ) {
-                                        return null;
-                                    }
-
-                                    const filteredPayload = payload.filter(
-                                        (item) => Number(item.value) > 0,
-                                    );
-
-                                    const total = filteredPayload.reduce(
-                                        (sum, item) => sum + Number(item.value),
-                                        0,
-                                    );
-
-                                    return (
-                                        <div className="max-h-[55vh] w-[260px] max-w-[92vw] overflow-y-auto rounded-xl border border-gray-200 bg-white/80 p-3 text-xs shadow-lg backdrop-blur-sm sm:w-[320px] sm:text-sm">
-                                            <p className="mb-2 font-bold text-gray-800">
-                                                {formatChartLabel(label)}
-                                            </p>
-
-                                            {filteredPayload.map(
-                                                (entry, index) => (
-                                                    <div
-                                                        key={index}
-                                                        className="mb-1 flex items-center justify-between gap-3"
-                                                    >
-                                                        <div className="flex min-w-0 items-center gap-2">
-                                                            <div
-                                                                className="h-3 w-3 shrink-0 rounded-full"
-                                                                style={{
-                                                                    backgroundColor:
-                                                                        entry.color,
-                                                                }}
-                                                            />
-
-                                                            <span className="truncate">
-                                                                {entry.name}
-                                                            </span>
-                                                        </div>
-
-                                                        <span className="shrink-0 font-bold">
-                                                            {formatMinutes(
-                                                                entry.value,
-                                                            )}
-                                                        </span>
-                                                    </div>
-                                                ),
-                                            )}
-
-                                            <div className="mt-2 flex justify-between border-t pt-2 font-bold">
-                                                <span>合計</span>
-                                                <span>
-                                                    {formatMinutes(total)}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    );
-                                }}
+                                formatter={(value) => formatMinutes(value)}
                             />
 
                             {chartCategories.map((category) => (
