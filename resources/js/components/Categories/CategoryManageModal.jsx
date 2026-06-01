@@ -86,7 +86,7 @@ export default function CategoryManageModal({
                                         key={category.id}
                                         className="rounded-xl border bg-white p-3 shadow-sm"
                                     >
-                                        <div className="mb-3 flex items-center justify-between">
+                                        <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-2">
                                                 <div
                                                     className="h-4 w-4 rounded-full border"
@@ -101,45 +101,46 @@ export default function CategoryManageModal({
                                                     {category.category_name}
                                                 </span>
                                             </div>
-                                        </div>
 
-                                        <div className="flex justify-end gap-2">
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                    if (
-                                                        confirm(
-                                                            "本当に削除しますか？",
-                                                        )
-                                                    ) {
-                                                        router.delete(
-                                                            `/categories/destroy/${category.id}`,
+                                            <div className="flex gap-2">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setEditingCategory(
+                                                            category,
                                                         );
-                                                    }
-                                                }}
-                                                className="rounded border px-3 py-1 text-sm hover:bg-red-500 hover:text-white"
-                                            >
-                                                削除
-                                            </button>
 
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                    setEditingCategory(
-                                                        category,
-                                                    );
-                                                    categoryForm.setData({
-                                                        category_name:
-                                                            category.category_name,
-                                                        color:
-                                                            category.color ??
-                                                            "#2563eb",
-                                                    });
-                                                }}
-                                                className="rounded border px-3 py-1 text-sm hover:bg-blue-500 hover:text-white"
-                                            >
-                                                編集
-                                            </button>
+                                                        categoryForm.setData({
+                                                            category_name:
+                                                                category.category_name,
+                                                            color:
+                                                                category.color ??
+                                                                "#2563eb",
+                                                        });
+                                                    }}
+                                                    className="rounded border px-3 py-1 text-sm hover:bg-blue-500 hover:text-white"
+                                                >
+                                                    編集
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        if (
+                                                            confirm(
+                                                                "本当に削除しますか？",
+                                                            )
+                                                        ) {
+                                                            router.delete(
+                                                                `/categories/${category.id}`,
+                                                            );
+                                                        }
+                                                    }}
+                                                    className="rounded bg-red-500 px-3 py-1 text-sm text-white hover:bg-red-600"
+                                                >
+                                                    削除
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 ))}
@@ -179,6 +180,30 @@ export default function CategoryManageModal({
                                                 />
                                             </td>
 
+                                            {/* 編集 */}
+                                            <td className="px-2 py-2">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setEditingCategory(
+                                                            category,
+                                                        );
+
+                                                        categoryForm.setData({
+                                                            category_name:
+                                                                category.category_name,
+                                                            color:
+                                                                category.color ??
+                                                                "#2563eb",
+                                                        });
+                                                    }}
+                                                    className="rounded border px-3 py-1 text-sm hover:bg-blue-500 hover:text-white"
+                                                >
+                                                    編集
+                                                </button>
+                                            </td>
+
+                                            {/* 削除 */}
                                             <td className="px-2 py-2">
                                                 <button
                                                     type="button"
@@ -193,30 +218,9 @@ export default function CategoryManageModal({
                                                             );
                                                         }
                                                     }}
-                                                    className="rounded border px-3 py-1 text-sm hover:bg-red-500 hover:text-white"
+                                                    className="rounded bg-red-500 px-3 py-1 text-sm text-white hover:bg-red-600"
                                                 >
                                                     削除
-                                                </button>
-                                            </td>
-
-                                            <td className="px-2 py-2">
-                                                <button
-                                                    type="button"
-                                                    onClick={() => {
-                                                        setEditingCategory(
-                                                            category,
-                                                        );
-                                                        categoryForm.setData({
-                                                            category_name:
-                                                                category.category_name,
-                                                            color:
-                                                                category.color ??
-                                                                "#2563eb",
-                                                        });
-                                                    }}
-                                                    className="rounded border px-3 py-1 text-sm hover:bg-blue-500 hover:text-white"
-                                                >
-                                                    編集
                                                 </button>
                                             </td>
                                         </tr>
