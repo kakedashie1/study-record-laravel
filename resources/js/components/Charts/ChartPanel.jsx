@@ -181,7 +181,9 @@ export default function ChartPanel({
                                                         fontWeight="bold"
                                                         fill="#111827"
                                                     >
-                                                        {formatMinutes(pieTotal)}
+                                                        {formatMinutes(
+                                                            pieTotal,
+                                                        )}
                                                     </tspan>
                                                 </text>
                                             )}
@@ -298,7 +300,76 @@ export default function ChartPanel({
                             />
 
                             <Tooltip
-                                formatter={(value) => formatMinutes(value)}
+                                allowEscapeViewBox={{ x: false, y: false }}
+                                wrapperStyle={{
+                                    zIndex: 50,
+                                    maxWidth: "92vw",
+                                    maxHeight: "55vh",
+                                    overflow: "hidden",
+                                    pointerEvents: "none",
+                                }}
+                                content={({ active, payload, label }) => {
+                                    if (
+                                        !active ||
+                                        !payload ||
+                                        payload.length === 0
+                                    ) {
+                                        return null;
+                                    }
+
+                                    const filteredPayload = payload.filter(
+                                        (item) => Number(item.value) > 0,
+                                    );
+
+                                    const total = filteredPayload.reduce(
+                                        (sum, item) => sum + Number(item.value),
+                                        0,
+                                    );
+
+                                    return (
+                                        <div className="max-h-[55vh] w-[260px] max-w-[92vw] overflow-y-auto rounded-xl border border-gray-200 bg-white/80 p-3 text-xs shadow-lg backdrop-blur-sm sm:w-[320px] sm:text-sm">
+                                            <p className="mb-2 font-bold text-gray-800">
+                                                {formatChartLabel(label)}
+                                            </p>
+
+                                            {filteredPayload.map(
+                                                (entry, index) => (
+                                                    <div
+                                                        key={index}
+                                                        className="mb-1 flex items-center justify-between gap-3"
+                                                    >
+                                                        <div className="flex min-w-0 items-center gap-2">
+                                                            <div
+                                                                className="h-3 w-3 shrink-0 rounded-full"
+                                                                style={{
+                                                                    backgroundColor:
+                                                                        entry.color,
+                                                                }}
+                                                            />
+
+                                                            <span className="truncate">
+                                                                {entry.name}
+                                                            </span>
+                                                        </div>
+
+                                                        <span className="shrink-0 font-bold">
+                                                            {formatMinutes(
+                                                                entry.value,
+                                                            )}
+                                                        </span>
+                                                    </div>
+                                                ),
+                                            )}
+
+                                            <div className="mt-2 flex justify-between border-t pt-2 font-bold">
+                                                <span>合計</span>
+                                                <span>
+                                                    {formatMinutes(total)}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    );
+                                }}
                             />
 
                             {chartCategories.map((category) => (
