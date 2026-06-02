@@ -162,6 +162,7 @@ export default function ChartPanel({
                                         innerRadius={38}
                                         outerRadius={58}
                                         stroke="none"
+                                        isAnimationActive={false}
                                     >
                                         {pieChartData.map((entry, index) => (
                                             <Cell
@@ -391,6 +392,7 @@ export default function ChartPanel({
                                     dataKey={category.category_name}
                                     stackId="study"
                                     fill={category.color ?? "#2563eb"}
+                                    isAnimationActive={false}
                                 >
                                     <LabelList
                                         dataKey={category.category_name}
@@ -399,6 +401,7 @@ export default function ChartPanel({
                                                 props;
 
                                             const data =
+                                                props.payload ??
                                                 barChartDataWithTotal[index];
 
                                             if (!data || Number(value) <= 0) {
@@ -452,7 +455,6 @@ export default function ChartPanel({
                                             const isMobile =
                                                 window.innerWidth < 640;
 
-                                            // 月別だけ2段表示
                                             const shouldBreakLine =
                                                 chartPeriod === "monthly";
 
@@ -469,7 +471,7 @@ export default function ChartPanel({
                                                         isMobile &&
                                                         chartPeriod ===
                                                             "monthly"
-                                                            ? 7
+                                                            ? 8
                                                             : 10
                                                     }
                                                     fontWeight="bold"
