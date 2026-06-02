@@ -162,7 +162,6 @@ export default function ChartPanel({
                                         innerRadius={38}
                                         outerRadius={58}
                                         stroke="none"
-                                        isAnimationActive={false}
                                     >
                                         {pieChartData.map((entry, index) => (
                                             <Cell
@@ -392,7 +391,6 @@ export default function ChartPanel({
                                     dataKey={category.category_name}
                                     stackId="study"
                                     fill={category.color ?? "#2563eb"}
-                                    isAnimationActive={false}
                                 >
                                     <LabelList
                                         dataKey={category.category_name}
@@ -402,6 +400,16 @@ export default function ChartPanel({
 
                                             const data =
                                                 props.payload ??
+                                                barChartDataWithTotal.find(
+                                                    (item) =>
+                                                        item.label ===
+                                                        props?.label,
+                                                ) ??
+                                                barChartDataWithTotal.find(
+                                                    (item) =>
+                                                        item.label ===
+                                                        props?.payload?.label,
+                                                ) ??
                                                 barChartDataWithTotal[index];
 
                                             if (!data || Number(value) <= 0) {
@@ -471,7 +479,7 @@ export default function ChartPanel({
                                                         isMobile &&
                                                         chartPeriod ===
                                                             "monthly"
-                                                            ? 8
+                                                            ? 7
                                                             : 10
                                                     }
                                                     fontWeight="bold"
