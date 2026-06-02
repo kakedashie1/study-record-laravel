@@ -14,7 +14,6 @@ import {
     Pie,
     Cell,
     Label,
-    LabelList,
 } from "recharts";
 
 export default function ChartPanel({
@@ -391,125 +390,121 @@ export default function ChartPanel({
                                     dataKey={category.category_name}
                                     stackId="study"
                                     fill={category.color ?? "#2563eb"}
-                                >
-                                    <LabelList
-                                        dataKey={category.category_name}
-                                        content={(props) => {
-                                            const { x, y, width, value, index } =
-                                                props;
+                                    shape={(props) => {
+                                        const {
+                                            x,
+                                            y,
+                                            width,
+                                            height,
+                                            fill,
+                                            payload,
+                                        } = props;
 
-                                            const data =
-                                                props.payload ??
-                                                barChartDataWithTotal.find(
-                                                    (item) =>
-                                                        item.label ===
-                                                        props?.label,
-                                                ) ??
-                                                barChartDataWithTotal.find(
-                                                    (item) =>
-                                                        item.label ===
-                                                        props?.payload?.label,
-                                                ) ??
-                                                barChartDataWithTotal[index];
+                                        if (!payload) {
+                                            return null;
+                                        }
 
-                                            if (!data || Number(value) <= 0) {
-                                                return null;
-                                            }
+                                        const currentValue = Number(
+                                            payload[category.category_name] ??
+                                                0,
+                                        );
 
-                                            const total = chartCategories.reduce(
-                                                (sum, cat) =>
-                                                    sum +
+                                        if (currentValue <= 0) {
+                                            return null;
+                                        }
+
+                                        const total = Number(
+                                            payload.total ?? 0,
+                                        );
+
+                                        const lastVisibleCategoryIndex =
+                                            chartCategories
+                                                .map((cat, index) =>
                                                     Number(
-                                                        data[
+                                                        payload[
                                                             cat.category_name
                                                         ] ?? 0,
-                                                    ),
-                                                0,
-                                            );
+                                                    ) > 0
+                                                        ? index
+                                                        : -1,
+                                                )
+                                                .filter((index) => index !== -1)
+                                                .at(-1);
 
-                                            if (total <= 0) {
-                                                return null;
-                                            }
+                                        const isTopBar =
+                                            categoryIndex ===
+                                            lastVisibleCategoryIndex;
 
-                                            const lastVisibleCategoryIndex =
-                                                chartCategories
-                                                    .map((cat, i) =>
-                                                        Number(
-                                                            data[
-                                                                cat
-                                                                    .category_name
-                                                            ] ?? 0,
-                                                        ) > 0
-                                                            ? i
-                                                            : -1,
-                                                    )
-                                                    .filter((i) => i !== -1)
-                                                    .at(-1);
+                                        const hours = Math.floor(total / 60);
+                                        const minutes = total % 60;
+                                        const centerX =
+                                            Number(x) + Number(width) / 2;
 
-                                            if (
-                                                categoryIndex !==
-                                                lastVisibleCategoryIndex
-                                            ) {
-                                                return null;
-                                            }
+                                        const isMobile =
+                                            window.innerWidth < 640;
 
-                                            const hours = Math.floor(
-                                                total / 60,
-                                            );
-                                            const minutes = total % 60;
-                                            const centerX =
-                                                Number(x) + Number(width) / 2;
+                                        // 月別だけ2段表示
+                                        const shouldBreakLine =
+                                            isMobile ||
+                                            chartPeriod === "monthly";
 
-                                            const isMobile =
-                                                window.innerWidth < 640;
+                                        return (
+                                            <g>
+                                                {/* 棒本体 */}
+                                                <rect
+                                                    x={x}
+                                                    y={y}
+                                                    width={width}
+                                                    height={height}
+                                                    fill={fill}
+                                                />
 
-                                            const shouldBreakLine =
-                                                chartPeriod === "monthly";
-
-                                            return (
-                                                <text
-                                                    x={centerX}
-                                                    y={
-                                                        shouldBreakLine
-                                                            ? Number(y) - 22
-                                                            : Number(y) - 6
-                                                    }
-                                                    textAnchor="middle"
-                                                    fontSize={
-                                                        isMobile &&
-                                                        chartPeriod ===
-                                                            "monthly"
-                                                            ? 7
-                                                            : 10
-                                                    }
-                                                    fontWeight="bold"
-                                                    fill="#111827"
-                                                >
-                                                    {shouldBreakLine &&
-                                                    hours > 0 &&
-                                                    minutes > 0 ? (
-                                                        <>
-                                                            <tspan
-                                                                x={centerX}
-                                                                dy="0"
-                                                            >
-                                                                {hours}時間
-                                                            </tspan>
-                                                            <tspan
-                                                                x={centerX}
-                                                                dy="1.2em"
-                                                            >
-                                                                {minutes}分
-                                                            </tspan>
-                                                        </>
-                                                    ) : (
-                                                        formatMinutes(total)
-                                                    )}
-                                                </text>
-                                            );
-                                        }}
-                                    />
-                                </Bar>
+                                                {/* 一番上の棒だけに合計時間を表示 */}
+                                                {isTopBar && total > 0 && (
+                                                    <text
+                                                        x={centerX}
+                                                        y={
+                                                            shouldBreakLine
+                                                                ? Number(y) - 22
+                                                                : Number(y) - 6
+                                                        }
+                                                        textAnchor="middle"
+                                                        fontSize={
+                                                            isMobile &&
+                                                            chartPeriod ===
+                                                                "monthly"
+                                                                ? 7
+                                                                : 10
+                                                        }
+                                                        fontWeight="bold"
+                                                        fill="#111827"
+                                                    >
+                                                        {shouldBreakLine &&
+                                                        hours > 0 &&
+                                                        minutes > 0 ? (
+                                                            <>
+                                                                <tspan
+                                                                    x={centerX}
+                                                                    dy="0"
+                                                                >
+                                                                    {hours}時間
+                                                                </tspan>
+                                                                <tspan
+                                                                    x={centerX}
+                                                                    dy="1.2em"
+                                                                >
+                                                                    {minutes}分
+                                                                </tspan>
+                                                            </>
+                                                        ) : (
+                                                            formatMinutes(total)
+                                                        )}
+                                                    </text>
+                                                )}
+                                            </g>
+                                        );
+                                    }}
+                                />
                             ))}
                         </BarChart>
                     </ResponsiveContainer>
