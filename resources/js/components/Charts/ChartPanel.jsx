@@ -14,6 +14,7 @@ import {
     Pie,
     Cell,
     Label,
+    LabelList,
 } from "recharts";
 
 export default function ChartPanel({
@@ -32,10 +33,25 @@ export default function ChartPanel({
     formatChartLabel,
     yAxisConfig,
 }) {
+    // 円グラフ中央に表示する合計時間
     const pieTotal = pieChartData.reduce(
         (sum, item) => sum + Number(item.total),
         0,
     );
+
+    // 棒グラフの各棒ごとの合計時間を追加
+    const barChartDataWithTotal = barChartData.map((item) => {
+        const total = chartCategories.reduce(
+            (sum, category) =>
+                sum + Number(item[category.category_name] ?? 0),
+            0,
+        );
+
+        return {
+            ...item,
+            total,
+        };
+    });
 
     return (
         <section
@@ -259,9 +275,9 @@ export default function ChartPanel({
                 <div className="min-h-0 flex-1">
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart
-                            data={barChartData}
+                            data={barChartDataWithTotal}
                             margin={{
-                                top: 4,
+                                top: 28,
                                 right: 8,
                                 left: 0,
                                 bottom: 20,
@@ -322,7 +338,8 @@ export default function ChartPanel({
                                     );
 
                                     const total = filteredPayload.reduce(
-                                        (sum, item) => sum + Number(item.value),
+                                        (sum, item) =>
+                                            sum + Number(item.value),
                                         0,
                                     );
 
@@ -372,13 +389,106 @@ export default function ChartPanel({
                                 }}
                             />
 
-                            {chartCategories.map((category) => (
+                            {chartCategories.map((category, categoryIndex) => (
                                 <Bar
                                     key={category.id}
                                     dataKey={category.category_name}
                                     stackId="study"
                                     fill={category.color ?? "#2563eb"}
-                                />
+                                >
+                                    {/* 各棒の一番上のカテゴリだけに合計時間を表示 */}
+                                    <LabelList
+                                        dataKey={category.category_name}
+                                        content={(props) => {
+                                            const { x, y, width, value, index } =
+                                                props;
+
+                                            const data =
+                                                barChartDataWithTotal[index];
+
+                                            if (!data || Number(value) <= 0) {
+                                                return null;
+                                            }
+
+                                            const lastVisibleCategoryIndex =
+                                                chartCategories
+                                                    .map((cat, i) =>
+                                                        Number(
+                                                            data[
+                                                                cat
+                                                                    .category_name
+                                                            ] ?? 0,
+                                                        ) > 0
+                                                            ? i
+                                                            : -1,
+                                                    )
+                                                    .filter((i) => i !== -1)
+                                                    .at(-1);
+
+                                            if (
+                                                categoryIndex !==
+                                                lastVisibleCategoryIndex
+                                            ) {
+                                                return null;
+                                            }
+
+                                            const totalMinutes = Number(
+                                                data.total,
+                                            );
+                                            const hours = Math.floor(
+                                                totalMinutes / 60,
+                                            );
+                                            const minutes = totalMinutes % 60;
+                                            const centerX =
+                                                Number(x) + Number(width) / 2;
+
+                                            const isMobile =
+                                                window.innerWidth < 640;
+
+                                            const shouldBreakLine =
+                                                isMobile ||
+                                                chartPeriod === "monthly";
+
+                                            return (
+                                                <text
+                                                    x={centerX}
+                                                    y={
+                                                        shouldBreakLine
+                                                            ? Number(y) - 20
+                                                            : Number(y) - 6
+                                                    }
+                                                    textAnchor="middle"
+                                                    fontSize={10}
+                                                    fontWeight="bold"
+                                                    fill="#111827"
+                                                >
+                                                    {shouldBreakLine &&
+                                                    hours > 0 &&
+                                                    minutes > 0 ? (
+                                                        <>
+                                                            <tspan
+                                                                x={centerX}
+                                                                dy="0"
+                                                            >
+                                                                {hours}時間
+                                                            </tspan>
+                                                            <tspan
+                                                                x={centerX}
+                                                                dy="1.2em"
+                                                            >
+                                                                {minutes}分
+                                                            </tspan>
+                                                        </>
+                                                    ) : (
+                                                        formatMinutes(
+                                                            totalMinutes,
+                                                        )
+                                                    )}
+                                                </text>
+                                            );
+                                        }}
+                                    />
+                                </Bar>
                             ))}
                         </BarChart>
                     </ResponsiveContainer>
