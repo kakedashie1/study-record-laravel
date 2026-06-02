@@ -395,13 +395,8 @@ export default function ChartPanel({
                                     <LabelList
                                         dataKey={category.category_name}
                                         content={(props) => {
-                                            const {
-                                                x,
-                                                y,
-                                                width,
-                                                value,
-                                                index,
-                                            } = props;
+                                            const { x, y, width, value, index } =
+                                                props;
 
                                             const data =
                                                 barChartDataWithTotal[index];
@@ -410,18 +405,16 @@ export default function ChartPanel({
                                                 return null;
                                             }
 
-                                            const total =
-                                                chartCategories.reduce(
-                                                    (sum, cat) =>
-                                                        sum +
-                                                        Number(
-                                                            data[
-                                                                cat
-                                                                    .category_name
-                                                            ] ?? 0,
-                                                        ),
-                                                    0,
-                                                );
+                                            const total = chartCategories.reduce(
+                                                (sum, cat) =>
+                                                    sum +
+                                                    Number(
+                                                        data[
+                                                            cat.category_name
+                                                        ] ?? 0,
+                                                    ),
+                                                0,
+                                            );
 
                                             if (total <= 0) {
                                                 return null;
@@ -458,8 +451,9 @@ export default function ChartPanel({
 
                                             const isMobile =
                                                 window.innerWidth < 640;
+
+                                            // 月別だけ2段表示
                                             const shouldBreakLine =
-                                                isMobile &&
                                                 chartPeriod === "monthly";
 
                                             return (
@@ -472,7 +466,11 @@ export default function ChartPanel({
                                                     }
                                                     textAnchor="middle"
                                                     fontSize={
-                                                        shouldBreakLine ? 7 : 10
+                                                        isMobile &&
+                                                        chartPeriod ===
+                                                            "monthly"
+                                                            ? 7
+                                                            : 10
                                                     }
                                                     fontWeight="bold"
                                                     fill="#111827"
