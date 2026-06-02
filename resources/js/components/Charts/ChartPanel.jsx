@@ -33,17 +33,14 @@ export default function ChartPanel({
     formatChartLabel,
     yAxisConfig,
 }) {
-    // 円グラフ中央に表示する合計時間
     const pieTotal = pieChartData.reduce(
         (sum, item) => sum + Number(item.total),
         0,
     );
 
-    // 棒グラフの各棒ごとの合計時間を追加
     const barChartDataWithTotal = barChartData.map((item) => {
         const total = chartCategories.reduce(
-            (sum, category) =>
-                sum + Number(item[category.category_name] ?? 0),
+            (sum, category) => sum + Number(item[category.category_name] ?? 0),
             0,
         );
 
@@ -277,7 +274,7 @@ export default function ChartPanel({
                         <BarChart
                             data={barChartDataWithTotal}
                             margin={{
-                                top: 28,
+                                top: 48,
                                 right: 8,
                                 left: 0,
                                 bottom: 20,
@@ -338,8 +335,7 @@ export default function ChartPanel({
                                     );
 
                                     const total = filteredPayload.reduce(
-                                        (sum, item) =>
-                                            sum + Number(item.value),
+                                        (sum, item) => sum + Number(item.value),
                                         0,
                                     );
 
@@ -396,17 +392,38 @@ export default function ChartPanel({
                                     stackId="study"
                                     fill={category.color ?? "#2563eb"}
                                 >
-                                    {/* 各棒の一番上のカテゴリだけに合計時間を表示 */}
                                     <LabelList
                                         dataKey={category.category_name}
                                         content={(props) => {
-                                            const { x, y, width, value, index } =
-                                                props;
+                                            const {
+                                                x,
+                                                y,
+                                                width,
+                                                value,
+                                                index,
+                                            } = props;
 
                                             const data =
                                                 barChartDataWithTotal[index];
 
                                             if (!data || Number(value) <= 0) {
+                                                return null;
+                                            }
+
+                                            const total =
+                                                chartCategories.reduce(
+                                                    (sum, cat) =>
+                                                        sum +
+                                                        Number(
+                                                            data[
+                                                                cat
+                                                                    .category_name
+                                                            ] ?? 0,
+                                                        ),
+                                                    0,
+                                                );
+
+                                            if (total <= 0) {
                                                 return null;
                                             }
 
@@ -432,21 +449,17 @@ export default function ChartPanel({
                                                 return null;
                                             }
 
-                                            const totalMinutes = Number(
-                                                data.total,
-                                            );
                                             const hours = Math.floor(
-                                                totalMinutes / 60,
+                                                total / 60,
                                             );
-                                            const minutes = totalMinutes % 60;
+                                            const minutes = total % 60;
                                             const centerX =
                                                 Number(x) + Number(width) / 2;
 
                                             const isMobile =
                                                 window.innerWidth < 640;
-
                                             const shouldBreakLine =
-                                                isMobile ||
+                                                isMobile &&
                                                 chartPeriod === "monthly";
 
                                             return (
@@ -454,11 +467,13 @@ export default function ChartPanel({
                                                     x={centerX}
                                                     y={
                                                         shouldBreakLine
-                                                            ? Number(y) - 20
+                                                            ? Number(y) - 22
                                                             : Number(y) - 6
                                                     }
                                                     textAnchor="middle"
-                                                    fontSize={10}
+                                                    fontSize={
+                                                        shouldBreakLine ? 7 : 10
+                                                    }
                                                     fontWeight="bold"
                                                     fill="#111827"
                                                 >
@@ -480,9 +495,7 @@ export default function ChartPanel({
                                                             </tspan>
                                                         </>
                                                     ) : (
-                                                        formatMinutes(
-                                                            totalMinutes,
-                                                        )
+                                                        formatMinutes(total)
                                                     )}
                                                 </text>
                                             );
