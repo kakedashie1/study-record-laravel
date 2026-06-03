@@ -372,13 +372,13 @@ export default function Top({
         <>
             <div className="h-screen overflow-hidden bg-white p-3">
                 {/* ヘッダー */}
-                <div className="mb-3 flex items-center justify-between rounded-xl border bg-white px-3 py-2 lg:ml-0 lg:mr-0 lg:border-0 lg:px-4">
+                <div className="mb-3 flex items-center justify-between rounded-xl bg-white px-3 py-2 lg:px-4">
                     {/* 左：ロゴ */}
                     <div className="flex items-center">
                         <img
                             src="/StudyRecord_logo_header.png"
                             alt="Study Record"
-                            className="h-16 w-auto"
+                            className="h-10 w-auto sm:h-12 md:h-14 lg:h-16"
                         />
                     </div>
 
