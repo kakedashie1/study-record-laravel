@@ -373,10 +373,14 @@ export default function Top({
             <div className="h-screen overflow-hidden bg-white p-3">
                 {/* ヘッダー */}
                 <div className="mb-3 flex items-center justify-between rounded-xl border bg-white px-3 py-2 lg:ml-0 lg:mr-0 lg:border-0 lg:px-4">
-                    {/* 左：タイトル */}
-                    <h1 className="truncate text-base font-bold sm:text-lg md:text-xl lg:text-2xl">
-                        学習時間記録アプリ
-                    </h1>
+                    {/* 左：ロゴ */}
+                    <div className="flex items-center">
+                        <img
+                            src="/StudyRecord_logo_header.png"
+                            alt="Study Record"
+                            className="h-16 w-auto"
+                        />
+                    </div>
 
                     {/* 右：ユーザー名 + ログアウト */}
                     <div className="ml-3 flex shrink-0 items-center gap-2 sm:gap-3">
