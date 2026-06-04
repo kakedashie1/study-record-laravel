@@ -378,7 +378,7 @@ export default function Top({
                         <img
                             src="/StudyRecord_logo_header.png"
                             alt="Study Record"
-                            className="h-10 w-auto sm:h-12 md:h-14 lg:h-16"
+                            className="h-10 w-auto sm:h-12 lg:h-16"
                         />
                     </div>
 
