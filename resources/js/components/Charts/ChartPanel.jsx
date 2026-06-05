@@ -49,6 +49,49 @@ export default function ChartPanel({
         };
     });
 
+    const PeriodButtons = () => (
+        <div className="flex gap-2">
+            <button
+                type="button"
+                onClick={() => setChartPeriod("daily")}
+                className={`flex h-8 flex-1 items-center justify-center gap-1 rounded border text-xs font-bold transition ${
+                    chartPeriod === "daily"
+                        ? "border-blue-600 bg-blue-600 text-white shadow-md"
+                        : "border-blue-200 bg-blue-50 text-gray-900"
+                }`}
+            >
+                <Icon icon="twemoji:calendar" width="16" />
+                <span>日別</span>
+            </button>
+
+            <button
+                type="button"
+                onClick={() => setChartPeriod("weekly")}
+                className={`flex h-8 flex-1 items-center justify-center gap-1 rounded border text-xs font-bold transition ${
+                    chartPeriod === "weekly"
+                        ? "border-green-600 bg-green-600 text-white shadow-md"
+                        : "border-green-200 bg-green-50 text-gray-900"
+                }`}
+            >
+                <Icon icon="twemoji:chart-increasing" width="16" />
+                <span>週別</span>
+            </button>
+
+            <button
+                type="button"
+                onClick={() => setChartPeriod("monthly")}
+                className={`flex h-8 flex-1 items-center justify-center gap-1 rounded border text-xs font-bold transition ${
+                    chartPeriod === "monthly"
+                        ? "border-purple-600 bg-purple-600 text-white shadow-md"
+                        : "border-purple-200 bg-purple-50 text-gray-900"
+                }`}
+            >
+                <Icon icon="twemoji:spiral-calendar" width="16" />
+                <span>月別</span>
+            </button>
+        </div>
+    );
+
     return (
         <section
             className={`${
@@ -81,55 +124,10 @@ export default function ChartPanel({
                         />
                     </div>
 
-                    <div className="col-span-2 min-w-0">
+                    {/* PCだけ上部に表示 */}
+                    <div className="col-span-2 hidden min-w-0 lg:block">
                         <label className="mb-1 block text-xs">期間</label>
-
-                        <div className="flex gap-2">
-                            <button
-                                type="button"
-                                onClick={() => setChartPeriod("daily")}
-                                className={`flex h-8 flex-1 items-center justify-center gap-1 rounded border text-xs font-bold transition ${
-                                    chartPeriod === "daily"
-                                        ? "border-blue-600 bg-blue-600 text-white shadow-md"
-                                        : "border-blue-200 bg-blue-50 text-gray-900"
-                                }`}
-                            >
-                                <Icon icon="twemoji:calendar" width="16" />
-                                <span>日別</span>
-                            </button>
-
-                            <button
-                                type="button"
-                                onClick={() => setChartPeriod("weekly")}
-                                className={`flex h-8 flex-1 items-center justify-center gap-1 rounded border text-xs font-bold transition ${
-                                    chartPeriod === "weekly"
-                                        ? "border-green-600 bg-green-600 text-white shadow-md"
-                                        : "border-green-200 bg-green-50 text-gray-900"
-                                }`}
-                            >
-                                <Icon
-                                    icon="twemoji:chart-increasing"
-                                    width="16"
-                                />
-                                <span>週別</span>
-                            </button>
-
-                            <button
-                                type="button"
-                                onClick={() => setChartPeriod("monthly")}
-                                className={`flex h-8 flex-1 items-center justify-center gap-1 rounded border text-xs font-bold transition ${
-                                    chartPeriod === "monthly"
-                                        ? "border-purple-600 bg-purple-600 text-white shadow-md"
-                                        : "border-purple-200 bg-purple-50 text-gray-900"
-                                }`}
-                            >
-                                <Icon
-                                    icon="twemoji:spiral-calendar"
-                                    width="16"
-                                />
-                                <span>月別</span>
-                            </button>
-                        </div>
+                        <PeriodButtons />
                     </div>
                 </div>
 
@@ -284,6 +282,11 @@ export default function ChartPanel({
                     </div>
                 </div>
 
+                {/* スマホだけ円グラフと棒グラフの間に表示 */}
+                <div className="mb-2 shrink-0 lg:hidden">
+                    <PeriodButtons />
+                </div>
+
                 <div className="flex min-h-0 flex-1 flex-col rounded-xl border p-2">
                     <h3 className="mb-1 text-xs font-bold">学習時間推移</h3>
 
@@ -303,10 +306,11 @@ export default function ChartPanel({
                                 <XAxis
                                     dataKey="label"
                                     interval={0}
-                                    height={24}
-                                    fontSize={12}
+                                    height={40}
                                     tickMargin={2}
-                                    tickFormatter={(value) => {
+                                    tick={(props) => {
+                                        const { x, y, payload } = props;
+
                                         const isMobile =
                                             window.innerWidth < 640;
 
@@ -314,11 +318,69 @@ export default function ChartPanel({
                                             chartPeriod === "daily" &&
                                             isMobile
                                         ) {
-                                            const date = new Date(value);
-                                            return `${date.getMonth() + 1}/${date.getDate()}`;
+                                            const date = new Date(
+                                                payload.value,
+                                            );
+
+                                            const weekDays = [
+                                                "日",
+                                                "月",
+                                                "火",
+                                                "水",
+                                                "木",
+                                                "金",
+                                                "土",
+                                            ];
+
+                                            return (
+                                                <g
+                                                    transform={`translate(${x},${y})`}
+                                                >
+                                                    <text
+                                                        x={0}
+                                                        y={0}
+                                                        dy={10}
+                                                        textAnchor="middle"
+                                                        fontSize={10}
+                                                        fill="#374151"
+                                                    >
+                                                        {date.getMonth() + 1}/
+                                                        {date.getDate()}
+                                                    </text>
+
+                                                    <text
+                                                        x={0}
+                                                        y={0}
+                                                        dy={22}
+                                                        textAnchor="middle"
+                                                        fontSize={9}
+                                                        fill="#6B7280"
+                                                    >
+                                                        (
+                                                        {
+                                                            weekDays[
+                                                                date.getDay()
+                                                            ]
+                                                        }
+                                                        )
+                                                    </text>
+                                                </g>
+                                            );
                                         }
 
-                                        return formatChartLabel(value);
+                                        return (
+                                            <text
+                                                x={x}
+                                                y={y + 12}
+                                                textAnchor="middle"
+                                                fontSize={12}
+                                                fill="#374151"
+                                            >
+                                                {formatChartLabel(
+                                                    payload.value,
+                                                )}
+                                            </text>
+                                        );
                                     }}
                                 />
 
@@ -476,14 +538,12 @@ export default function ChartPanel({
                                                 const isMobile =
                                                     window.innerWidth < 640;
 
-                                                // 月別だけ2段表示
                                                 const shouldBreakLine =
                                                     isMobile ||
                                                     chartPeriod === "monthly";
 
                                                 return (
                                                     <g>
-                                                        {/* 棒本体 */}
                                                         <rect
                                                             x={x}
                                                             y={y}
@@ -492,7 +552,6 @@ export default function ChartPanel({
                                                             fill={fill}
                                                         />
 
-                                                        {/* 一番上の棒だけに合計時間を表示 */}
                                                         {isTopBar &&
                                                             total > 0 && (
                                                                 <text
@@ -544,6 +603,7 @@ export default function ChartPanel({
                                                                                 {
                                                                                     minutes
                                                                                 }
+
                                                                                 分
                                                                             </tspan>
                                                                         </>

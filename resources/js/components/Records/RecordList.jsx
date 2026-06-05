@@ -50,7 +50,7 @@ export default function RecordList({
             </div>
 
             <div className="min-h-0 flex-1 overflow-hidden rounded-xl bg-gray-50 p-2">
-                <div className="h-full overflow-y-auto space-y-3 pb-6 pr-1">
+                <div className="h-full overflow-y-auto space-y-3 pb-20 pr-1 lg:pb-6">
                     {loading ? (
                         <p>読み込み中...</p>
                     ) : listRecords.length === 0 ? (
