@@ -370,7 +370,7 @@ export default function Top({
 
     return (
         <>
-            <div className="h-screen overflow-hidden bg-white p-3">
+            <div className="flex h-screen flex-col overflow-hidden bg-white p-3">
                 {/* ヘッダー */}
                 <div className="mb-3 flex items-center justify-between rounded-xl bg-white px-3 py-2 lg:px-4">
                     {/* 左：ロゴ */}
@@ -396,7 +396,7 @@ export default function Top({
                     </div>
                 </div>
 
-                <div className="grid h-[calc(100vh-80px)] grid-cols-1 gap-3 overflow-hidden lg:h-[calc(100vh-24px)] lg:grid-cols-12">
+                <div className="grid min-h-0 flex-1 grid-cols-1 gap-3 overflow-hidden lg:grid-cols-12">
                     {/* ========================= */}
                     {/* 左列 */}
                     {/* ========================= */}
