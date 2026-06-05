@@ -36,14 +36,11 @@ export default function DashboardCards({
     const totalLabel = "全期間";
 
     return (
-        <div className="relative mx-auto h-56 w-full max-w-sm">
+        <div className="relative mx-auto h-48 w-full max-w-sm sm:h-56">
             {/* 左上：週別 */}
             <div className="absolute left-0 top-0 w-[42%] rounded-xl border-2 border-green-300 bg-green-50 p-3 shadow-sm">
                 <div className="flex items-center gap-1 text-xs font-bold text-gray-900">
-                    <Icon
-                        icon="twemoji:chart-increasing"
-                        width="16"
-                    />
+                    <Icon icon="twemoji:chart-increasing" width="16" />
 
                     <span>週別</span>
 
@@ -60,10 +57,7 @@ export default function DashboardCards({
             {/* 右上：月別 */}
             <div className="absolute right-0 top-0 w-[42%] rounded-xl border-2 border-purple-300 bg-purple-50 p-3 shadow-sm">
                 <div className="flex items-center gap-1 text-xs font-bold text-gray-900">
-                    <Icon
-                        icon="twemoji:spiral-calendar"
-                        width="16"
-                    />
+                    <Icon icon="twemoji:spiral-calendar" width="16" />
 
                     <span>月別</span>
 
@@ -80,10 +74,7 @@ export default function DashboardCards({
             {/* 左下：総合計 */}
             <div className="absolute bottom-0 left-0 w-[42%] rounded-xl border-2 border-gray-300 bg-gray-50 p-3 shadow-sm">
                 <div className="flex items-center gap-1 text-xs font-bold text-gray-900">
-                    <Icon
-                        icon="twemoji:trophy"
-                        width="16"
-                    />
+                    <Icon icon="twemoji:trophy" width="16" />
 
                     <span>総合計</span>
 
@@ -100,10 +91,7 @@ export default function DashboardCards({
             {/* 右下：年別 */}
             <div className="absolute bottom-0 right-0 w-[42%] rounded-xl border-2 border-orange-300 bg-orange-50 p-3 shadow-sm">
                 <div className="flex items-center gap-1 text-xs font-bold text-gray-900">
-                    <Icon
-                        icon="twemoji:direct-hit"
-                        width="16"
-                    />
+                    <Icon icon="twemoji:direct-hit" width="16" />
 
                     <span>年別</span>
 
@@ -120,10 +108,7 @@ export default function DashboardCards({
             {/* 中央：日別 */}
             <div className="absolute left-1/2 top-1/2 z-10 w-[52%] -translate-x-1/2 -translate-y-1/2 rounded-2xl border-2 border-blue-500 bg-blue-50 p-4 text-center shadow-lg">
                 <div className="flex items-center justify-center gap-1 text-sm font-bold text-gray-900">
-                    <Icon
-                        icon="twemoji:calendar"
-                        width="18"
-                    />
+                    <Icon icon="twemoji:calendar" width="18" />
 
                     <span>日別</span>
 

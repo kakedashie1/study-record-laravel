@@ -434,7 +434,7 @@ export default function Top({
                             dashboardTotalTime={dashboardTotalTime}
                         />
 
-                        <div className="mt-4 rounded-xl border p-3">
+                        <div className="mt-2 rounded-xl border p-2 sm:mt-4 sm:p-3">
                             <h2 className="mb-2 text-base font-bold text-blue-600">
                                 🖊 学習時間記録
                             </h2>
