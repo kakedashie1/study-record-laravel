@@ -421,7 +421,7 @@ export default function Top({
                     <section
                         className={`${
                             activePanel === "center" ? "block" : "hidden"
-                        } h-full overflow-y-auto rounded-xl border p-4 lg:col-span-4 lg:block`}
+                        } h-full overflow-y-auto rounded-xl border p-2 pb-28 sm:p-4 sm:pb-32 lg:col-span-4 lg:block lg:pb-4`}
                     >
                         <h2 className="mb-3 text-lg font-bold text-blue-600">
                             学習時間
