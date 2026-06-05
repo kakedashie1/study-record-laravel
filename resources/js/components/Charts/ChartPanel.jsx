@@ -273,10 +273,10 @@ export default function ChartPanel({
                         <BarChart
                             data={barChartDataWithTotal}
                             margin={{
-                                top: 48,
-                                right: 8,
-                                left: 0,
-                                bottom: 20,
+                                top: 28,
+                                right: 4,
+                                left: -10,
+                                bottom: 4,
                             }}
                         >
                             <CartesianGrid strokeDasharray="3 3" />
@@ -284,9 +284,9 @@ export default function ChartPanel({
                             <XAxis
                                 dataKey="label"
                                 interval={0}
-                                height={32}
+                                height={24}
                                 fontSize={12}
-                                tickMargin={4}
+                                tickMargin={2}
                                 tickFormatter={(value) => {
                                     const isMobile = window.innerWidth < 640;
 
