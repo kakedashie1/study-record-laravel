@@ -106,7 +106,7 @@ export default function DashboardCards({
             </div>
 
             {/* 中央：日別 */}
-            <div className="absolute left-1/2 top-1/2 z-10 w-[52%] -translate-x-1/2 -translate-y-1/2 rounded-2xl border-2 border-blue-500 bg-blue-50 p-4 text-center shadow-xl ring-2 ring-white">
+           <div className="absolute left-1/2 top-1/2 z-10 w-[50%] -translate-x-1/2 -translate-y-1/2 rounded-2xl border-2 border-blue-500 bg-blue-50 p-2 text-center shadow-xl ring-2 ring-white sm:w-[52%] sm:p-4">
                 <div className="flex items-center justify-center gap-1 text-sm font-bold text-gray-900">
                     <Icon icon="twemoji:calendar" width="18" />
 

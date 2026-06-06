@@ -18,7 +18,7 @@ export default function RecordList({
         <section
             className={`${
                 activePanel === "left" ? "flex" : "hidden"
-           } h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-sm sm:p-4 lg:col-span-3 lg:flex`}
+            } h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-sm sm:p-4 lg:col-span-3 lg:flex`}
         >
             <div className="mb-3">
                 <h2 className="text-lg font-bold text-blue-600">
@@ -44,7 +44,7 @@ export default function RecordList({
             <div className="mb-3 rounded-2xl border border-blue-200 bg-white p-3 shadow-md">
                 <p className="text-sm text-gray-600">{listDate} の合計時間</p>
 
-                <p className="text-xl font-bold text-blue-600">
+                <p className="text-xl font-bold text-gray-900">
                     {formatMinutes(listStudyTime)}
                 </p>
             </div>
