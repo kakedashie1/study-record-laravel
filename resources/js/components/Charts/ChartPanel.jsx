@@ -104,7 +104,7 @@ export default function ChartPanel({
                 activePanel === "right" ? "flex" : "hidden"
             } h-full min-h-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-sm flex-col transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900 lg:col-span-5 lg:flex`}
         >
-            <div className="flex h-[111%] w-[100%] origin-top-left scale-90 flex-col lg:h-full lg:w-full lg:scale-100">
+            <div className="flex h-[111%] w-[111%] origin-top-left scale-90 flex-col lg:h-full lg:w-full lg:scale-100">
                 <h2 className="mb-3 shrink-0 text-base font-bold text-slate-700 dark:text-slate-100">
                     学習時間のグラフ
                 </h2>
