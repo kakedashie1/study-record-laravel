@@ -96,7 +96,7 @@ export default function ChartPanel({
         <section
             className={`${
                 activePanel === "right" ? "flex" : "hidden"
-            } h-full min-h-0 overflow-hidden rounded-xl border p-2 flex-col lg:col-span-5 lg:flex`}
+           } h-full min-h-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-sm flex-col lg:col-span-5 lg:flex`}
         >
             <div className="flex h-[111%] w-[111%] origin-top-left scale-90 flex-col lg:h-full lg:w-full lg:scale-100">
                 <h2 className="mb-1 shrink-0 text-base font-bold text-blue-600">
@@ -131,7 +131,7 @@ export default function ChartPanel({
                     </div>
                 </div>
 
-                <div className="mb-2 flex min-h-0 flex-[0.9] flex-col rounded-xl border p-2">
+              <div className="mb-2 flex min-h-0 flex-[0.9] flex-col rounded-2xl border border-slate-300 bg-white p-3 shadow-md">
                     <h3 className="mb-1 text-xs font-bold">
                         カテゴリー別割合（{getPieChartRangeLabel()}）
                     </h3>
@@ -287,7 +287,7 @@ export default function ChartPanel({
                     <PeriodButtons />
                 </div>
 
-                <div className="flex min-h-0 flex-1 flex-col rounded-xl border p-2">
+               <div className="flex min-h-0 flex-1 flex-col rounded-2xl border border-slate-300 bg-white p-3 shadow-md">
                     <h3 className="mb-1 text-xs font-bold">学習時間推移</h3>
 
                     <div className="min-h-0 flex-1">

@@ -18,7 +18,7 @@ export default function RecordList({
         <section
             className={`${
                 activePanel === "left" ? "flex" : "hidden"
-            } h-full min-w-0 flex-col overflow-hidden rounded-xl border p-2 sm:p-4 lg:col-span-3 lg:flex`}
+           } h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-sm sm:p-4 lg:col-span-3 lg:flex`}
         >
             <div className="mb-3">
                 <h2 className="text-lg font-bold text-blue-600">
@@ -41,7 +41,7 @@ export default function RecordList({
                 />
             </div>
 
-            <div className="mb-3 rounded-lg bg-blue-50 p-3">
+            <div className="mb-3 rounded-2xl border border-blue-200 bg-white p-3 shadow-md">
                 <p className="text-sm text-gray-600">{listDate} の合計時間</p>
 
                 <p className="text-xl font-bold text-blue-600">
@@ -49,7 +49,7 @@ export default function RecordList({
                 </p>
             </div>
 
-            <div className="min-h-0 flex-1 overflow-hidden rounded-xl bg-gray-50 p-2">
+            <div className="min-h-0 flex-1 overflow-hidden rounded-2xl border border-slate-300 bg-white p-2 shadow-md">
                 <div className="h-full overflow-y-auto space-y-3 pb-20 pr-1 lg:pb-6">
                     {loading ? (
                         <p>読み込み中...</p>
@@ -61,7 +61,7 @@ export default function RecordList({
                         listRecords.map((record) => (
                             <div
                                 key={record.id}
-                                className="rounded-xl border p-3 shadow-sm transition"
+                                className="rounded-2xl border p-3 shadow-md transition"
                                 style={{
                                     backgroundColor: `${record.category?.color ?? "#9ca3af"}15`,
                                     borderColor:

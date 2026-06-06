@@ -370,9 +370,9 @@ export default function Top({
 
     return (
         <>
-            <div className="flex h-screen flex-col overflow-hidden bg-white p-3">
+            <div className="flex h-screen flex-col overflow-hidden bg-slate-100 p-3">
                 {/* ヘッダー */}
-                <div className="mb-3 flex items-center justify-between rounded-xl bg-white px-3 py-2 lg:px-4">
+                <div className="mb-3 flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-3 py-2 shadow-sm lg:px-4">
                     {/* 左：ロゴ */}
                     <div className="flex items-center">
                         <img
@@ -421,7 +421,7 @@ export default function Top({
                     <section
                         className={`${
                             activePanel === "center" ? "block" : "hidden"
-                        } h-full overflow-y-auto rounded-xl border p-2 pb-28 sm:p-4 sm:pb-32 lg:col-span-4 lg:block lg:pb-4`}
+                        } h-full overflow-y-auto rounded-2xl border border-slate-200 bg-white p-2 pb-28 shadow-sm sm:p-4 sm:pb-32 lg:col-span-4 lg:block lg:pb-4`}
                     >
                         <h2 className="mb-3 text-lg font-bold text-blue-600">
                             学習時間
@@ -434,8 +434,8 @@ export default function Top({
                             dashboardTotalTime={dashboardTotalTime}
                         />
 
-                        <div className="mt-2 rounded-xl border p-2 sm:mt-4 sm:p-3">
-                            <h2 className="mb-2 text-base font-bold text-blue-600">
+                        <div className="mt-2 rounded-2xl border border-slate-300 bg-white p-3 shadow-md sm:mt-4 sm:p-4">
+                          <h2 className="mb-3 text-base font-bold text-slate-700">
                                 🖊 学習時間記録
                             </h2>
                             <RecordCreateForm
