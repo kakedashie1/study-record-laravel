@@ -97,6 +97,22 @@ export default function Top({
 
     const [activePanel, setActivePanel] = useState("center");
 
+    const [theme, setTheme] = useState(() => {
+        return localStorage.getItem("theme") || "light";
+    });
+
+    useEffect(() => {
+        const root = document.documentElement;
+
+        if (theme === "dark") {
+            root.classList.add("dark");
+        } else {
+            root.classList.remove("dark");
+        }
+
+        localStorage.setItem("theme", theme);
+    }, [theme]);
+
     /*
     |--------------------------------------------------------------------------
     | Form
@@ -370,9 +386,9 @@ export default function Top({
 
     return (
         <>
-            <div className="flex h-screen flex-col overflow-hidden bg-slate-100 p-3">
+            <div className="flex h-screen flex-col overflow-hidden bg-slate-100 p-3 text-slate-900 transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100">
                 {/* ヘッダー */}
-                <div className="mb-3 flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-3 py-2 shadow-sm lg:px-4">
+                <div className="mb-3 flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-3 py-2 shadow-sm transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900 lg:px-4">
                     {/* 左：ロゴ */}
                     <div className="flex items-center">
                         <img
@@ -384,15 +400,25 @@ export default function Top({
 
                     {/* 右：ユーザー名 + ログアウト */}
                     <div className="ml-3 flex shrink-0 items-center gap-2 sm:gap-3">
-                        <label className="hidden text-sm text-gray-600 sm:block">
+                        <label className="hidden text-sm text-gray-600 dark:text-slate-300 sm:block">
                             {auth.user?.name}
                         </label>
 
                         <form method="POST" action="/logout" className="inline">
-                            <button className="rounded-xl border px-2 py-1 text-xs hover:bg-gray-100 sm:px-3 sm:text-sm">
+                            <button className="rounded-xl border border-slate-300 px-2 py-1 text-xs hover:bg-gray-100 dark:border-slate-600 dark:text-slate-100 dark:hover:bg-slate-800 sm:px-3 sm:text-sm">
                                 ログアウト
                             </button>
                         </form>
+
+                        <button
+                            type="button"
+                            onClick={() =>
+                                setTheme(theme === "dark" ? "light" : "dark")
+                            }
+                            className="rounded-xl border border-slate-300 px-2 py-1 text-xs hover:bg-gray-100 dark:border-slate-600 dark:text-slate-100 dark:hover:bg-slate-800 sm:px-3 sm:text-sm"
+                        >
+                            {theme === "dark" ? "☀️" : "🌙"}
+                        </button>
                     </div>
                 </div>
 
@@ -421,11 +447,9 @@ export default function Top({
                     <section
                         className={`${
                             activePanel === "center" ? "block" : "hidden"
-                        } h-full overflow-y-auto rounded-2xl border border-slate-200 bg-white p-2 pb-28 shadow-sm sm:p-4 sm:pb-32 lg:col-span-4 lg:block lg:pb-4`}
+                        } h-full overflow-y-auto rounded-2xl border border-slate-200 bg-white p-2 pb-28 shadow-sm transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900 sm:p-4 sm:pb-32 lg:col-span-4 lg:block lg:pb-4`}
                     >
-                        <h2 className="mb-3 text-lg font-bold text-blue-600">
-                            学習時間
-                        </h2>
+
                         <DashboardCards
                             dashboardTodayTime={dashboardTodayTime}
                             dashboardWeeklyTime={dashboardWeeklyTime}
@@ -434,9 +458,9 @@ export default function Top({
                             dashboardTotalTime={dashboardTotalTime}
                         />
 
-                        <div className="mt-2 rounded-2xl border border-slate-300 bg-white p-3 shadow-md sm:mt-4 sm:p-4">
-                          <h2 className="mb-3 text-base font-bold text-slate-700">
-                                🖊 学習時間記録
+                        <div className="mt-2 rounded-2xl border border-slate-300 bg-white p-3 shadow-md transition-colors duration-300 dark:border-slate-700 dark:bg-slate-800 sm:mt-4 sm:p-4">
+                            <h2 className="mb-3 text-base font-bold text-slate-700 dark:text-slate-100">
+                                 学習時間記録
                             </h2>
                             <RecordCreateForm
                                 data={data}

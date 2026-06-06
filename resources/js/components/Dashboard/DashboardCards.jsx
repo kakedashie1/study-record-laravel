@@ -38,86 +38,86 @@ export default function DashboardCards({
     return (
         <div className="relative mx-auto h-48 w-full max-w-sm sm:h-56">
             {/* 左上：週別 */}
-            <div className="absolute left-0 top-0 w-[42%] rounded-xl border-2 border-green-300 bg-green-50 p-3 shadow-md ring-1 ring-white">
-                <div className="flex items-center gap-1 text-xs font-bold text-gray-900">
+            <div className="absolute left-0 top-0 w-[42%] rounded-xl border-2 border-green-300 bg-green-50 p-3 shadow-md ring-1 ring-white dark:border-green-700 dark:bg-green-950 dark:ring-slate-800">
+                <div className="flex items-center gap-1 text-xs font-bold text-gray-900 dark:text-slate-100">
                     <Icon icon="twemoji:chart-increasing" width="16" />
 
                     <span>週別</span>
 
-                    <span className="text-[10px] font-normal text-gray-700">
+                    <span className="text-[10px] font-normal text-gray-700 dark:text-slate-300">
                         {weeklyLabel}
                     </span>
                 </div>
 
-                <p className="mt-1 break-words text-sm font-bold text-gray-900 sm:text-base">
+                <p className="mt-1 break-words text-sm font-bold text-gray-900 dark:text-slate-100 sm:text-base">
                     {formatMinutes(dashboardWeeklyTime)}
                 </p>
             </div>
 
             {/* 右上：月別 */}
-            <div className="absolute right-0 top-0 w-[42%] rounded-xl border-2 border-purple-300 bg-purple-50 p-3 shadow-md ring-1 ring-white">
-                <div className="flex items-center gap-1 text-xs font-bold text-gray-900">
+            <div className="absolute right-0 top-0 w-[42%] rounded-xl border-2 border-purple-300 bg-purple-50 p-3 shadow-md ring-1 ring-white dark:border-purple-700 dark:bg-purple-950 dark:ring-slate-800">
+                <div className="flex items-center gap-1 text-xs font-bold text-gray-900 dark:text-slate-100">
                     <Icon icon="twemoji:spiral-calendar" width="16" />
 
                     <span>月別</span>
 
-                    <span className="text-[10px] font-normal text-gray-700">
+                    <span className="text-[10px] font-normal text-gray-700 dark:text-slate-300">
                         {monthlyLabel}
                     </span>
                 </div>
 
-                <p className="mt-1 break-words text-sm font-bold text-gray-900 sm:text-base">
+                <p className="mt-1 break-words text-sm font-bold text-gray-900 dark:text-slate-100 sm:text-base">
                     {formatMinutes(dashboardMonthlyTime)}
                 </p>
             </div>
 
             {/* 左下：総合計 */}
-            <div className="absolute bottom-0 left-0 w-[42%] rounded-xl border-2 border-gray-300 bg-gray-50 p-3 shadow-md ring-1 ring-white">
-                <div className="flex items-center gap-1 text-xs font-bold text-gray-900">
+            <div className="absolute bottom-0 left-0 w-[42%] rounded-xl border-2 border-gray-300 bg-gray-50 p-3 shadow-md ring-1 ring-white dark:border-slate-600 dark:bg-slate-800 dark:ring-slate-700">
+                <div className="flex items-center gap-1 text-xs font-bold text-gray-900 dark:text-slate-100">
                     <Icon icon="twemoji:trophy" width="16" />
 
                     <span>総合計</span>
 
-                    <span className="text-[10px] font-normal text-gray-700">
+                    <span className="text-[10px] font-normal text-gray-700 dark:text-slate-300">
                         {totalLabel}
                     </span>
                 </div>
 
-                <p className="mt-1 break-words text-sm font-bold text-gray-900 sm:text-base">
+                <p className="mt-1 break-words text-sm font-bold text-gray-900 dark:text-slate-100 sm:text-base">
                     {formatMinutes(dashboardTotalTime)}
                 </p>
             </div>
 
             {/* 右下：年別 */}
-            <div className="absolute bottom-0 right-0 w-[42%] rounded-xl border-2 border-orange-300 bg-orange-50 p-3 shadow-md ring-1 ring-white">
-                <div className="flex items-center gap-1 text-xs font-bold text-gray-900">
+            <div className="absolute bottom-0 right-0 w-[42%] rounded-xl border-2 border-orange-300 bg-orange-50 p-3 shadow-md ring-1 ring-white dark:border-orange-700 dark:bg-orange-950 dark:ring-slate-800">
+                <div className="flex items-center gap-1 text-xs font-bold text-gray-900 dark:text-slate-100">
                     <Icon icon="twemoji:direct-hit" width="16" />
 
                     <span>年別</span>
 
-                    <span className="text-[10px] font-normal text-gray-700">
+                    <span className="text-[10px] font-normal text-gray-700 dark:text-slate-300">
                         {yearlyLabel}
                     </span>
                 </div>
 
-                <p className="mt-1 break-words text-sm font-bold text-gray-900 sm:text-base">
+                <p className="mt-1 break-words text-sm font-bold text-gray-900 dark:text-slate-100 sm:text-base">
                     {formatMinutes(dashboardYearlyTime)}
                 </p>
             </div>
 
             {/* 中央：日別 */}
-           <div className="absolute left-1/2 top-1/2 z-10 w-[50%] -translate-x-1/2 -translate-y-1/2 rounded-2xl border-2 border-blue-500 bg-blue-50 p-2 text-center shadow-xl ring-2 ring-white sm:w-[52%] sm:p-4">
-                <div className="flex items-center justify-center gap-1 text-sm font-bold text-gray-900">
+            <div className="absolute left-1/2 top-1/2 z-10 w-[50%] -translate-x-1/2 -translate-y-1/2 rounded-2xl border-2 border-blue-500 bg-blue-50 p-2 text-center shadow-xl ring-2 ring-white dark:border-blue-500 dark:bg-blue-950 dark:ring-slate-800 sm:w-[52%] sm:p-4">
+                <div className="flex items-center justify-center gap-1 text-sm font-bold text-gray-900 dark:text-slate-100">
                     <Icon icon="twemoji:calendar" width="18" />
 
                     <span>日別</span>
 
-                    <span className="text-xs font-normal text-gray-700">
+                    <span className="text-xs font-normal text-gray-700 dark:text-slate-300">
                         {dailyLabel}
                     </span>
                 </div>
 
-                <p className="mt-2 break-words text-xl font-bold text-gray-900 sm:text-2xl">
+                <p className="mt-2 break-words text-xl font-bold text-gray-900 dark:text-slate-100 sm:text-2xl">
                     {formatMinutes(dashboardTodayTime)}
                 </p>
             </div>

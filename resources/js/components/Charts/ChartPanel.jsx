@@ -50,44 +50,50 @@ export default function ChartPanel({
     });
 
     const PeriodButtons = () => (
-        <div className="flex gap-2">
+        <div className="grid grid-cols-3 gap-2">
             <button
                 type="button"
                 onClick={() => setChartPeriod("daily")}
-                className={`flex h-8 flex-1 items-center justify-center gap-1 rounded border text-xs font-bold transition ${
+                className={`rounded-xl border-2 p-2 text-center shadow-md ring-1 ring-white transition dark:ring-slate-800 ${
                     chartPeriod === "daily"
-                        ? "border-blue-600 bg-blue-600 text-white shadow-md"
-                        : "border-blue-200 bg-blue-50 text-gray-900"
+                        ? "border-blue-500 bg-blue-50 dark:border-blue-500 dark:bg-blue-950"
+                        : "border-slate-300 bg-white hover:bg-blue-50 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-blue-950"
                 }`}
             >
-                <Icon icon="twemoji:calendar" width="16" />
-                <span>日別</span>
+                <div className="flex items-center justify-center gap-1 text-xs font-bold text-gray-900 dark:text-slate-100">
+                    <Icon icon="twemoji:calendar" width="16" />
+                    <span>日別</span>
+                </div>
             </button>
 
             <button
                 type="button"
                 onClick={() => setChartPeriod("weekly")}
-                className={`flex h-8 flex-1 items-center justify-center gap-1 rounded border text-xs font-bold transition ${
+                className={`rounded-xl border-2 p-2 text-center shadow-md ring-1 ring-white transition dark:ring-slate-800 ${
                     chartPeriod === "weekly"
-                        ? "border-green-600 bg-green-600 text-white shadow-md"
-                        : "border-green-200 bg-green-50 text-gray-900"
+                        ? "border-green-300 bg-green-50 dark:border-green-700 dark:bg-green-950"
+                        : "border-slate-300 bg-white hover:bg-green-50 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-green-950"
                 }`}
             >
-                <Icon icon="twemoji:chart-increasing" width="16" />
-                <span>週別</span>
+                <div className="flex items-center justify-center gap-1 text-xs font-bold text-gray-900 dark:text-slate-100">
+                    <Icon icon="twemoji:chart-increasing" width="16" />
+                    <span>週別</span>
+                </div>
             </button>
 
             <button
                 type="button"
                 onClick={() => setChartPeriod("monthly")}
-                className={`flex h-8 flex-1 items-center justify-center gap-1 rounded border text-xs font-bold transition ${
+                className={`rounded-xl border-2 p-2 text-center shadow-md ring-1 ring-white transition dark:ring-slate-800 ${
                     chartPeriod === "monthly"
-                        ? "border-purple-600 bg-purple-600 text-white shadow-md"
-                        : "border-purple-200 bg-purple-50 text-gray-900"
+                        ? "border-purple-300 bg-purple-50 dark:border-purple-700 dark:bg-purple-950"
+                        : "border-slate-300 bg-white hover:bg-purple-50 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-purple-950"
                 }`}
             >
-                <Icon icon="twemoji:spiral-calendar" width="16" />
-                <span>月別</span>
+                <div className="flex items-center justify-center gap-1 text-xs font-bold text-gray-900 dark:text-slate-100">
+                    <Icon icon="twemoji:spiral-calendar" width="16" />
+                    <span>月別</span>
+                </div>
             </button>
         </div>
     );
@@ -96,26 +102,30 @@ export default function ChartPanel({
         <section
             className={`${
                 activePanel === "right" ? "flex" : "hidden"
-           } h-full min-h-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-sm flex-col lg:col-span-5 lg:flex`}
+            } h-full min-h-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-sm flex-col transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900 lg:col-span-5 lg:flex`}
         >
-            <div className="flex h-[111%] w-[111%] origin-top-left scale-90 flex-col lg:h-full lg:w-full lg:scale-100">
-                <h2 className="mb-1 shrink-0 text-base font-bold text-blue-600">
+            <div className="flex h-[111%] w-[100%] origin-top-left scale-90 flex-col lg:h-full lg:w-full lg:scale-100">
+                <h2 className="mb-3 shrink-0 text-base font-bold text-slate-700 dark:text-slate-100">
                     学習時間のグラフ
                 </h2>
 
                 <div className="mb-2 grid w-full shrink-0 grid-cols-[40%_1fr] gap-x-3 gap-y-2">
                     <div className="min-w-0">
-                        <label className="mb-1 block text-xs">日付</label>
+                        <label className="mb-1 block text-xs text-slate-700 dark:text-slate-300">
+                            日付
+                        </label>
                         <input
                             type="date"
                             value={chartDate}
                             onChange={(e) => setChartDate(e.target.value)}
-                            className="h-8 w-full max-w-full min-w-0 rounded border px-1 text-[10px] sm:text-sm"
+                            className="h-8 w-full max-w-full min-w-0 rounded border border-slate-300 bg-white px-1 text-[10px] text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 sm:text-sm"
                         />
                     </div>
 
                     <div className="min-w-0">
-                        <label className="mb-1 block text-xs">カテゴリー</label>
+                        <label className="mb-1 block text-xs text-slate-700 dark:text-slate-300">
+                            カテゴリー
+                        </label>
                         <CategorySelect
                             categories={categories}
                             value={chartCategoryId}
@@ -126,13 +136,15 @@ export default function ChartPanel({
 
                     {/* PCだけ上部に表示 */}
                     <div className="col-span-2 hidden min-w-0 lg:block">
-                        <label className="mb-1 block text-xs">期間</label>
+                        <label className="mb-1 block text-xs text-slate-700 dark:text-slate-300">
+                            期間
+                        </label>
                         <PeriodButtons />
                     </div>
                 </div>
 
-              <div className="mb-2 flex min-h-0 flex-[0.9] flex-col rounded-2xl border border-slate-300 bg-white p-3 shadow-md">
-                    <h3 className="mb-1 text-xs font-bold">
+                <div className="mb-2 flex min-h-0 flex-[0.9] flex-col rounded-2xl border border-slate-300 bg-white p-3 shadow-md transition-colors duration-300 dark:border-slate-700 dark:bg-slate-800">
+                    <h3 className="mb-1 text-xs font-bold text-slate-800 dark:text-slate-100">
                         カテゴリー別割合（{getPieChartRangeLabel()}）
                     </h3>
 
@@ -192,7 +204,13 @@ export default function ChartPanel({
                                                             x="50%"
                                                             dy="-0.4em"
                                                             fontSize="10"
-                                                            fill="#6b7280"
+                                                            fill={
+                                                                document.documentElement.classList.contains(
+                                                                    "dark",
+                                                                )
+                                                                    ? "#cbd5e1"
+                                                                    : "#6b7280"
+                                                            }
                                                         >
                                                             合計
                                                         </tspan>
@@ -201,7 +219,13 @@ export default function ChartPanel({
                                                             dy="1.4em"
                                                             fontSize="12"
                                                             fontWeight="bold"
-                                                            fill="#111827"
+                                                            fill={
+                                                                document.documentElement.classList.contains(
+                                                                    "dark",
+                                                                )
+                                                                    ? "#f8fafc"
+                                                                    : "#111827"
+                                                            }
                                                         >
                                                             {formatMinutes(
                                                                 pieTotal,
@@ -287,8 +311,10 @@ export default function ChartPanel({
                     <PeriodButtons />
                 </div>
 
-               <div className="flex min-h-0 flex-1 flex-col rounded-2xl border border-slate-300 bg-white p-3 shadow-md">
-                    <h3 className="mb-1 text-xs font-bold">学習時間推移</h3>
+                <div className="flex min-h-0 flex-1 flex-col rounded-2xl border border-slate-300 bg-white p-3 shadow-md transition-colors duration-300 dark:border-slate-700 dark:bg-slate-800">
+                    <h3 className="mb-1 text-xs font-bold text-slate-800 dark:text-slate-100">
+                        学習時間推移
+                    </h3>
 
                     <div className="min-h-0 flex-1">
                         <ResponsiveContainer width="100%" height="100%">
@@ -301,7 +327,16 @@ export default function ChartPanel({
                                     bottom: 4,
                                 }}
                             >
-                                <CartesianGrid strokeDasharray="3 3" />
+                                <CartesianGrid
+                                    strokeDasharray="3 3"
+                                    stroke={
+                                        document.documentElement.classList.contains(
+                                            "dark",
+                                        )
+                                            ? "#334155"
+                                            : "#d1d5db"
+                                    }
+                                />
 
                                 <XAxis
                                     dataKey="label"
@@ -342,7 +377,13 @@ export default function ChartPanel({
                                                         dy={10}
                                                         textAnchor="middle"
                                                         fontSize={10}
-                                                        fill="#374151"
+                                                        fill={
+                                                            document.documentElement.classList.contains(
+                                                                "dark",
+                                                            )
+                                                                ? "#cbd5e1"
+                                                                : "#374151"
+                                                        }
                                                     >
                                                         {date.getMonth() + 1}/
                                                         {date.getDate()}
@@ -354,7 +395,13 @@ export default function ChartPanel({
                                                         dy={22}
                                                         textAnchor="middle"
                                                         fontSize={9}
-                                                        fill="#6B7280"
+                                                        fill={
+                                                            document.documentElement.classList.contains(
+                                                                "dark",
+                                                            )
+                                                                ? "#94a3b8"
+                                                                : "#6B7280"
+                                                        }
                                                     >
                                                         (
                                                         {
@@ -374,7 +421,13 @@ export default function ChartPanel({
                                                 y={y + 12}
                                                 textAnchor="middle"
                                                 fontSize={12}
-                                                fill="#374151"
+                                                fill={
+                                                    document.documentElement.classList.contains(
+                                                        "dark",
+                                                    )
+                                                        ? "#cbd5e1"
+                                                        : "#374151"
+                                                }
                                             >
                                                 {formatChartLabel(
                                                     payload.value,
@@ -387,8 +440,17 @@ export default function ChartPanel({
                                 <YAxis
                                     domain={yAxisConfig.domain}
                                     ticks={yAxisConfig.ticks}
-                                    width={45}
+                                    width={60}
                                     fontSize={10}
+                                    tick={{
+                                        fill: document.documentElement.classList.contains(
+                                            "dark",
+                                        )
+                                            ? "#cbd5e1"
+                                            : "#374151",
+                                        textAnchor: "end",
+                                    }}
+                                    tickMargin={4}
                                     tickFormatter={(value) =>
                                         Number(value) === 0
                                             ? ""
@@ -425,8 +487,8 @@ export default function ChartPanel({
                                         );
 
                                         return (
-                                            <div className="max-h-[55vh] w-[260px] max-w-[92vw] overflow-y-auto rounded-xl border border-gray-200 bg-white/80 p-3 text-xs shadow-lg backdrop-blur-sm sm:w-[320px] sm:text-sm">
-                                                <p className="mb-2 font-bold text-gray-800">
+                                            <div className="max-h-[55vh] w-[260px] max-w-[92vw] overflow-y-auto rounded-xl border border-gray-200 bg-white/80 p-3 text-xs shadow-lg backdrop-blur-sm dark:border-slate-600 dark:bg-slate-900/90 dark:text-slate-100 sm:w-[320px] sm:text-sm">
+                                                <p className="mb-2 font-bold text-gray-800 dark:text-slate-100">
                                                     {formatChartLabel(label)}
                                                 </p>
 
@@ -459,7 +521,7 @@ export default function ChartPanel({
                                                     ),
                                                 )}
 
-                                                <div className="mt-2 flex justify-between border-t pt-2 font-bold">
+                                                <div className="mt-2 flex justify-between border-t border-slate-200 pt-2 font-bold dark:border-slate-700">
                                                     <span>合計</span>
                                                     <span>
                                                         {formatMinutes(total)}
@@ -576,7 +638,13 @@ export default function ChartPanel({
                                                                             : 10
                                                                     }
                                                                     fontWeight="bold"
-                                                                    fill="#111827"
+                                                                    fill={
+                                                                        document.documentElement.classList.contains(
+                                                                            "dark",
+                                                                        )
+                                                                            ? "#f8fafc"
+                                                                            : "#111827"
+                                                                    }
                                                                 >
                                                                     {shouldBreakLine &&
                                                                     hours > 0 &&

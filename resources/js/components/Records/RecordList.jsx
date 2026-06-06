@@ -18,18 +18,20 @@ export default function RecordList({
         <section
             className={`${
                 activePanel === "left" ? "flex" : "hidden"
-            } h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-sm sm:p-4 lg:col-span-3 lg:flex`}
+            } h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-sm transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900 sm:p-4 lg:col-span-3 lg:flex`}
         >
             <div className="mb-3">
-                <h2 className="text-lg font-bold text-blue-600">
+                <h2 className="mb-3 text-base font-bold text-slate-700 dark:text-slate-100">
                     学習記録一覧
                 </h2>
 
-                <p className="text-sm text-gray-500">選択した日の記録</p>
+                <p className="text-sm text-gray-500 dark:text-slate-400">
+                    選択した日の記録
+                </p>
             </div>
 
             <div className="mb-3 min-w-0 overflow-hidden">
-                <label className="mb-1 block text-sm font-bold">
+                <label className="mb-1 block text-sm font-bold text-slate-800 dark:text-slate-100">
                     日付を選択
                 </label>
 
@@ -37,24 +39,26 @@ export default function RecordList({
                     type="date"
                     value={listDate}
                     onChange={handleListDateChange}
-                    className="block h-9 w-full max-w-full min-w-0 appearance-none rounded border px-1 py-1 text-xs sm:h-10 sm:px-3 sm:py-2 sm:text-sm"
+                    className="block h-9 w-full max-w-full min-w-0 appearance-none rounded border border-slate-300 bg-white px-1 py-1 text-xs text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 sm:h-10 sm:px-3 sm:py-2 sm:text-sm"
                 />
             </div>
 
-            <div className="mb-3 rounded-2xl border border-blue-200 bg-white p-3 shadow-md">
-                <p className="text-sm text-gray-600">{listDate} の合計時間</p>
+            <div className="mb-3 rounded-2xl border border-blue-200 bg-white p-3 shadow-md transition-colors duration-300 dark:border-blue-800 dark:bg-slate-800">
+                <p className="text-sm text-gray-600 dark:text-slate-300">
+                    {listDate} の合計時間
+                </p>
 
-                <p className="text-xl font-bold text-gray-900">
+                <p className="text-xl font-bold text-gray-900 dark:text-slate-100">
                     {formatMinutes(listStudyTime)}
                 </p>
             </div>
 
-            <div className="min-h-0 flex-1 overflow-hidden rounded-2xl border border-slate-300 bg-white p-2 shadow-md">
+            <div className="min-h-0 flex-1 overflow-hidden rounded-2xl border border-slate-300 bg-white p-2 shadow-md transition-colors duration-300 dark:border-slate-700 dark:bg-slate-800">
                 <div className="h-full overflow-y-auto space-y-3 pb-20 pr-1 lg:pb-6">
                     {loading ? (
                         <p>読み込み中...</p>
                     ) : listRecords.length === 0 ? (
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-gray-500 dark:text-slate-400">
                             この日の記録はありません。
                         </p>
                     ) : (
@@ -79,7 +83,7 @@ export default function RecordList({
                                         }}
                                     />
 
-                                    <p className="font-bold text-gray-900">
+                                    <p className="font-bold text-gray-900 dark:text-slate-100">
                                         {record.category?.category_name ??
                                             "未設定"}
                                     </p>
@@ -87,7 +91,7 @@ export default function RecordList({
 
                                 {/* 時間 + ボタン */}
                                 <div className="mt-3 flex items-center justify-between">
-                                    <p className="text-2xl font-bold text-gray-900">
+                                    <p className="text-2xl font-bold text-gray-900 dark:text-slate-100">
                                         {formatMinutes(record.study_time)}
                                     </p>
 
@@ -107,7 +111,7 @@ export default function RecordList({
                                                         record.study_date,
                                                 });
                                             }}
-                                            className="rounded border px-3 py-1 text-sm hover:bg-blue-500 hover:text-white"
+                                            className="rounded border border-slate-300 px-3 py-1 text-sm text-slate-900 hover:bg-blue-500 hover:text-white dark:border-slate-600 dark:text-slate-100 dark:hover:bg-blue-600"
                                         >
                                             編集
                                         </button>
