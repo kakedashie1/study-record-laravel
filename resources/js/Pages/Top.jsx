@@ -113,6 +113,16 @@ export default function Top({
         localStorage.setItem("theme", theme);
     }, [theme]);
 
+    const [isPwa, setIsPwa] = useState(false);
+
+    useEffect(() => {
+        const standalone =
+            window.matchMedia("(display-mode: standalone)").matches ||
+            window.navigator.standalone === true;
+
+        setIsPwa(standalone);
+    }, []);
+
     /*
     |--------------------------------------------------------------------------
     | Form
@@ -455,7 +465,9 @@ export default function Top({
                     <section
                         className={`${
                             activePanel === "center" ? "block" : "hidden"
-                        } h-full overflow-y-auto rounded-2xl border border-slate-200 bg-white p-2 pb-28 shadow-sm transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900 sm:p-4 sm:pb-32 lg:col-span-4 lg:block lg:pb-4`}
+                        } h-full overflow-y-auto rounded-2xl border border-slate-200 bg-white p-2 shadow-sm transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900 sm:p-4 lg:col-span-4 lg:block lg:pb-4 ${
+                            isPwa ? "pb-0" : "pb-28 sm:pb-32"
+                        }`}
                     >
                         <DashboardCards
                             dashboardTodayTime={dashboardTodayTime}
