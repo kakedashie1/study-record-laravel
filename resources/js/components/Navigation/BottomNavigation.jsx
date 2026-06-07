@@ -1,9 +1,28 @@
+import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 
 export default function BottomNavigation({ activePanel, setActivePanel }) {
+    const [isPwa, setIsPwa] = useState(false);
+
+    useEffect(() => {
+        const standalone =
+            window.matchMedia("(display-mode: standalone)").matches ||
+            window.navigator.standalone === true;
+
+        setIsPwa(standalone);
+    }, []);
+
     return (
-        <div className="fixed bottom-0 left-0 z-40 w-full pb-[max(env(safe-area-inset-bottom),8px)] lg:hidden">
-            <div className="grid h-14 w-full grid-cols-3 border-t bg-white shadow-[0_-4px_12px_rgba(0,0,0,0.08)]">
+        <div
+            className={`fixed bottom-0 left-0 z-40 w-full lg:hidden ${
+                isPwa ? "pb-3" : "pb-[max(env(safe-area-inset-bottom),8px)]"
+            }`}
+        >
+            <div
+                className={`grid w-full grid-cols-3 border-t bg-white shadow-[0_-4px_12px_rgba(0,0,0,0.08)] ${
+                    isPwa ? "h-16" : "h-14"
+                }`}
+            >
                 {/* 一覧 */}
                 <button
                     type="button"
@@ -14,7 +33,7 @@ export default function BottomNavigation({ activePanel, setActivePanel }) {
                             : "bg-green-50 text-gray-900"
                     }`}
                 >
-                    <Icon icon="twemoji:clipboard" width="22" />
+                    <Icon icon="twemoji:clipboard" width={isPwa ? 26 : 22} />
 
                     <span
                         className={
@@ -37,7 +56,7 @@ export default function BottomNavigation({ activePanel, setActivePanel }) {
                             : "bg-blue-50 text-gray-900"
                     }`}
                 >
-                    <Icon icon="twemoji:pencil" width="22" />
+                    <Icon icon="twemoji:pencil" width={isPwa ? 26 : 22} />
 
                     <span
                         className={
@@ -60,7 +79,7 @@ export default function BottomNavigation({ activePanel, setActivePanel }) {
                             : "bg-purple-50 text-gray-900"
                     }`}
                 >
-                    <Icon icon="twemoji:bar-chart" width="22" />
+                    <Icon icon="twemoji:bar-chart" width={isPwa ? 26 : 22} />
 
                     <span
                         className={

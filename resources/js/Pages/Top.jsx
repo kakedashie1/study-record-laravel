@@ -398,21 +398,29 @@ export default function Top({
         <>
             <div className="flex h-screen flex-col overflow-hidden bg-slate-100 p-3 text-slate-900 transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100">
                 {/* ヘッダー */}
-                <div className="mb-3 flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-3 py-2 shadow-sm transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900 lg:px-4">
+                <div
+                    className={`mb-3 flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-3 shadow-sm transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900 lg:px-4 ${
+                        isPwa ? "py-4" : "py-2"
+                    }`}
+                >
                     {/* 左：ロゴ */}
                     <div className="flex items-center">
                         {/* ライトモード */}
                         <img
                             src="/StudyRecord_logo_header.png"
                             alt="Study Record"
-                            className="h-10 w-auto dark:hidden sm:h-12 lg:h-16"
+                            className={`w-auto dark:hidden lg:h-16 ${
+                                isPwa ? "h-12" : "h-10"
+                            } sm:h-12`}
                         />
 
                         {/* ダークモード */}
                         <img
                             src="/StudyRecord_logo_header_dark.png"
                             alt="Study Record"
-                            className="hidden h-10 w-auto dark:block sm:h-12 lg:h-16"
+                            className={`hidden w-auto dark:block lg:h-16 ${
+                                isPwa ? "h-12" : "h-10"
+                            } sm:h-12`}
                         />
                     </div>
 
