@@ -16,7 +16,7 @@ export default function CategoryManageModal({
                     onClick={() => setIsCategoryModalOpen(false)}
                 >
                     <div
-                        className="w-[92vw] max-w-[500px] rounded-xl bg-white p-4 sm:p-6"
+                        className="w-[92vw] max-w-[500px] rounded-xl bg-white p-4 text-gray-900 sm:p-6 dark:bg-gray-800 dark:text-white"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <h2 className="mb-4 text-xl font-bold">
@@ -48,7 +48,7 @@ export default function CategoryManageModal({
                                         e.target.value,
                                     )
                                 }
-                                className="flex-1 rounded border px-2 py-1"
+                                className="flex-1 rounded border border-gray-300 bg-white px-2 py-1 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                                 placeholder="カテゴリー名"
                             />
 
@@ -84,7 +84,7 @@ export default function CategoryManageModal({
                                 {categories.map((category) => (
                                     <div
                                         key={category.id}
-                                        className="rounded-xl border bg-white p-3 shadow-sm"
+                                        className="rounded-xl border border-gray-200 bg-white p-3 shadow-sm dark:border-gray-700 dark:bg-gray-700"
                                     >
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-2">
@@ -248,7 +248,7 @@ export default function CategoryManageModal({
                     onClick={() => setEditingCategory(null)}
                 >
                     <div
-                        className="w-[400px] rounded-xl bg-white p-6"
+                        className="w-[400px] rounded-xl bg-white p-6 text-gray-900 dark:bg-gray-800 dark:text-white"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <h2 className="mb-4 text-xl font-bold">
@@ -279,7 +279,7 @@ export default function CategoryManageModal({
                                         e.target.value,
                                     )
                                 }
-                                className="mb-4 w-full rounded border px-2 py-1"
+                                className="mb-4 w-full rounded border border-gray-300 bg-white px-2 py-1 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                             />
 
                             {categoryForm.errors.category_name && (

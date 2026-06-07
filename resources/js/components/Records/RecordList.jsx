@@ -39,7 +39,7 @@ export default function RecordList({
                     type="date"
                     value={listDate}
                     onChange={handleListDateChange}
-                    className="block h-9 w-full max-w-full min-w-0 appearance-none rounded border border-slate-300 bg-white px-1 py-1 text-xs text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 sm:h-10 sm:px-3 sm:py-2 sm:text-sm"
+                    className="h-8 w-full max-w-full min-w-0 cursor-pointer rounded border border-slate-500 bg-white px-1 text-[10px] text-slate-900 dark:border-slate-500 dark:bg-slate-700 dark:text-slate-100 sm:text-sm"
                 />
             </div>
 

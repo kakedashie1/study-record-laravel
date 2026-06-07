@@ -20,7 +20,7 @@ export default function RecordEditModal({
             onClick={() => setEditingRecord(null)}
         >
             <div
-                className="w-[400px] rounded-xl bg-white p-6"
+                className="w-[400px] rounded-xl bg-white p-6 text-gray-900 dark:bg-gray-800 dark:text-white"
                 onClick={(e) => e.stopPropagation()}
             >
                 <h2 className="mb-4 text-xl font-bold">学習記録編集</h2>
@@ -50,7 +50,7 @@ export default function RecordEditModal({
                             onChange={(e) =>
                                 editForm.setData("study_date", e.target.value)
                             }
-                            className="w-full rounded border px-2 py-1"
+                            className="w-full rounded border border-gray-300 bg-white px-2 py-1 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                         />
 
                         {editForm.errors.study_date && (
@@ -70,7 +70,7 @@ export default function RecordEditModal({
                             onChange={(e) =>
                                 editForm.setData("category_id", e.target.value)
                             }
-                            className="w-full rounded border px-2 py-1"
+                            className="w-full rounded border border-gray-300 bg-white px-2 py-1 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                         >
                             <option value="">選択してください</option>
 
@@ -108,7 +108,7 @@ export default function RecordEditModal({
                         <button
                             type="button"
                             onClick={() => setEditingRecord(null)}
-                            className="rounded border px-4 py-2"
+                            className="rounded border border-gray-300 px-4 py-2 text-gray-900 dark:border-gray-600 dark:text-white"
                         >
                             キャンセル
                         </button>

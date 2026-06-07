@@ -391,10 +391,18 @@ export default function Top({
                 <div className="mb-3 flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-3 py-2 shadow-sm transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900 lg:px-4">
                     {/* 左：ロゴ */}
                     <div className="flex items-center">
+                        {/* ライトモード */}
                         <img
                             src="/StudyRecord_logo_header.png"
                             alt="Study Record"
-                            className="h-10 w-auto sm:h-12 lg:h-16"
+                            className="h-10 w-auto dark:hidden sm:h-12 lg:h-16"
+                        />
+
+                        {/* ダークモード */}
+                        <img
+                            src="/StudyRecord_logo_header_dark.png"
+                            alt="Study Record"
+                            className="hidden h-10 w-auto dark:block sm:h-12 lg:h-16"
                         />
                     </div>
 
@@ -449,7 +457,6 @@ export default function Top({
                             activePanel === "center" ? "block" : "hidden"
                         } h-full overflow-y-auto rounded-2xl border border-slate-200 bg-white p-2 pb-28 shadow-sm transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900 sm:p-4 sm:pb-32 lg:col-span-4 lg:block lg:pb-4`}
                     >
-
                         <DashboardCards
                             dashboardTodayTime={dashboardTodayTime}
                             dashboardWeeklyTime={dashboardWeeklyTime}
@@ -460,7 +467,7 @@ export default function Top({
 
                         <div className="mt-2 rounded-2xl border border-slate-300 bg-white p-3 shadow-md transition-colors duration-300 dark:border-slate-700 dark:bg-slate-800 sm:mt-4 sm:p-4">
                             <h2 className="mb-3 text-base font-bold text-slate-700 dark:text-slate-100">
-                                 学習時間記録
+                                学習時間記録
                             </h2>
                             <RecordCreateForm
                                 data={data}

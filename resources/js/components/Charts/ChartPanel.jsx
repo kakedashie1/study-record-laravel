@@ -118,7 +118,7 @@ export default function ChartPanel({
                             type="date"
                             value={chartDate}
                             onChange={(e) => setChartDate(e.target.value)}
-                            className="h-8 w-full max-w-full min-w-0 rounded border border-slate-300 bg-white px-1 text-[10px] text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 sm:text-sm"
+                           className="h-8 w-full max-w-full min-w-0 cursor-pointer rounded border border-slate-500 bg-white px-1 text-[10px] text-slate-900 dark:border-slate-500 dark:bg-slate-700 dark:text-slate-100 sm:text-sm"
                         />
                     </div>
 
