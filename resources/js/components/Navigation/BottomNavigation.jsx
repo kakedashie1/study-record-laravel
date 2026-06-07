@@ -15,7 +15,7 @@ export default function BottomNavigation({ activePanel, setActivePanel }) {
     return (
         <div
             className={`fixed bottom-0 left-0 z-40 w-full lg:hidden ${
-                isPwa ? "pb-3" : "pb-[max(env(safe-area-inset-bottom),8px)]"
+                isPwa ? "pb-6" : "pb-[max(env(safe-area-inset-bottom),8px)]"
             }`}
         >
             <div
