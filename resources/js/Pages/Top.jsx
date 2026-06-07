@@ -400,7 +400,7 @@ export default function Top({
                 {/* ヘッダー */}
                 <div
                     className={`mb-3 flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-3 shadow-sm transition-colors duration-300 dark:border-slate-700 dark:bg-slate-900 lg:px-4 ${
-                        isPwa ? "py-4" : "py-2"
+                        isPwa ? "py-6" : "py-2"
                     }`}
                 >
                     {/* 左：ロゴ */}
@@ -410,7 +410,7 @@ export default function Top({
                             src="/StudyRecord_logo_header.png"
                             alt="Study Record"
                             className={`w-auto dark:hidden lg:h-16 ${
-                                isPwa ? "h-12" : "h-10"
+                                isPwa ? "h-15" : "h-10"
                             } sm:h-12`}
                         />
 
@@ -419,7 +419,7 @@ export default function Top({
                             src="/StudyRecord_logo_header_dark.png"
                             alt="Study Record"
                             className={`hidden w-auto dark:block lg:h-16 ${
-                                isPwa ? "h-12" : "h-10"
+                                isPwa ? "h-15" : "h-10"
                             } sm:h-12`}
                         />
                     </div>
