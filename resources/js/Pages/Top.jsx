@@ -469,6 +469,9 @@ export default function Top({
                             isPwa ? "pb-0" : "pb-28 sm:pb-32"
                         }`}
                     >
+                        <h2 className="mb-3 text-base font-bold text-slate-700 dark:text-slate-100">
+                            学習時間ダッシュボード
+                        </h2>
                         <DashboardCards
                             dashboardTodayTime={dashboardTodayTime}
                             dashboardWeeklyTime={dashboardWeeklyTime}
