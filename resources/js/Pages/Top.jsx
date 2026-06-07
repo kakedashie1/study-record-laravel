@@ -477,7 +477,11 @@ export default function Top({
                             isPwa ? "pb-0" : "pb-28 sm:pb-32"
                         }`}
                     >
-                        <h2 className="mb-3 text-base font-bold text-slate-700 dark:text-slate-100">
+                        <h2
+                            className={`text-base font-bold text-slate-700 dark:text-slate-100 ${
+                                isPwa ? "mb-6" : "mb-3"
+                            }`}
+                        >
                             学習時間ダッシュボード
                         </h2>
                         <DashboardCards
