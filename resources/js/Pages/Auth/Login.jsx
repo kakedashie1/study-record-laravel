@@ -1,19 +1,37 @@
-import { useForm, Link } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
+import { useState } from "react";
 
 export default function Login() {
-    const { data, setData, post, processing, errors } = useForm({
-        email: "",
-        password: "",
-    });
+    const [errors, setErrors] = useState({});
+    const [processing, setProcessing] = useState(false);
 
     const submit = (e) => {
         e.preventDefault();
-        post("/login");
+
+        const formData = new FormData(e.currentTarget);
+
+        setProcessing(true);
+        setErrors({});
+
+        router.post(
+            "/login",
+            {
+                email: formData.get("email"),
+                password: formData.get("password"),
+            },
+            {
+                onError: (errors) => {
+                    setErrors(errors);
+                },
+                onFinish: () => {
+                    setProcessing(false);
+                },
+            },
+        );
     };
 
     return (
         <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100 px-4 dark:bg-gray-900">
-            {/* ロゴ */}
             <div className="mb-6">
                 <img
                     src="/StudyRecord_logo_header.png"
@@ -42,12 +60,10 @@ export default function Login() {
 
                     <div className="mb-4">
                         <input
+                            name="email"
                             type="email"
                             placeholder="メールアドレス"
-                            value={data.email}
-                            onChange={(e) =>
-                                setData("email", e.target.value)
-                            }
+                            autoComplete="email"
                             className="w-full rounded border border-gray-300 bg-white px-3 py-2 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                         />
 
@@ -60,12 +76,10 @@ export default function Login() {
 
                     <div className="mb-4">
                         <input
+                            name="password"
                             type="password"
                             placeholder="パスワード"
-                            value={data.password}
-                            onChange={(e) =>
-                                setData("password", e.target.value)
-                            }
+                            autoComplete="current-password"
                             className="w-full rounded border border-gray-300 bg-white px-3 py-2 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                         />
 
@@ -79,9 +93,9 @@ export default function Login() {
                     <button
                         type="submit"
                         disabled={processing}
-                        className="w-full rounded bg-blue-500 p-2 text-white transition hover:bg-blue-600"
+                        className="w-full rounded bg-blue-500 p-2 text-white transition hover:bg-blue-600 disabled:opacity-60"
                     >
-                        Login
+                        {processing ? "ログイン中..." : "Login"}
                     </button>
 
                     <div className="mt-4 text-center">
