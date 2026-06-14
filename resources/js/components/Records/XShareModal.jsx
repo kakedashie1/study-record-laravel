@@ -2,9 +2,7 @@ export default function XShareModal({ isOpen, onClose, todayTimeText }) {
     if (!isOpen) return null;
 
     const handleShare = () => {
-        const text =
-            `今日の勉強時間：${todayTimeText}\n\n` +
-            `Study Recordで学習を記録しました！`;
+        const text = `今日の勉強時間：${todayTimeText}`;
 
         const shareUrl =
             "https://twitter.com/intent/tweet?" +
@@ -32,7 +30,8 @@ export default function XShareModal({ isOpen, onClose, todayTimeText }) {
 
                 <p className="mt-3 whitespace-pre-line rounded-xl bg-slate-100 p-3 text-sm text-slate-700 dark:bg-slate-700 dark:text-slate-100">
                     今日の勉強時間：{todayTimeText}
-                    {"\n\n"}#勉強垢 #勉強垢さんと繋がりたい#勉強記録 #学習記録 #StudyRecord
+                    {"\n\n"}#勉強垢 #勉強垢さんと繋がりたい#勉強記録 #学習記録
+                    #StudyRecord
                 </p>
 
                 <div className="mt-5 flex gap-3">
