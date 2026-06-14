@@ -32,7 +32,7 @@ export default function XShareModal({ isOpen, onClose, todayTimeText }) {
 
                 <p className="mt-3 whitespace-pre-line rounded-xl bg-slate-100 p-3 text-sm text-slate-700 dark:bg-slate-700 dark:text-slate-100">
                     今日の勉強時間：{todayTimeText}
-                    {"\n\n"}#StudyRecord #勉強記録 #学習記録
+                    {"\n\n"}#勉強垢 #勉強垢さんと繋がりたい#勉強記録 #学習記録 #StudyRecord
                 </p>
 
                 <div className="mt-5 flex gap-3">

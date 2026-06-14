@@ -8,7 +8,7 @@ import DashboardCards from "../components/Dashboard/DashboardCards";
 import BottomNavigation from "../components/Navigation/BottomNavigation";
 import ChartPanel from "../components/Charts/ChartPanel";
 import CategoryManageModal from "../components/Categories/CategoryManageModal";
-import XShareModal from "@/Components/Records/XShareModal";
+import XShareModal from "@/components/Records/XShareModal";
 import { formatMinutes } from "../utils/format";
 
 export default function Top({
