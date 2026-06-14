@@ -2,13 +2,13 @@ export default function XShareModal({ isOpen, onClose, todayTimeText }) {
     if (!isOpen) return null;
 
     const handleShare = () => {
-        const text = `今日の勉強時間：${todayTimeText}`;
+        const text = `今日の勉強時間：${todayTimeText}\n\n`;
 
         const shareUrl =
             "https://twitter.com/intent/tweet?" +
             new URLSearchParams({
                 text,
-                hashtags: "StudyRecord,勉強記録,学習記録",
+                hashtags: "勉強垢さんと繋がりたい,勉強記録,学習記録,StudyRecord",
             }).toString();
 
         window.open(shareUrl, "_blank", "noopener,noreferrer");
