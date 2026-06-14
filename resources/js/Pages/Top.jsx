@@ -8,6 +8,8 @@ import DashboardCards from "../components/Dashboard/DashboardCards";
 import BottomNavigation from "../components/Navigation/BottomNavigation";
 import ChartPanel from "../components/Charts/ChartPanel";
 import CategoryManageModal from "../components/Categories/CategoryManageModal";
+import XShareModal from "@/Components/Records/XShareModal";
+import { formatMinutes } from "../utils/format";
 
 export default function Top({
     categories,
@@ -85,6 +87,8 @@ export default function Top({
 
     const [editingCategory, setEditingCategory] = useState(null);
 
+    const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+
     /*
     |--------------------------------------------------------------------------
     | その他
@@ -92,6 +96,8 @@ export default function Top({
     */
 
     const [loading, setLoading] = useState(false);
+
+    const [todayTimeText, setTodayTimeText] = useState("");
 
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -271,6 +277,8 @@ export default function Top({
     const submit = (e) => {
         e.preventDefault();
 
+        const registeredStudyTime = data.study_time;
+
         post("/store", {
             onSuccess: () => {
                 reset();
@@ -280,6 +288,9 @@ export default function Top({
                 fetchDashboardData();
 
                 fetchChartData();
+
+                setTodayTimeText(formatMinutes(registeredStudyTime));
+                setIsShareModalOpen(true);
             },
         });
     };
@@ -504,6 +515,10 @@ export default function Top({
                                 submit={submit}
                                 categories={categories}
                                 setIsCategoryModalOpen={setIsCategoryModalOpen}
+                                onCreated={(studyTimeText) => {
+                                    setTodayTimeText(studyTimeText);
+                                    setIsShareModalOpen(true);
+                                }}
                             />
                         </div>
                     </section>
@@ -555,6 +570,13 @@ export default function Top({
                 setEditingCategory={setEditingCategory}
                 categoryForm={categoryForm}
                 categories={categories}
+            />
+
+            {/* 共有モーダル */}
+            <XShareModal
+                isOpen={isShareModalOpen}
+                onClose={() => setIsShareModalOpen(false)}
+                todayTimeText={todayTimeText}
             />
         </>
     );
