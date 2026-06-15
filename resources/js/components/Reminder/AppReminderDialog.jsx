@@ -23,7 +23,7 @@ export default function AppReminderDialog({
                 onClick={(e) => e.stopPropagation()}
             >
                 <h2 className="text-xl font-bold text-red-600">
-                    TEST DIALOG
+                    リマインド通知
                 </h2>
 
                 <p className="mt-3 text-sm">
