@@ -10,7 +10,7 @@ export default function ReminderPanel({ reminders, reminderSetting }) {
     const [isSettingOpen, setIsSettingOpen] = useState(false);
 
     return (
-        <section className="relative flex h-full min-h-0 flex-col rounded-2xl bg-white p-4 text-slate-900 dark:bg-slate-800 dark:text-slate-100">
+        <section className="relative flex h-full min-h-0 flex-col overflow-hidden rounded-2xl bg-white p-4 text-slate-900 dark:bg-slate-800 dark:text-slate-100">
             <div className="flex items-center justify-between gap-3">
                 <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">
                     リマインド
@@ -18,8 +18,8 @@ export default function ReminderPanel({ reminders, reminderSetting }) {
 
                 <button
                     type="button"
-                    onClick={() => setIsSettingOpen(true)}
-                    className="rounded-lg border px-3 py-1.5 text-sm font-bold text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-gray-700"
+                    onClick={() => setIsCreateOpen(true)}
+                    className="absolute bottom-20 left-1/2 z-40 w-[90%] max-w-md -translate-x-1/2 rounded-full bg-purple-600 py-3 text-sm font-bold text-white shadow-lg hover:bg-purple-700"
                 >
                     設定
                 </button>
@@ -51,7 +51,7 @@ export default function ReminderPanel({ reminders, reminderSetting }) {
                 </button>
             </div>
 
-            <div className="mt-4 min-h-0 flex-1 overflow-y-auto pb-24">
+            <div className="mt-4 min-h-0 flex-1 overflow-y-auto pb-32">
                 {viewMode === "list" ? (
                     <ReminderList reminders={reminders} />
                 ) : (

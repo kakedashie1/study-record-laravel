@@ -45,7 +45,7 @@ export default function ReminderCreateModal({ onClose }) {
                             type="text"
                             value={data.title}
                             onChange={(e) => setData("title", e.target.value)}
-                            className="w-full rounded-lg border px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100"
+                            className="w-full rounded-lg border px-3 py-2 text-base dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100"
                             placeholder="例：英単語100個"
                         />
 
@@ -64,7 +64,7 @@ export default function ReminderCreateModal({ onClose }) {
                         <textarea
                             value={data.memo}
                             onChange={(e) => setData("memo", e.target.value)}
-                            className="h-28 w-full rounded-lg border px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100"
+                            className="h-28 w-full rounded-lg border px-3 py-2 text-base dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100"
                             placeholder="例：ターゲット1900 1〜100"
                         />
 
