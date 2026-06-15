@@ -18,8 +18,8 @@ export default function ReminderPanel({ reminders, reminderSetting }) {
 
                 <button
                     type="button"
-                    onClick={() => setIsCreateOpen(true)}
-                    className="absolute bottom-20 left-1/2 z-40 w-[90%] max-w-md -translate-x-1/2 rounded-full bg-purple-600 py-3 text-sm font-bold text-white shadow-lg hover:bg-purple-700"
+                    onClick={() => setIsSettingOpen(true)}
+                    className="rounded-lg border px-3 py-1.5 text-sm font-bold text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-gray-700"
                 >
                     設定
                 </button>
@@ -62,7 +62,7 @@ export default function ReminderPanel({ reminders, reminderSetting }) {
             <button
                 type="button"
                 onClick={() => setIsCreateOpen(true)}
-                className="fixed bottom-20 left-1/2 z-40 w-[90%] max-w-md -translate-x-1/2 rounded-full bg-purple-600 py-3 text-sm font-bold text-white shadow-lg hover:bg-purple-700 lg:absolute lg:bottom-4"
+                className="absolute bottom-20 left-1/2 z-40 w-[90%] max-w-md -translate-x-1/2 rounded-full bg-purple-600 py-3 text-sm font-bold text-white shadow-lg hover:bg-purple-700"
             >
                 ＋ リマインド作成
             </button>
