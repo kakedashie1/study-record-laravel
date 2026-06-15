@@ -15,42 +15,26 @@ export default function AppReminderDialog({
 
     return (
         <div
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 px-4"
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 px-4"
             onClick={onClose}
         >
             <div
-                className="w-full max-w-sm rounded-2xl bg-white p-5 shadow-xl dark:bg-slate-800"
+                className="w-full max-w-sm rounded-3xl border-4 border-red-500 bg-white p-6 text-slate-900 shadow-2xl dark:bg-slate-800 dark:text-slate-100"
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className="flex items-start justify-between gap-3">
-                    <div>
-                        <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
-                            復習があります
-                        </h2>
+                <h2 className="text-xl font-bold text-red-600">
+                    TEST DIALOG
+                </h2>
 
-                        <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-                            期限切れ・今日のリマインドが{" "}
-                            <span className="font-bold text-orange-600">
-                                {reminderNoticeCount}
-                            </span>{" "}
-                            件あります。
-                        </p>
-                    </div>
+                <p className="mt-3 text-sm">
+                    期限切れ・今日のリマインドが {reminderNoticeCount} 件あります。
+                </p>
 
+                <div className="mt-6 grid grid-cols-2 gap-2">
                     <button
                         type="button"
                         onClick={onClose}
-                        className="rounded-lg px-2 py-1 text-sm font-bold text-slate-500 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700"
-                    >
-                        ✕
-                    </button>
-                </div>
-
-                <div className="mt-5 grid grid-cols-2 gap-2">
-                    <button
-                        type="button"
-                        onClick={onClose}
-                        className="rounded-lg border py-2 text-sm font-bold text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-100 dark:hover:bg-slate-700"
+                        className="rounded-xl border py-3 text-sm font-bold"
                     >
                         あとで
                     </button>
@@ -58,7 +42,7 @@ export default function AppReminderDialog({
                     <button
                         type="button"
                         onClick={goReminder}
-                        className="rounded-lg bg-purple-600 py-2 text-sm font-bold text-white hover:bg-purple-700"
+                        className="rounded-xl bg-purple-600 py-3 text-sm font-bold text-white"
                     >
                         確認する
                     </button>
