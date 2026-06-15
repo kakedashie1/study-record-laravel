@@ -10,6 +10,8 @@ import ChartPanel from "../components/Charts/ChartPanel";
 import CategoryManageModal from "../components/Categories/CategoryManageModal";
 import XShareModal from "@/components/Records/XShareModal";
 import { formatMinutes } from "../utils/format";
+import ReminderPanel from "../components/Reminder/ReminderPanel";
+import AppReminderDialog from "../components/Reminder/AppReminderDialog";
 
 export default function Top({
     categories,
@@ -19,6 +21,9 @@ export default function Top({
     monthlyStudyTime: monthlyStudyTimeProp,
     yearlyStudyTime: yearlyStudyTimeProp,
     totalStudyTime: totalStudyTimeProp,
+    reminders,
+    reminderSetting,
+    reminderNoticeCount,
 }) {
     const today = new Date().toLocaleDateString("sv-SE").slice(0, 10);
 
@@ -102,6 +107,8 @@ export default function Top({
     const [errorMessage, setErrorMessage] = useState("");
 
     const [activePanel, setActivePanel] = useState("center");
+
+    const [isReminderDialogOpen, setIsReminderDialogOpen] = useState(false);
 
     const [theme, setTheme] = useState(() => {
         return localStorage.getItem("theme") || "light";
@@ -253,6 +260,12 @@ export default function Top({
     useEffect(() => {
         fetchChartData();
     }, [chartDate, chartPeriod, chartCategoryId]);
+
+    useEffect(() => {
+        if (reminderNoticeCount > 0) {
+            setIsReminderDialogOpen(true);
+        }
+    }, [reminderNoticeCount]);
 
     /*
     |--------------------------------------------------------------------------
@@ -524,6 +537,22 @@ export default function Top({
                     </section>
 
                     {/* ========================= */}
+                    {/* スマホ：リマインド画面 */}
+                    {/* ========================= */}
+                    <section
+                        className={`${
+                            activePanel === "reminder" ? "flex" : "hidden"
+                        } h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-3 text-slate-900 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 lg:hidden ${
+                            isPwa ? "pb-20" : "pb-24"
+                        }`}
+                    >
+                        <ReminderPanel
+                            reminders={reminders ?? []}
+                            reminderSetting={reminderSetting}
+                        />
+                    </section>
+
+                    {/* ========================= */}
                     {/* 右列 */}
                     {/* ========================= */}
                     <ChartPanel
@@ -548,6 +577,7 @@ export default function Top({
             <BottomNavigation
                 activePanel={activePanel}
                 setActivePanel={setActivePanel}
+                reminderNoticeCount={reminderNoticeCount}
             />
 
             {/* 学習記録編集モーダル */}
@@ -577,6 +607,14 @@ export default function Top({
                 isOpen={isShareModalOpen}
                 onClose={() => setIsShareModalOpen(false)}
                 todayTimeText={todayTimeText}
+            />
+
+            {/* リマインドダイアログ */}
+            <AppReminderDialog
+                isOpen={isReminderDialogOpen}
+                onClose={() => setIsReminderDialogOpen(false)}
+                reminderNoticeCount={reminderNoticeCount}
+                setActivePanel={setActivePanel}
             />
         </>
     );

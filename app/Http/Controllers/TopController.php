@@ -10,6 +10,9 @@ use Inertia\Response;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Models\Reminder;
+use App\Models\ReminderSetting;
+
 
 class TopController extends Controller
 {
@@ -37,6 +40,50 @@ class TopController extends Controller
             ->whereYear('study_date', now()->year)
             ->sum('study_time');
         $total_study_time = Record::where('user_id', Auth::id())->sum('study_time');
+
+        $todayDate = now()->toDateString();
+
+        $reminders = Reminder::where('user_id', Auth::id())
+            ->where('is_done', false)
+            ->orderByRaw("
+        CASE
+            WHEN remind_date IS NOT NULL AND remind_date < ? THEN 0
+            WHEN remind_at IS NOT NULL AND DATE(remind_at) < ? THEN 0
+            ELSE 1
+        END
+    ", [$todayDate, $todayDate])
+            ->orderByRaw("COALESCE(remind_date, DATE(remind_at)) ASC")
+            ->orderByRaw("remind_at ASC")
+            ->get();
+        $reminderSetting = ReminderSetting::firstOrCreate(
+            ['user_id' => Auth::id()],
+            [
+                'intervals' => [
+                    ['type' => 'hours', 'value' => 6],
+                    ['type' => 'days', 'value' => 1],
+                    ['type' => 'days', 'value' => 3],
+                    ['type' => 'days', 'value' => 7],
+                    ['type' => 'months', 'value' => 1],
+                ],
+                'previous_day_notify_time' => '22:00',
+                'same_day_notify_time' => '07:00',
+            ]
+        );
+
+        $today = Carbon::today();
+
+        $reminderNoticeCount = $reminders->filter(function ($reminder) use ($today) {
+            if ($reminder->remind_date) {
+                return Carbon::parse($reminder->remind_date)->lte($today);
+            }
+
+            if ($reminder->remind_at) {
+                return Carbon::parse($reminder->remind_at)->lte(now());
+            }
+
+            return false;
+        })->count();
+
         return Inertia::render('Top', [
             'categories' => $categories,
             'records' => $records,
@@ -45,6 +92,9 @@ class TopController extends Controller
             'monthlyStudyTime' => $monthly_study_time,
             'yearlyStudyTime' => $yearly_study_time,
             'totalStudyTime' => $total_study_time,
+            'reminders' => $reminders,
+            'reminderSetting' => $reminderSetting,
+            'reminderNoticeCount' => $reminderNoticeCount,
         ]);
     }
 

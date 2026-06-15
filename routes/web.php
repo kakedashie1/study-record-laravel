@@ -5,6 +5,8 @@ use App\Http\Controllers\RecordController;
 use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\ReminderController;
+use App\Http\Controllers\ReminderSettingController;
 
 
 
@@ -35,4 +37,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     Route::get('/records/chart', [TopController::class, 'chart']);
     Route::get('/records/dashboard', [TopController::class, 'dashboard']);
+    Route::post('/reminders', [ReminderController::class, 'store'])
+        ->name('reminders.store');
+
+    Route::patch('/reminders/{reminder}/complete', [ReminderController::class, 'complete'])
+        ->name('reminders.complete');
+
+    Route::delete('/reminders/{reminder}', [ReminderController::class, 'destroy'])
+        ->name('reminders.destroy');
+
+    Route::patch('/reminder-settings', [ReminderSettingController::class, 'update'])
+        ->name('reminder-settings.update');
 });
