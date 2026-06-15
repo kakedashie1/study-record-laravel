@@ -22,7 +22,7 @@ class ReminderController extends Controller
             'title' => $validated['title'],
             'memo' => $validated['memo'] ?? null,
             'step' => 1,
-            'remind_at' => now()->addMinute(),
+            'remind_at' => now()->addHours(6),
             'remind_date' => null,
             'is_done' => false,
         ]);
