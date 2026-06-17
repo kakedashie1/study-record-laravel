@@ -1,10 +1,22 @@
 import { useForm } from "@inertiajs/react";
 
-export default function ReminderCreateModal({ onClose }) {
+export default function ReminderCreateModal({ reminderSetting, onClose }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         title: "",
         memo: "",
     });
+
+    const firstInterval = reminderSetting?.intervals?.[0] ?? {
+        type: "hours",
+        value: 6,
+    };
+
+    const firstReminderText =
+        firstInterval.type === "hours"
+            ? `${Number(firstInterval.value)}時間後`
+            : firstInterval.type === "days"
+              ? `${Number(firstInterval.value)}日後`
+              : `${Number(firstInterval.value)}か月後`;
 
     const submit = (e) => {
         e.preventDefault();
@@ -82,7 +94,8 @@ export default function ReminderCreateModal({ onClose }) {
                     </div>
 
                     <div className="rounded-lg bg-purple-50 p-3 text-xs font-bold text-purple-700 dark:bg-purple-900/30 dark:text-purple-200">
-                        作成すると、まず6時間後にリマインドされます。
+                        作成すると、まず{firstReminderText}
+                        にリマインドされます。
                     </div>
 
                     <div className="grid grid-cols-2 gap-2">

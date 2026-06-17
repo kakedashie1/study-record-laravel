@@ -9,6 +9,7 @@ use App\Http\Controllers\TopController;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 
 class RecordController extends Controller
@@ -95,5 +96,34 @@ class RecordController extends Controller
                 'error' => 'データの更新に失敗しました。',
             ]);
         }
+    }
+
+    public function shareToday(Request $request)
+    {
+        $date = $request->input('date');
+        $userId = Auth::id();
+
+        $todayTotalTime = Record::where('user_id', $userId)
+            ->whereDate('study_date', $date)
+            ->sum('study_time');
+
+        $categories = Category::where('categories.user_id', $userId)
+            ->leftJoin('records', function ($join) use ($date, $userId) {
+                $join->on('categories.id', '=', 'records.category_id')
+                    ->whereDate('records.study_date', $date)
+                    ->where('records.user_id', $userId);
+            })
+            ->select(
+                'categories.category_name',
+                DB::raw('COALESCE(SUM(records.study_time), 0) as total_time')
+            )
+            ->groupBy('categories.id', 'categories.category_name')
+            ->havingRaw('SUM(records.study_time) > 0')
+            ->get();
+
+        return response()->json([
+            'today_total_time' => $todayTotalTime,
+            'categories' => $categories,
+        ]);
     }
 }

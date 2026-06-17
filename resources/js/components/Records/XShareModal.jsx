@@ -1,14 +1,11 @@
-export default function XShareModal({ isOpen, onClose, todayTimeText }) {
+export default function XShareModal({ isOpen, onClose, shareText }) {
     if (!isOpen) return null;
 
     const handleShare = () => {
-        const text = `今日の勉強時間：${todayTimeText}\n\n`;
-
         const shareUrl =
             "https://twitter.com/intent/tweet?" +
             new URLSearchParams({
-                text,
-                hashtags: "勉強垢さんと繋がりたい,勉強記録,学習記録,StudyRecord",
+                text: shareText,
             }).toString();
 
         window.open(shareUrl, "_blank", "noopener,noreferrer");
@@ -28,10 +25,8 @@ export default function XShareModal({ isOpen, onClose, todayTimeText }) {
                     学習記録を共有しますか？
                 </h2>
 
-                <p className="mt-3 whitespace-pre-line rounded-xl bg-slate-100 p-3 text-sm text-slate-700 dark:bg-slate-700 dark:text-slate-100">
-                    今日の勉強時間：{todayTimeText}
-                    {"\n\n"}#勉強垢 #勉強垢さんと繋がりたい#勉強記録 #学習記録
-                    #StudyRecord
+                <p className="mt-3 max-h-64 overflow-y-auto whitespace-pre-line rounded-xl bg-slate-100 p-3 text-sm text-slate-700 dark:bg-slate-700 dark:text-slate-100">
+                    {shareText}
                 </p>
 
                 <div className="mt-5 flex gap-3">

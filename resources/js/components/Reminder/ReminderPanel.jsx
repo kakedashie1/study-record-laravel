@@ -68,7 +68,10 @@ export default function ReminderPanel({ reminders, reminderSetting }) {
             </button>
 
             {isCreateOpen && (
-                <ReminderCreateModal onClose={() => setIsCreateOpen(false)} />
+                <ReminderCreateModal
+                    reminderSetting={reminderSetting}
+                    onClose={() => setIsCreateOpen(false)}
+                />
             )}
 
             {isSettingOpen && (

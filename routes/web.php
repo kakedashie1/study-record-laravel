@@ -48,4 +48,7 @@ Route::middleware('auth')->group(function () {
 
     Route::patch('/reminder-settings', [ReminderSettingController::class, 'update'])
         ->name('reminder-settings.update');
+
+    Route::get('/records/share-today', [RecordController::class, 'shareToday']);
+
 });

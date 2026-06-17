@@ -73,10 +73,10 @@ export default function ReminderSettingModal({ reminderSetting, onClose }) {
                                 onChange={(e) =>
                                     setData(
                                         "previous_day_notify_time",
-                                        e.target.value
+                                        e.target.value,
                                     )
                                 }
-                                className="w-full rounded-lg border px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100"
+                                className="w-full rounded-lg border px-3 py-2 text-base dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100"
                             />
                         </div>
 
@@ -91,10 +91,10 @@ export default function ReminderSettingModal({ reminderSetting, onClose }) {
                                 onChange={(e) =>
                                     setData(
                                         "same_day_notify_time",
-                                        e.target.value
+                                        e.target.value,
                                     )
                                 }
-                                className="w-full rounded-lg border px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100"
+                                className="w-full rounded-lg border px-3 py-2 text-base dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100"
                             />
                         </div>
                     </div>
@@ -114,17 +114,30 @@ export default function ReminderSettingModal({ reminderSetting, onClose }) {
                                 </p>
 
                                 <input
-                                    type="number"
-                                    min="1"
-                                    value={interval.value}
-                                    onChange={(e) =>
+                                    type="text"
+                                    inputMode="numeric"
+                                    pattern="[0-9]*"
+                                    value={String(interval.value ?? "")}
+                                    onChange={(e) => {
+                                        let value = e.target.value.replace(
+                                            /[^0-9]/g,
+                                            "",
+                                        );
+
+                                        value = value.replace(/^0+/, "");
+
                                         updateInterval(
                                             index,
                                             "value",
-                                            e.target.value
-                                        )
-                                    }
-                                    className="w-full rounded-lg border px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100"
+                                            value === "" ? "" : Number(value),
+                                        );
+                                    }}
+                                    onBlur={() => {
+                                        if (interval.value === "") {
+                                            updateInterval(index, "value", 1);
+                                        }
+                                    }}
+                                    className="w-full rounded-lg border px-3 py-2 text-base dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100"
                                 />
 
                                 <select
@@ -133,10 +146,10 @@ export default function ReminderSettingModal({ reminderSetting, onClose }) {
                                         updateInterval(
                                             index,
                                             "type",
-                                            e.target.value
+                                            e.target.value,
                                         )
                                     }
-                                    className="w-full rounded-lg border px-2 py-2 text-sm dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100"
+                                    className="w-full rounded-lg border px-2 py-2 text-base dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100"
                                 >
                                     <option value="hours">時間後</option>
                                     <option value="days">日後</option>

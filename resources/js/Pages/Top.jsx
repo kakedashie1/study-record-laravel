@@ -110,6 +110,18 @@ export default function Top({
 
     const [isReminderDialogOpen, setIsReminderDialogOpen] = useState(false);
 
+    const [shareText, setShareText] = useState("");
+
+    const fetchTodayShareData = async () => {
+        const response = await fetch(`/records/share-today?date=${today}`);
+
+        if (!response.ok) {
+            throw new Error("共有データの取得に失敗しました");
+        }
+
+        return await response.json();
+    };
+
     const [theme, setTheme] = useState(() => {
         return localStorage.getItem("theme") || "light";
     });
@@ -293,17 +305,37 @@ export default function Top({
         const registeredStudyTime = data.study_time;
 
         post("/store", {
-            onSuccess: () => {
+            onSuccess: async () => {
                 reset();
 
                 fetchListRecordsByDate(listDate);
-
                 fetchDashboardData();
-
                 fetchChartData();
 
-                setTodayTimeText(formatMinutes(registeredStudyTime));
-                setIsShareModalOpen(true);
+                try {
+                    const result = await fetchTodayShareData();
+
+                    const categoryLines = result.categories
+                        .map((category) => {
+                            return `${category.category_name}：${formatMinutes(category.total_time)}`;
+                        })
+                        .join("\n");
+
+                    const text =
+                        `今日の合計勉強時間：${formatMinutes(result.today_total_time)}\n\n` +
+                        `カテゴリー別\n` +
+                        categoryLines +
+                        `\n\n` +
+                        `#勉強垢さんと繋がりたい\n` +
+                        `#勉強記録\n` +
+                        `#学習記録\n` +
+                        `#StudyRecord`;
+
+                    setShareText(text);
+                    setIsShareModalOpen(true);
+                } catch (error) {
+                    setErrorMessage(error.message);
+                }
             },
         });
     };
@@ -606,7 +638,7 @@ export default function Top({
             <XShareModal
                 isOpen={isShareModalOpen}
                 onClose={() => setIsShareModalOpen(false)}
-                todayTimeText={todayTimeText}
+                shareText={shareText}
             />
 
             {/* リマインドダイアログ */}
