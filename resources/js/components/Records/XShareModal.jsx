@@ -2,10 +2,13 @@ export default function XShareModal({ isOpen, onClose, shareText }) {
     if (!isOpen) return null;
 
     const handleShare = () => {
+        const appUrl = "https://study-record-laravel.onrender.com";
+
         const shareUrl =
             "https://twitter.com/intent/tweet?" +
             new URLSearchParams({
                 text: shareText,
+                url: appUrl,
             }).toString();
 
         window.open(shareUrl, "_blank", "noopener,noreferrer");

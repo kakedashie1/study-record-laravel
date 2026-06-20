@@ -321,15 +321,20 @@ export default function Top({
                         })
                         .join("\n");
 
-                    const text =
-                        `今日の合計勉強時間：${formatMinutes(result.today_total_time)}\n\n` +
-                        `カテゴリー別\n` +
-                        categoryLines +
-                        `\n\n` +
-                        `#勉強垢さんと繋がりたい\n` +
-                        `#勉強記録\n` +
-                        `#学習記録\n` +
-                        `#StudyRecord`;
+                    const text = [
+                        `📚 今日の合計勉強時間：${formatMinutes(result.today_total_time)}`,
+                        "",
+                        "カテゴリー別",
+                        categoryLines,
+                        "",
+                        "#勉強垢さんと繋がりたい",
+                        "#勉強記録",
+                        "#学習記録",
+                        "#StudyRecord",
+                        "",
+                        "📱 Study Record",
+                        "学習時間を記録できる無料アプリ",
+                    ].join("\n");
 
                     setShareText(text);
                     setIsShareModalOpen(true);
